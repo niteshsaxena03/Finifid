@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button"; // Adjust the import path as per your project structure
 import "./WelcomeScreen.css";
+import { useNavigate } from "react-router-dom";
+import LoginScreen from "../Login/LoginScreen";
 
 function WelcomeScreen() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,6 +35,7 @@ function WelcomeScreen() {
           className="button"
           variant="background"
           size={isSmallScreen ? "sm" : "lg"}
+          onClick={() => navigate("/login")}
         >
           Login
         </Button>
@@ -38,6 +43,7 @@ function WelcomeScreen() {
           className="button"
           variant="background"
           size={isSmallScreen ? "sm" : "lg"}
+          onClick={() => navigate("/signup")}
         >
           SignUp
         </Button>
