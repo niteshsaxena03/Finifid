@@ -1,5 +1,5 @@
 import "./App.css";
-import WelcomeScreen from "./components/pages/WelcomeScreen";
+import WelcomeScreen from "./components/pages/WelcomeScreen/WelcomeScreen";
 import { Button } from "./components/ui/button";
 import { Routes, Route } from "react-router";
 

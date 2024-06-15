@@ -1,0 +1,44 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Roboto", sans-serif; /* Modern, clean font */
+  background: #ffe0b2; /* Light background color to complement the gradient */
+}
+
+.mainHeading,
+.secondHeading {
+  text-align: center;
+  margin: 0; /* Reset margins */
+}
+
+.mainHeading {
+  font-size: calc(2em + 4vw); /* Responsive font size */
+  font-weight: 700; /* Bold text */
+  color: white; /* White text for better contrast */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Add text shadow for better readability */
+}
+
+.secondHeading {
+  font-size: calc(1em + 1vw); /* Responsive font size */
+  font-weight: 400; /* Normal weight text */
+  color: white; /* White text for better contrast */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Add text shadow for better readability */
+}
+
+.welcomeScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  background: linear-gradient(
+    135deg,
+    #8e0b3a 0%,
+    #1f1c18 100%
+  ); /* Dark red gradient background */
+  color: white; /* White text for better contrast */
+  height: 100vh; /* Full viewport height */
+  padding: 20px; /* Padding for inner spacing */
+  box-sizing: border-box; /* Include padding in element's total width and height */
+}
