@@ -1,14 +1,13 @@
 import "./App.css";
+import WelcomeScreen from "./components/pages/WelcomeScreen";
 import { Button } from "./components/ui/button";
+import { Routes, Route } from "react-router";
 
 function App() {
   return (
-    <>
-      <div className="testing">
-        <h1>testing</h1>
-        <Button variant="blue">Click</Button>
-      </div>
-    </>
+    <Routes>
+      <Route path="/" element={<WelcomeScreen />} />
+    </Routes>
   );
 }
 
