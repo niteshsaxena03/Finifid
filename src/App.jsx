@@ -1,8 +1,8 @@
 import "./App.css";
-import LoginScreen from "./components/pages/Login/LoginScreen";
-import SignUpScreen from "./components/pages/SignUp/SignUpScreen";
-import WelcomeScreen from "./components/pages/WelcomeScreen/WelcomeScreen";
-import { Button } from "./components/ui/button";
+import HomeScreen from "./pages/Home/HomeScreen";
+import LoginScreen from "./pages/Login/LoginScreen";
+import SignUpScreen from "./pages/SignUp/SignUpScreen";
+import WelcomeScreen from "./pages/Welcome/WelcomeScreen";
 import { Routes, Route } from "react-router";
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
       <Route path="/" element={<WelcomeScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/signup" element={<SignUpScreen />} />
+      <Route path="/home" element={<HomeScreen />} />
     </Routes>
   );
 }
