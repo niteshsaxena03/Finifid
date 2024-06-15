@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardHeader,
@@ -10,8 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "./LoginScreen.css"; // Import your CSS file for LoginScreen styling
+import { useNavigate } from "react-router-dom";
 
 export default function LoginScreen() {
+  const navigate = useNavigate();
   return (
     <div className="loginScreen">
       <Card className="mx-auto max-w-sm">
@@ -36,8 +37,11 @@ export default function LoginScreen() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" variant="mehroon">
+              Log in
+            </Button>
+            <Button className="w-full" onClick={() => navigate("/signup")}>
+              Dont have an account? Sign Up
             </Button>
           </div>
         </CardContent>

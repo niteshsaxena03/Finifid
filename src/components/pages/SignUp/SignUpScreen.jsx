@@ -9,8 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "./SignUpScreen.css"; // Import your CSS file for LoginScreen styling
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpScreen() {
+  const navigate = useNavigate();
   return (
     <div className="loginScreen">
       <Card className="mx-auto max-w-sm">
@@ -35,8 +37,11 @@ export default function SignUpScreen() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" variant="mehroon">
               Sign Up
+            </Button>
+            <Button className="w-full" onClick={() => navigate("/login")}>
+              Already have an account? Log in
             </Button>
           </div>
         </CardContent>
