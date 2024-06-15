@@ -42,3 +42,23 @@ html {
   padding: 20px; /* Padding for inner spacing */
   box-sizing: border-box; /* Include padding in element's total width and height */
 }
+
+.buttonContainer {
+  margin-top: 20px; /* Adjust as needed */
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #8e0b3a; /* Dark red background */
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 5%;
+  margin-left: 5%;
+}
