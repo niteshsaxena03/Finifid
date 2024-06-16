@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -10,13 +11,24 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "./LoginScreen.css"; // Import your CSS file for LoginScreen styling
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useFirebase } from "../../Firebase/firebaseContext";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");
+  const { loginUserWithEmailAndPassword } = useFirebase();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await loginUserWithEmailAndPassword(email, password);
+      navigate("/home");
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+      // Handle the error 
+    }
+  };
 
   return (
     <div className="loginScreen">
@@ -28,27 +40,37 @@ export default function LoginScreen() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
+          <form onSubmit={handleLogin}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" variant="mehroon">
+                Log in
+              </Button>
+              <Button className="w-full" onClick={() => navigate("/signup")}>
+                Don't have an account? Sign Up
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
-            </div>
-            <Button type="submit" className="w-full" variant="mehroon">
-              Log in
-            </Button>
-            <Button className="w-full" onClick={() => navigate("/signup")}>
-              Dont have an account? Sign Up
-            </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>
