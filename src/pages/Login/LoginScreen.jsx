@@ -10,9 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "./LoginScreen.css"; // Import your CSS file for LoginScreen styling
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
+  const [email,setEmail]=useState('');
+  const [password,setPassword]=useState('');
+
+  
   return (
     <div className="loginScreen">
       <Card className="mx-auto max-w-sm">
