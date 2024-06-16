@@ -14,10 +14,10 @@ import { useState } from "react";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
-  const [email,setEmail]=useState('');
-  const [password,setPassword]=useState('');
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
 
-  
+
   return (
     <div className="loginScreen">
       <Card className="mx-auto max-w-sm">
