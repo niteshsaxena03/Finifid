@@ -23,10 +23,10 @@ export default function SignUpScreen() {
     e.preventDefault();
     try {
       await signUpUserWithEmailAndPassword(email, password);
-      navigate("/home"); // Navigate to the home page or wherever you want after successful sign-up
+      navigate("/home"); // Navigate to the home page after successful sign-up
     } catch (error) {
       console.error("Error signing up:", error.message);
-      // Handle the error (e.g., display a message to the user)
+      // Handle the error
     }
   };
 
