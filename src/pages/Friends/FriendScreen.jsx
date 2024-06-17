@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import FollowerList from "./FollowerList";
 import FollowingList from "./FollowingList";
 import "./FriendScreen.css";

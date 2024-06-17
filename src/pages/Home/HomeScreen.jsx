@@ -1,14 +1,11 @@
-import Header from "../../components/ui/Navbar/header.jsx";
+import Header from "../../components/Navbar/header.jsx";
 
 function HomeScreen() {
   return (
-    // Main Home
     <div className="main">
-       <Header/>
+      <Header />
     </div>
-
-  ); 
-
+  );
 }
 
 export default HomeScreen;
