@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,7 +9,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import "./LoginScreen.css"; // Import your CSS file for LoginScreen styling
+import "./LoginScreen.css";
 import { useNavigate } from "react-router-dom";
 import { useFirebase } from "../../Firebase/firebaseContext";
 
@@ -26,7 +26,7 @@ export default function LoginScreen() {
       navigate("/home");
     } catch (error) {
       console.error("Error logging in:", error.message);
-      // Handle the error 
+      // Handle the error
     }
   };
 
@@ -67,7 +67,7 @@ export default function LoginScreen() {
                 Log in
               </Button>
               <Button className="w-full" onClick={() => navigate("/signup")}>
-                Don't have an account? Sign Up
+                Dont have an account? Sign Up
               </Button>
             </div>
           </form>

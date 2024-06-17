@@ -1,0 +1,58 @@
+.heading {
+    font-size: 50px;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    margin: 20px 10px;
+    background: linear-gradient(135deg, #6a0830, #a02775);
+    border: 5px solid #ff4081;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.mainPage {
+    background-color: #6a0830;
+    height: 100vh;
+}
+
+.friend-screen {
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 18px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+
+.tabs button.active {
+    background-color: #8e0b3a;
+    color: white;
+    border-radius: 5px;
+}
+
+.tab-content {
+    margin-top: 20px;
+}
