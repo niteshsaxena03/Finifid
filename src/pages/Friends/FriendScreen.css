@@ -1,68 +1,68 @@
 /* General styling for heading and friend screen */
 .heading,
 .friend-screen {
-    color: white;
-    padding: 20px;
-    text-align: center;
-    margin: 20px 10px;
-    font-family: 'Arial', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 10px;
+  letter-spacing: 2px;
 }
 
 /* Styling specific to heading */
 .heading {
-    background: linear-gradient(135deg, #6a0830, #a02775);
-    border: 5px solid #ff4081;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    font-size: 50px;
+  background: linear-gradient(135deg, #6a0830, #a02775);
+  border: 5px solid #ff4081;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-size: 60px;
+  font-family: 'Great Vibes', cursive;
 }
 
 /* Styling specific to friend screen content */
 .friend-screen {
-    background-color: #e23b78;
-    border: 5px solid red;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    font-size: 20px;
+  background-color: #e23b78;
+  border: 5px solid red;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  font-family: "Arial", sans-serif;
 }
 
 /* Styling for the main page background */
 .mainPage {
-    background-color: #6a0830;
-    min-height: 100vh; /* Ensure the main page fills the viewport */
-    padding: 20px; /* Added padding for spacing */
+  background-color: #6a0830;
+  min-height: 100vh; /* Ensure the main page fills the viewport */
+  padding: 20px; /* Added padding for spacing */
 }
 
 /* Tabs styling */
 .tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .tabs button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 18px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 18px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .tabs button:hover {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
 .tabs button.active {
-    background-color: #8e0b3a;
-    color: white;
-    border-radius: 5px;
+  background-color: #8e0b3a;
+  color: white;
+  border-radius: 5px;
 }
 
 /* Styling for tab content */
 .tab-content {
-    margin-top: 20px;
+  margin-top: 20px;
 }

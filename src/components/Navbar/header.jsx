@@ -24,7 +24,7 @@ function Header() {
         <div className="icons">
           <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
           <HeaderOptions Icon={Message} label={"Message"} />
-          <HeaderOptions Icon={NotificationAdd} label={"Notify"} />
+          <HeaderOptions Icon={NotificationAdd} label={"Notifications"} />
           <HeaderOptions
             Icon={GroupIcon}
             label={"Friends"}
