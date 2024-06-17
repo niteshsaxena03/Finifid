@@ -82,3 +82,7 @@
     flex-direction: column;
     margin-top:25%;
 }
+
+body{
+  background-color: #f3f2ef;
+}
