@@ -10,16 +10,36 @@
 
 /* Styling specific to heading */
 .heading {
-  background: linear-gradient(135deg, #6a0830, #a02775);
+  background: linear-gradient(135deg, #2c3e50, #3498db);
   border: 5px solid #ff4081;
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   font-size: 60px;
   font-family: 'Great Vibes', cursive;
-  animation: fadeInScaleUp 2s ease-in-out;
+  animation: changeGradient 10s infinite alternate, fadeInScaleUp 2s ease-in-out; /* Combined animations */
 }
 
-/* Animation for the heading */
+/* Keyframes for changing gradient */
+@keyframes changeGradient {
+  0% {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+  }
+  25% {
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+  }
+  50% {
+    background: linear-gradient(135deg, #9b59b6, #e74c3c);
+  }
+  75% {
+    background: linear-gradient(135deg, #e74c3c, #2980b9);
+  }
+  100% {
+    background: linear-gradient(135deg, #2980b9, #2c3e50);
+  }
+}
+
+
+/* Keyframes for fadeInScaleUp animation */
 @keyframes fadeInScaleUp {
   0% {
     opacity: 0;
@@ -30,6 +50,7 @@
     transform: scale(1);
   }
 }
+
 
 /* Styling specific to friend screen content */
 .friend-screen {
