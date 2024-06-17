@@ -1,4 +1,5 @@
 import "./App.css";
+import FriendScreen from "./pages/Friends/FriendScreen";
 import HomeScreen from "./pages/Home/HomeScreen";
 import LoginScreen from "./pages/Login/LoginScreen";
 import SignUpScreen from "./pages/SignUp/SignUpScreen";
@@ -12,6 +13,7 @@ function App() {
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/signup" element={<SignUpScreen />} />
       <Route path="/home" element={<HomeScreen />} />
+      <Route path="/friends" element={<FriendScreen/>}/>
     </Routes>
   );
 }
