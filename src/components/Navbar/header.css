@@ -1,11 +1,8 @@
-/* Importing other CSS if needed */
-/* Importing icons and components */
-
 /* Body styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif; /* Set a default font-family */
+  font-family: Arial, sans-serif;
 }
 
 /* Header styles */
@@ -14,12 +11,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Increased padding for better spacing */
-  height: 60px; /* Increased height for better visibility */
+  padding: 10px 20px;
+  height: 60px;
   position: sticky;
   top: 0;
-  z-index: 100; /* Ensure header is above other content */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Left side of the header */
@@ -29,15 +26,16 @@ body {
 }
 
 .headerLeft .logo {
-  margin-right: 10px; /* Adjusted margin for spacing */
+  margin-right: 10px;
 }
 
 .search {
   background-color: #eef3f8;
-  padding: 6px 12px; /* Adjusted padding for better input box alignment */
+  padding: 6px 12px;
   border-radius: 7px;
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .search input {
@@ -45,7 +43,8 @@ body {
   border: none;
   outline: none;
   margin-left: 5px;
-  font-size: 14px; /* Adjusted font size */
+  font-size: 14px;
+  width: 100%;
 }
 
 .search svg {
@@ -55,7 +54,7 @@ body {
 
 /* Right side of the header */
 .headerRight {
-  margin-right: 20px; /* Adjusted margin for spacing */
+  margin-right: 20px;
 }
 
 .headerRight .icons {
@@ -73,15 +72,14 @@ body {
   cursor: pointer;
 }
 
-/* Avatar styles */
 .headerRight .MuiAvatar-circular {
-  height: 30px; /* Increased avatar size */
+  height: 30px;
   width: 30px;
   object-fit: cover;
-  margin-left: 10px; /* Adjusted margin for spacing */
+  margin-left: 10px;
 }
 
-/* Responsive adjustments (optional) */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .headerLeft {
     margin-left: 5%;
@@ -89,5 +87,24 @@ body {
   
   .headerRight {
     margin-right: 5%;
+  }
+
+  .search {
+    padding: 4px 8px;
+  }
+
+  .search svg {
+    font-size: 18px;
+  }
+
+  .icon {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .headerRight .MuiAvatar-circular {
+    height: 25px;
+    width: 25px;
+    margin-left: 8px;
   }
 }

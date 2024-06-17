@@ -1,10 +1,5 @@
-// css
 import "./header.css";
-
-// components
 import HeaderOptions from "./headerOptions.jsx";
-
-// All Icons Import :
 import PublicIcon from "@mui/icons-material/Public";
 import SearchIcon from "@mui/icons-material/Search";
 import { Home } from "@mui/icons-material";
@@ -16,16 +11,13 @@ import { Avatar } from "@mui/material";
 function Header() {
   return (
     <div className="header">
-      {" "}
-      {/* Nav Header  */}
       <div className="headerLeft">
         <div className="logo">
           <PublicIcon />
         </div>
-
         <div className="search">
           <SearchIcon />
-          <input type="text" placeholder="search" name="searchData" />
+          <input type="text" placeholder="Search" name="searchData" />
         </div>
       </div>
       <div className="headerRight">

@@ -1,4 +1,6 @@
-.heading, .friend-screen {
+/* General styling for heading and friend screen */
+.heading,
+.friend-screen {
     color: white;
     padding: 20px;
     text-align: center;
@@ -8,6 +10,7 @@
     letter-spacing: 2px;
 }
 
+/* Styling specific to heading */
 .heading {
     background: linear-gradient(135deg, #6a0830, #a02775);
     border: 5px solid #ff4081;
@@ -16,6 +19,7 @@
     font-size: 50px;
 }
 
+/* Styling specific to friend screen content */
 .friend-screen {
     background-color: #e23b78;
     border: 5px solid red;
@@ -24,14 +28,14 @@
     font-size: 20px;
 }
 
-
+/* Styling for the main page background */
 .mainPage {
     background-color: #6a0830;
-    height: 100vh;
+    min-height: 100vh; /* Ensure the main page fills the viewport */
+    padding: 20px; /* Added padding for spacing */
 }
 
-
-
+/* Tabs styling */
 .tabs {
     display: flex;
     justify-content: center;
@@ -58,6 +62,7 @@
     border-radius: 5px;
 }
 
+/* Styling for tab content */
 .tab-content {
     margin-top: 20px;
 }
