@@ -30,7 +30,7 @@ function Header() {
       </div>
       <div className="headerRight">
         <div className="icons">
-          <HeaderOptions Icon={Home} label={"Home"} />
+          <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
           <HeaderOptions Icon={Message} label={"Message"} />
           <HeaderOptions Icon={NotificationAdd} label={"Notify"} />
           <HeaderOptions
