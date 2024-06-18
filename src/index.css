@@ -86,3 +86,7 @@
 body{
   background-color: #f3f2ef;
 }
+
+.appBody{
+  display: flex ;
+}

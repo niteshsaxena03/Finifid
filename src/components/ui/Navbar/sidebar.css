@@ -1,0 +1,139 @@
+.sidebar{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 0.21;
+    height: 400px;
+    width: 210px;
+    
+    /* border:  1px solid black; */
+
+    margin-left: 6%;
+    margin-top: 1.5%;
+}   
+
+.profile{
+    border-bottom: 1px solid #000;
+    background-color: #fff;
+
+    height: 195px;
+    width: 210px;
+
+    /* border:  1px solid black; */
+
+    overflow: hidden;
+
+}
+
+.curveBorder{
+    border-radius: 10px;
+}
+
+.backPhoto{
+
+    width: 100%;
+    height: 100%;
+
+    background-image: url(./planBg.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+.user{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    height: 120px;
+    width: 100%;
+}
+
+.userHeader{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    bottom: 25px;
+
+}
+
+.userTitle{
+    font-weight: bold ;
+    font-size: 15px;
+}
+
+.userDescription{
+    font-size: 11px;
+    color: #333;
+    font-weight: 550;
+
+}
+
+
+.sepLine{
+    height: 1px;
+    background-color: #ccc;
+}
+
+.userInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* margin: 4% 0 ; */
+    height: 75px;
+}
+
+.userInfoContent{
+    display: flex  ;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.2%;
+}
+
+.sideFont{
+    font-size: 11px;
+    color: #333;
+    font-weight: 500;
+}
+
+.subProfile{
+
+    height: 195px;
+    width: 210px;
+
+    border-bottom: 1px solid #000;
+    background-color: #fff;
+
+    padding: 10px;
+    margin: 10px 0 ;
+    position: sticky;
+    top: 60px;
+
+}
+
+.trends span{
+    font-weight: bold ;  
+    font-size: 13px; 
+    margin-right: 7px ;
+    color: #333;
+}
+
+.subProfile .headTrend{
+    font-size: 14px;
+    color: #0e0e0e;
+    margin-bottom: 3%;
+}
+
+.subProfile p{
+    display: flex;   
+    align-items: center;
+    color: #333;
+    font-size: 12px;
+}
