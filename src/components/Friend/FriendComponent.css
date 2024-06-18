@@ -1,17 +1,14 @@
 .outerContainer {
-  border: 10px solid #1b0672; /* Light border around the entire component */
-  border-radius: 8px; /* Rounded corners */
-  padding: 10px; /* Padding inside the outer container */
-  margin-bottom: 20px; /* Spacing between each friend component */
-  background-color: #e9f192; /* Light gray background */
-  display: flex; /* Display children in a row */
-  align-items: center; /* Center items vertically */
+  border-radius: 8px; 
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #e9f192; 
 }
 
 .friendContainer {
   display: flex; /* Display items in a row */
+  flex-direction: column;
   align-items: center; /* Center items vertically */
-  flex: 1; /* Expand to fill available space */
   padding: 10px; /* Padding inside the friend container */
 }
 
@@ -21,6 +18,14 @@
   border-radius: 50%; /* Circular shape for the profile image */
   object-fit: cover; /* Ensure the image covers the entire space */
   margin-right: 20px; /* Spacing between image and text */
+}
+
+.details {
+  flex: 1; /* Expand to fill available space */
+  display: flex; /* Display items in a row */
+  flex-direction: column;
+  justify-content: center; /* Space items evenly */
+  align-items: center; /* Center items vertically */
 }
 
 .person {
@@ -42,7 +47,6 @@
 }
 
 .Button {
-  margin-top: 10px; /* Add space above button */
   background-color: #a31339; /* Blue button background */
   color: #fff; /* White text color */
   border: none; /* Remove button border */
@@ -50,6 +54,7 @@
   border-radius: 4px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Smooth transition on hover */
+  margin-top: 10px;
 }
 
 /* Hover effect */
@@ -64,6 +69,7 @@
   }
 
   .friendContainer {
+    display: flex; /* Ensure items are displayed in a row on smaller screens */
     flex-direction: column; /* Stack items vertically on smaller screens */
     align-items: center; /* Center items horizontally */
     text-align: center; /* Center-align text */
@@ -71,6 +77,12 @@
 
   .profileImage {
     margin: 0 auto 10px; /* Center profile image and add spacing below */
+  }
+
+  .details {
+    width: 100%; /* Ensure details take full width on smaller screens */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
   }
 
   .person h1 {
@@ -83,6 +95,7 @@
 
   .Button {
     margin-top: 10px; /* Add space above button */
-    display: inline-block; /* Ensure button behaves as block element */
+    display: block; /* Ensure button behaves as block element */
+    width: 100%; /* Full width button on smaller screens */
   }
 }
