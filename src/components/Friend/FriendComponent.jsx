@@ -18,7 +18,7 @@ function FriendComponent({ name, about, image }) {
           <h1>{name}</h1>
           <h2>{about}</h2>
         </div>
-        <Button>View Profile</Button>
+        <button className="Button">View Profile</button>
       </div>
     </div>
   );

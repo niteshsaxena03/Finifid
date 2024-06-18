@@ -3,14 +3,18 @@
   border-radius: 8px; /* Rounded corners */
   padding: 10px; /* Padding inside the outer container */
   margin-bottom: 20px; /* Spacing between each friend component */
-  background-color: #fff; /* White background */
+  background-color: #e9f192; /* Light gray background */
+  display: flex; /* Display children in a row */
+  align-items: center; /* Center items vertically */
+ 
 }
 
 .friendContainer {
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
+  display: flex; /* Display items in a row */
+  align-items: center; /* Center items vertically */
+  flex: 1; /* Expand to fill available space */
   padding: 10px; /* Padding inside the friend container */
+   justify-content:space-evenly;
 }
 
 .profileImage {
@@ -18,16 +22,17 @@
   width: 100px;
   border-radius: 50%; /* Circular shape for the profile image */
   object-fit: cover; /* Ensure the image covers the entire space */
-  margin-bottom: 10px; /* Spacing below the profile image */
+  margin-right: 20px; /* Spacing between image and text */
 }
 
 .person {
-  text-align: center; /* Center-align text */
+  flex: 1; /* Expand to fill available space */
 }
 
 .person h1 {
   margin: 0;
-  font-size: 18px;
+  font-size: 30px;
+  font-weight:bold;
   color: #333; /* Dark text color */
 }
 
@@ -35,4 +40,20 @@
   margin: 5px 0 0;
   font-size: 14px;
   color: #666; /* Lighter text color */
+}
+
+.Button {
+  margin-left: auto; /* Push button to the right */
+  background-color: #a31339; /* Blue button background */
+  color: #fff; /* White text color */
+  border: none; /* Remove button border */
+  padding: 8px 16px; /* Padding inside the button */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+
+  /* Hover effect */
+  &:hover {
+    background-color: #ec2e34; /* Darker blue on hover */
+  }
 }
