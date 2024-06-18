@@ -1,12 +1,11 @@
 .outerContainer {
-  border: 2px solid #ddd; /* Light border around the entire component */
+  border: 10px solid #1b0672; /* Light border around the entire component */
   border-radius: 8px; /* Rounded corners */
   padding: 10px; /* Padding inside the outer container */
   margin-bottom: 20px; /* Spacing between each friend component */
   background-color: #e9f192; /* Light gray background */
   display: flex; /* Display children in a row */
   align-items: center; /* Center items vertically */
- 
 }
 
 .friendContainer {
@@ -14,7 +13,6 @@
   align-items: center; /* Center items vertically */
   flex: 1; /* Expand to fill available space */
   padding: 10px; /* Padding inside the friend container */
-   justify-content:space-evenly;
 }
 
 .profileImage {
@@ -32,18 +30,19 @@
 .person h1 {
   margin: 0;
   font-size: 30px;
-  font-weight:bold;
+  font-weight: bold;
   color: #333; /* Dark text color */
 }
 
 .person h2 {
   margin: 5px 0 0;
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: bold;
   color: #666; /* Lighter text color */
 }
 
 .Button {
-  margin-left: auto; /* Push button to the right */
+  margin-top: 10px; /* Add space above button */
   background-color: #a31339; /* Blue button background */
   color: #fff; /* White text color */
   border: none; /* Remove button border */
@@ -51,9 +50,39 @@
   border-radius: 4px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
 
-  /* Hover effect */
-  &:hover {
-    background-color: #ec2e34; /* Darker blue on hover */
+/* Hover effect */
+.Button:hover {
+  background-color: #ec2e34; /* Darker blue on hover */
+}
+
+/* Media query for smaller screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+  .outerContainer {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+  }
+
+  .friendContainer {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center-align text */
+  }
+
+  .profileImage {
+    margin: 0 auto 10px; /* Center profile image and add spacing below */
+  }
+
+  .person h1 {
+    font-size: 24px; /* Decrease font size for smaller screens */
+  }
+
+  .person h2 {
+    font-size: 16px; /* Decrease font size for smaller screens */
+  }
+
+  .Button {
+    margin-top: 10px; /* Add space above button */
+    display: inline-block; /* Ensure button behaves as block element */
   }
 }
