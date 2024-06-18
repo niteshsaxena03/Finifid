@@ -8,17 +8,23 @@ function FriendComponent({ name, about, image }) {
   return (
     <div className="outerContainer">
       <div className="friendContainer">
-        <img
-          src={image || fallbackImage}
-          className="profileImage"
-          alt="Profile"
-        />
+        <div className="profilePicture">
+          <img
+            src={image || fallbackImage}
+            className="profileImage"
+            alt="Profile"
+          />
+        </div>
         <div className="details">
-          <div className="person">
+          <div className="personDetails">
             <h1>{name}</h1>
-            <h2>{about}</h2>
+            <h2>
+              <span>{about}</span>
+            </h2>
           </div>
-          <button className="Button">View Profile</button>
+          <div className="buttonContainer">
+            <button className="Button">View Profile</button>
+          </div>
         </div>
       </div>
     </div>
