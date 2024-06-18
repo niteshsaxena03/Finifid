@@ -77,7 +77,7 @@
 
 /* Styling for the main page background */
 .mainPage {
-  background-color: #6a0830;
+  background-color:#cfc8c8;
   min-height: 100vh; /* Ensure the main page fills the viewport */
   padding: 20px; /* Added padding for spacing */
 }
