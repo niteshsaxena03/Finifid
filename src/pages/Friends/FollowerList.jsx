@@ -1,14 +1,16 @@
+import FriendComponent from "@/components/Friend/FriendComponent"
 
-
-function FollowerList() {
+function FollowerList({ followers }) {
   return (
     <div>
-      <ul>
-        {/* Example list items */}
-        <li>Follower 1</li>
-        <li>Follower 2</li>
-        <li>Follower 3</li>
-      </ul>
+      {followers.map((follower, index) => (
+        <FriendComponent
+          key={index}
+          name={follower.name}
+          about={follower.about}
+          image={follower.image}
+        />
+      ))}
     </div>
   );
 }
