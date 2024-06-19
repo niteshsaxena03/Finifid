@@ -1,11 +1,18 @@
 .notification-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* Center horizontally */
+  justify-content:center; /* Align items to the left */
   padding: 20px;
   border-bottom: 1px solid #ddd;
   background-color: white;
-  margin:10px;
+  margin: 10px;
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  border-radius: 12px;
+}
+
+.notification-container:hover {
+  background-color: #e8e3e3; /* Light grey background on hover */
+  cursor: pointer; /* Change cursor to pointer on hover */
 }
 
 .notification-image {

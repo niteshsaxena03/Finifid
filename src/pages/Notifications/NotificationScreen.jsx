@@ -58,17 +58,19 @@ function NotificationScreen() {
   return (
     <div>
       <Header />
-      <div className="heading">
-        <h1>Notifications</h1>
-      </div>
-      <div>
-        {notification.map((notify) => (
-          <NotificationComponent
-            key={notify.id}
-            name={notify.name}
-            image={notify.image}
-          />
-        ))}
+      <div className="mainPage">
+        <div className="heading">
+          <h1>Notifications</h1>
+        </div>
+        <div>
+          {notification.map((notify) => (
+            <NotificationComponent
+              key={notify.id}
+              name={notify.name}
+              image={notify.image}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
