@@ -37,7 +37,7 @@ function Header() {
         <div className={`icons ${isMobileMenuOpen ? "open" : ""}`}>
           <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
           <HeaderOptions Icon={Message} label={"Message"} />
-          <HeaderOptions Icon={NotificationAdd} label={"Notifications"} />
+          <HeaderOptions Icon={NotificationAdd} label={"Notifications"} navigation={"/notifications"}/>
           <HeaderOptions
             Icon={GroupIcon}
             label={"Friends"}

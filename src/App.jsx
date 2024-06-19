@@ -2,6 +2,7 @@ import "./App.css";
 import FriendScreen from "./pages/Friends/FriendScreen";
 import HomeScreen from "./pages/Home/HomeScreen";
 import LoginScreen from "./pages/Login/LoginScreen";
+import NotificationScreen from "./pages/Notifications/NotificationScreen";
 import SignUpScreen from "./pages/SignUp/SignUpScreen";
 import WelcomeScreen from "./pages/Welcome/WelcomeScreen";
 import { Routes, Route } from "react-router";
@@ -14,6 +15,7 @@ function App() {
       <Route path="/signup" element={<SignUpScreen />} />
       <Route path="/home" element={<HomeScreen />} />
       <Route path="/friends" element={<FriendScreen/>}/>
+      <Route path="/notifications" element={<NotificationScreen/>}/>
     </Routes>
   );
 }
