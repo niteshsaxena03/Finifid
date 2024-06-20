@@ -3,8 +3,22 @@ import FollowerList from "./FollowerList";
 import FollowingList from "./FollowingList";
 import "./FriendScreen.css";
 import Header from "../../components/Navbar/header";
+import { useNavigate } from "react-router";
+import { useFirebase } from "@/Firebase/firebaseContext.jsx";
+import { useEffect } from "react";
 
 function FriendScreen() {
+  const navigate = useNavigate();
+  const firebase = useFirebase();
+  const { isLoggedIn } = useFirebase();
+
+  // Check if user is logged in or not.
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [firebase, navigate]);
+  
   const [activeTab, setActiveTab] = useState("followers"); // 'followers' or 'following'
 
   const handleTabChange = (tab) => {

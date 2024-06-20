@@ -1,6 +1,9 @@
 
 import Header from "@/components/Navbar/header";
 import NotificationComponent from "@/components/Notification/NotificationComponent";
+import { useNavigate } from "react-router";
+import { useFirebase } from "@/Firebase/firebaseContext.jsx";
+import { useEffect } from "react";
 
 // Define the notification constant with 6 entries
 const notification = [
@@ -55,6 +58,16 @@ const notification = [
 ];
 
 function NotificationScreen() {
+  const navigate = useNavigate();
+  const firebase = useFirebase();
+  const { isLoggedIn } = useFirebase();
+
+  // Check if user is logged in or not.
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [firebase, navigate]);
   return (
     <div>
       <Header />
