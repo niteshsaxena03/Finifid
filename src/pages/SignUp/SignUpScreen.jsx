@@ -16,12 +16,15 @@ import { useState } from "react";
 export default function SignUpScreen() {
   const navigate = useNavigate();
   const { signUpUserWithEmailAndPassword } = useFirebase();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hobby, setHobby] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
+      // You might want to send the name and hobby to your backend here
       await signUpUserWithEmailAndPassword(email, password);
       navigate("/home"); // Navigate to the home page after successful sign-up
     } catch (error) {
@@ -32,16 +35,27 @@ export default function SignUpScreen() {
 
   return (
     <div className="loginScreen">
-      <Card className="mx-auto max-w-sm">
+      <Card className="cardContainer mx-auto">
         <form onSubmit={handleSignUp}>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
             <CardDescription>
-              Enter your email and password to create a new account
+              Enter your details to create a new account
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  required
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -61,6 +75,17 @@ export default function SignUpScreen() {
                   required
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hobby">Hobby</Label>
+                <Input
+                  id="hobby"
+                  type="text"
+                  placeholder="e.g., Painting"
+                  onChange={(e) => setHobby(e.target.value)}
+                  value={hobby}
+                  required
                 />
               </div>
               <Button type="submit" className="w-full" variant="mehroon">

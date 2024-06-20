@@ -1,14 +1,13 @@
 .loginScreen {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  height: 100vh; /* Full viewport height */
-  background: linear-gradient(135deg, #8e0b3a 0%, #1f1c18 100%);
-  color: white; /* White text for better contrast */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5; /* Optional: background color for the screen */
 }
 
-.card {
-  width: 100%; /* Adjust width as needed */
-  max-width: 400px; /* Maximum width of the card */
-  padding: 20px; /* Padding for spacing inside the card */
+.cardContainer {
+  width: 100%; /* Adjust this as needed */
+  max-width: 500px; /* Adjust max width as needed */
+  padding: 10px; /* Optional: padding for spacing */
 }
