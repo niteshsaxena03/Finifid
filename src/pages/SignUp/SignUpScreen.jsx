@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -11,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import "./SignUpScreen.css"; // Import your CSS file for LoginScreen styling
 import { useNavigate } from "react-router-dom";
 import { useFirebase } from "../../Firebase/firebaseContext";
-import { useState } from "react";
 
 export default function SignUpScreen() {
   const navigate = useNavigate();
@@ -20,16 +20,24 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setError(null); // Clear previous errors
     try {
       // You might want to send the name and hobby to your backend here
-      await signUpUserWithEmailAndPassword(email, password);
-      navigate("/home"); // Navigate to the home page after successful sign-up
+      const result = await signUpUserWithEmailAndPassword(email, password);
+      if (result) {
+        console.log("Sign up successful:", result);
+        navigate("/home"); // Navigate to the home page after successful sign-up
+      } else {
+        console.warn("Sign up result is null or undefined");
+        setError("Unexpected error occurred. Please try again.");
+      }
     } catch (error) {
       console.error("Error signing up:", error.message);
-      // Handle the error
+      setError("Failed to sign up. Please try again.");
     }
   };
 
@@ -88,6 +96,9 @@ export default function SignUpScreen() {
                   required
                 />
               </div>
+              {error && (
+                <div className="error-message text-red-500">{error}</div>
+              )}
               <Button type="submit" className="w-full" variant="mehroon">
                 Sign Up
               </Button>

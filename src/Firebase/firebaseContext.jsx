@@ -1,10 +1,10 @@
-import { createContext, useContext,useState,useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -25,26 +25,36 @@ const FirebaseContext = createContext(null);
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
-   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-   useEffect(() => {
-     onAuthStateChanged(firebaseAuth, (user) => {
-       if (user) setUser(user);
-       else setUser(null);
-     });
-   }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) setUser(user);
+      else setUser(null);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   const signUpUserWithEmailAndPassword = (email, password) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password);
   };
+
   const loginUserWithEmailAndPassword = (email, password) => {
-    signInWithEmailAndPassword(firebaseAuth, email, password);
+    return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
-  const isLoggedIn = user ? true : false;
+
+  const isLoggedIn = !!user;
 
   return (
     <FirebaseContext.Provider
-      value={{ signUpUserWithEmailAndPassword, loginUserWithEmailAndPassword,isLoggedIn }}
+      value={{
+        signUpUserWithEmailAndPassword,
+        loginUserWithEmailAndPassword,
+        isLoggedIn,
+        user,
+      }}
     >
       {props.children}
     </FirebaseContext.Provider>

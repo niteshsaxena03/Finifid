@@ -18,15 +18,23 @@ export default function LoginScreen() {
   const { loginUserWithEmailAndPassword } = useFirebase();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null); // Clear previous errors
     try {
-      await loginUserWithEmailAndPassword(email, password);
-      navigate("/home");
+      const result = await loginUserWithEmailAndPassword(email, password);
+      if (result) {
+        console.log("Login successful:", result);
+        navigate("/home");
+      } else {
+        console.warn("Login result is null or undefined");
+        setError("Unexpected error occurred. Please try again.");
+      }
     } catch (error) {
       console.error("Error logging in:", error.message);
-      // Handle the error
+      setError("Invalid email or password. Please try again.");
     }
   };
 
@@ -63,11 +71,14 @@ export default function LoginScreen() {
                   required
                 />
               </div>
+              {error && (
+                <div className="error-message text-red-500">{error}</div>
+              )}
               <Button type="submit" className="w-full" variant="mehroon">
                 Log in
               </Button>
               <Button className="w-full" onClick={() => navigate("/signup")}>
-                Dont have an account? Sign Up
+                Don't have an account? Sign Up
               </Button>
             </div>
           </form>
