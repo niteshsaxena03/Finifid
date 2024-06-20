@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"; // Adjust the import path as per your project structure
 import "./WelcomeScreen.css";
 import { useNavigate } from "react-router-dom";
+import { useFirebase } from "@/Firebase/firebaseContext";
 
 function WelcomeScreen() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
+  const firebase = useFirebase();
+  const { isLoggedIn } = useFirebase();
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,6 +27,11 @@ function WelcomeScreen() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/home");
+    }
+  }, [firebase, navigate]);
 
   return (
     <div className="welcomeScreen">
