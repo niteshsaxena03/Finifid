@@ -1,17 +1,18 @@
-import React from "react";
-import Icon from "../Icon/Icon.jsx";
+import React from 'react'
+import ICON from '../IconComponent/Icon.jsx'
 
-const rightBarHead = ({ Icon, newsHeader }) => {
+const rightBarHead = ({Icon,newsHeader}) => {
   return (
     <>
       <div className="mainNewsHeader">
         <h4>{newsHeader}</h4>
-        <Icon Icon={Icon} label={false} idx={-1} />
-      </div>
+        <ICON Icon = {Icon} label = {"false"} idx = {-1} />
+    </div>
 
-      <div className="sepLine" />
+       <div className='sepLine'/>
+    
     </>
-  );
-};
+  )
+}
 
-export default rightBarHead;
+export default rightBarHead

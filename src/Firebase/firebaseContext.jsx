@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-import { createContext, useContext } from "react";
-import { initializeApp  } from "firebase/app";
-import { getFirestore , serverTimestamp  } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage' ;
-
-
-=======
 import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
->>>>>>> 5be0a597c0096c67171ab0c76513c12e6507c462
+import { getFirestore, serverTimestamp } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -35,15 +29,12 @@ const FirebaseContext = createContext(null);
 // Get a reference to the Firestore service
 const db = getFirestore(firebaseApp);
 
-// To get Image from the Storage : 
+// To get Image from the Storage :
+const storage = getStorage(firebaseApp);
 
-const storage = getStorage(firebaseApp) ; 
-
-
-export { db } 
-export { serverTimestamp }
-
-export {storage} 
+export { db };
+export { serverTimestamp };
+export { storage };
 
 export const useFirebase = () => useContext(FirebaseContext);
 

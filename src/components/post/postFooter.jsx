@@ -1,4 +1,4 @@
-import React from 'react'
+
 import Icon from "../IconComponent/Icon.jsx" ; 
 
 // Icons : 
