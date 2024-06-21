@@ -1,6 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, serverTimestamp } from "firebase/firestore";
+import {
+  getFirestore,
+  serverTimestamp,
+  query,
+  where,
+  collection,
+  getDocs
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 import {
@@ -58,6 +65,24 @@ export const FirebaseProvider = (props) => {
   const loginUserWithEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
+  const getUserDetailsByEmail = async (email) => {
+    try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userData = querySnapshot.docs[0].data();
+        return userData;
+      } else {
+        console.warn("No matching documents.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error.message);
+      return null;
+    }
+  };
 
   const isLoggedIn = !!user;
 
@@ -68,6 +93,7 @@ export const FirebaseProvider = (props) => {
         loginUserWithEmailAndPassword,
         isLoggedIn,
         user,
+        getUserDetailsByEmail,
       }}
     >
       {props.children}
