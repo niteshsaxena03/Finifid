@@ -25,6 +25,7 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
+  const [profession, setProfession] = useState(""); // New state for profession
   const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
@@ -42,6 +43,7 @@ export default function SignUpScreen() {
           name,
           email,
           hobby,
+          profession, // Save profession to Firestore
           createdAt: serverTimestamp(),
         });
 
@@ -67,7 +69,7 @@ export default function SignUpScreen() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -108,6 +110,17 @@ export default function SignUpScreen() {
                   placeholder="e.g., Painting"
                   onChange={(e) => setHobby(e.target.value)}
                   value={hobby}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profession">Profession</Label>
+                <Input
+                  id="profession"
+                  type="text"
+                  placeholder="e.g., Engineer"
+                  onChange={(e) => setProfession(e.target.value)}
+                  value={profession}
                   required
                 />
               </div>
