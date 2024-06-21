@@ -52,7 +52,7 @@
 .newsSection{
 
     height: max-content;
-    width: inherit;
+    width: fit-content;
 
     
     border-bottom: 1px solid #000;
@@ -68,10 +68,16 @@
 .mainNewsHeader{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     padding: 0px  5px;
     margin-bottom: 1.2%;
 }
+
+.mainNewsHeader h4{
+   width: 150px ;
+}
+
 
 
 .mainNewsBox ul{

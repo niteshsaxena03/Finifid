@@ -1,70 +1,55 @@
 import React from 'react'
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Avatar } from '@mui/material';
 import '../Navbar/sidebar.css';
 import './post.css' ;
-import Icon from "../IconComponent/Icon.jsx" ; 
+import PostHeader from './postHeader';
+import PostFooter from './postFooter';
 
-// Icons : 
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import SendIcon from '@mui/icons-material/Send';
 
-const Post = ({Post}) => {
+
+const Post = ({name, subHeader ,message , avatar , timestamp , postImage  ,  postvideo   , caption = ""}) => {
   return (
     <div className='posts'>
 
-        <div className="postHeader">
-
-                <div className="postHeaderLeft">
-
-                    {/* avatar */}
-
-                    <Avatar/>
-
-                    {/* Username and Info  */}
-
-                    <div className="username">
-
-                        <h4 className='userTitle'>Yash Gupta</h4>
-                        <p className='userDescription'>Front End Developer</p>  
-                        
-                    </div>
-                </div>
-
-                <div className="postHeaderRight ">
-                        <MoreVertIcon/>
-                </div>
-        </div>
+        <PostHeader name={name} subHeader={subHeader} avatar={avatar} timestamp={timestamp} />       
 
         <div className="postBody">
-            <div className="postBodyContent">
-                {Post}
-            </div>
+
+
+        {/* 1 */}
+        { message != "" ? <div className="postBodyContent">{message}</div> : null }
+
+        {/* 2 */}
+        { postImage  != undefined ? 
+
+        <div className="imagePost">
+            <p  className='caption'><i>{(caption != "" ? caption : null )}</i></p>
+            <div className="sepLine"></div>
+            <img src={postImage}  className="postBodyContent"></img>
+        </div> 
+        
+        // else 
+        : null }
+
+
+        {/* 3*/}
+        { postvideo  != undefined ? 
+
+        <div className="videoPost">
+            <p  className='caption'><i>{(caption != "" ? caption : null )}</i></p>
+            <div className="sepLine vidLine"></div>
+            <video src={postvideo} controls></video>
+        </div> 
+
+        // else 
+        : null }
+        
+
+  
+
         </div>
 
         
-        <div className="postFooter">
-                <Icon Icon = {ThumbUpOffAltIcon} label={"Like"} idx = {-1}/>
-                <Icon Icon = {ChatBubbleOutlineIcon} label={"Comment"} idx = {-1}/>
-                <Icon Icon = {ShareIcon} label={"Share"} idx = {-1}/>
-                <Icon Icon = {SendIcon} label={"Send"} idx = {-1}/>
-
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <PostFooter/>
     </div>
 
   )

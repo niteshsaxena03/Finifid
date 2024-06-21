@@ -25,13 +25,7 @@ const rightBar = () => {
 
         <div className="mainNewsBox">
 
-            <ul>
-                <NewsApi/>
-                <NewsApi/>
-                <NewsApi/>
-                <NewsApi/>
                 <NewsApi end = {true}/>
-            </ul>
                 
         </div>
 

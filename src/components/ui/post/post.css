@@ -13,7 +13,10 @@
 
 
     border-radius: 10px;
+
+    transition: all 1s 0.9s linear ;
 }
+
 
 .postHeader{
     display: flex;
@@ -27,22 +30,56 @@
 .postHeaderLeft{
     display: flex;
     flex: 1;
-    /* justify-content: ; */
+    align-items: center;
 }
+
+.timeStamp{
+    font-size: 10px;
+    color: #333;
+    font-weight: 500;
+}
+
+.postHeaderRight{
+
+}
+
 
 .postHeaderLeft .username{
     margin-left: 2%;
 }
 
 .postBody{
-    padding: 0 7px;
+    padding: 3px 7px;
     min-height: 150px ;
     margin-bottom: 1%;
+
 }
 
 img{
+   
     border-radius: 20px ;
+    width: 100%;
 }
+
+.imagePost,.videoPost{
+    display: flex;
+    flex-direction: column;
+}
+
+.sepLine {
+    height: 1px;
+    background-color: #ccc;
+}
+
+.vidLine{
+    margin: 1%;
+}
+
+.caption{
+    font-size: 15px;
+    color: #333;
+}
+
 
 .postBodyContent{
     margin-top: 1.5%;
