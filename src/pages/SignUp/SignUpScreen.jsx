@@ -9,9 +9,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import "./SignUpScreen.css"; // Import your CSS file for LoginScreen styling
+import "./SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
 import { useNavigate } from "react-router-dom";
-import { useFirebase } from "../../Firebase/firebaseContext";
+import {
+  useFirebase,
+  db,
+  serverTimestamp,
+} from "../../Firebase/firebaseContext";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignUpScreen() {
   const navigate = useNavigate();
@@ -26,10 +31,20 @@ export default function SignUpScreen() {
     e.preventDefault();
     setError(null); // Clear previous errors
     try {
-      // You might want to send the name and hobby to your backend here
+      // Sign up the user
       const result = await signUpUserWithEmailAndPassword(email, password);
       if (result) {
         console.log("Sign up successful:", result);
+
+        // Add user details to Firestore
+        const userRef = doc(db, "users", result.user.uid);
+        await setDoc(userRef, {
+          name,
+          email,
+          hobby,
+          createdAt: serverTimestamp(),
+        });
+
         navigate("/home"); // Navigate to the home page after successful sign-up
       } else {
         console.warn("Sign up result is null or undefined");

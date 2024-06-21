@@ -1,58 +1,62 @@
-import React from 'react'
-import '../Navbar/sidebar.css';
-import './post.css' ;
-import PostHeader from './postHeader';
-import PostFooter from './postFooter';
+import React from "react";
+import "../Navbar/sidebar.css";
+import "./post.css";
+import PostHeader from "./postHeader";
+import PostFooter from "./postFooter";
 
-
-
-const Post = ({name, subHeader ,message , avatar , timestamp , postImage  ,  postvideo   , caption = ""}) => {
+const Post = ({
+  name,
+  subHeader,
+  message,
+  avatar,
+  timestamp,
+  postImage,
+  postvideo,
+  caption = "",
+}) => {
   return (
-    <div className='posts'>
+    <div className="posts">
+      <PostHeader
+        name={name}
+        subHeader={subHeader}
+        avatar={avatar}
+        timestamp={timestamp}
+      />
 
-        <PostHeader name={name} subHeader={subHeader} avatar={avatar} timestamp={timestamp} />       
-
-        <div className="postBody">
-
-
+      <div className="postBody">
         {/* 1 */}
-        { message != "" ? <div className="postBodyContent">{message}</div> : null }
+        {message != "" ? (
+          <div className="postBodyContent">{message}</div>
+        ) : null}
 
         {/* 2 */}
-        { postImage  != undefined ? 
-
-        <div className="imagePost">
-            <p  className='caption'><i>{(caption != "" ? caption : null )}</i></p>
+        {postImage != undefined ? (
+          <div className="imagePost">
+            <p className="caption">
+              <i>{caption != "" ? caption : null}</i>
+            </p>
             <div className="sepLine"></div>
-            <img src={postImage}  className="postBodyContent"></img>
-        </div> 
-        
-        // else 
-        : null }
-
+            <img src={postImage} className="postBodyContent"></img>
+          </div>
+        ) : // else
+        null}
 
         {/* 3*/}
-        { postvideo  != undefined ? 
-
-        <div className="videoPost">
-            <p  className='caption'><i>{(caption != "" ? caption : null )}</i></p>
+        {postvideo != undefined ? (
+          <div className="videoPost">
+            <p className="caption">
+              <i>{caption != "" ? caption : null}</i>
+            </p>
             <div className="sepLine vidLine"></div>
             <video src={postvideo} controls></video>
-        </div> 
+          </div>
+        ) : // else
+        null}
+      </div>
 
-        // else 
-        : null }
-        
-
-  
-
-        </div>
-
-        
-        <PostFooter/>
+      <PostFooter />
     </div>
+  );
+};
 
-  )
-}
-
-export default Post
+export default Post;

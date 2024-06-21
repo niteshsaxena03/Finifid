@@ -1,4 +1,4 @@
-import React from 'react'
+
 import ICON from '../IconComponent/Icon.jsx'
 
 const rightBarHead = ({Icon,newsHeader}) => {

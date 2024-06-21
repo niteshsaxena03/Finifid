@@ -17,7 +17,7 @@ function HomeScreen() {
     if (!isLoggedIn) {
       navigate("/");
     }
-  }, [firebase, navigate]);
+  }, [firebase, navigate,isLoggedIn]);
   return (
     // Main Home
     <div className="main">

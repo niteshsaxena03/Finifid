@@ -67,7 +67,7 @@ function NotificationScreen() {
     if (!isLoggedIn) {
       navigate("/");
     }
-  }, [firebase, navigate]);
+  }, [firebase, navigate,isLoggedIn]);
   return (
     <div>
       <Header />
