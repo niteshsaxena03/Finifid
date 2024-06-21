@@ -1,16 +1,16 @@
-import React from "react";
+import FriendComponent from "@/components/Friend/FriendComponent"
 
-function FollowingList() {
+function FollowingList({ following }) {
   return (
     <div>
-      {/* Display following list content here */}
-      <h2>Following List</h2>
-      <ul>
-        {/* Example list items */}
-        <li>Following 1</li>
-        <li>Following 2</li>
-        <li>Following 3</li>
-      </ul>
+      {following.map((follow, index) => (
+        <FriendComponent
+          key={index}
+          name={follow.name}
+          about={follow.about}
+          image={follow.image}
+        />
+      ))}
     </div>
   );
 }

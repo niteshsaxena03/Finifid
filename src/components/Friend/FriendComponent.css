@@ -1,0 +1,141 @@
+.outerContainer {
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+
+.friendContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  padding: 10px;
+}
+
+.profilePicture {
+  margin-bottom: 20px; /* Space between profile picture and details */
+  display: flex;
+  justify-content: center;
+}
+
+.profileImage {
+  height: 170px;
+  width: 170px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+}
+
+.personDetails {
+  text-align: center; /* Center-align text */
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+}
+
+.personDetails h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  color: #333;
+}
+
+.personDetails h2 {
+  font-size: 18px;
+  color: #666;
+  width: 100%; /* Full width */
+  white-space: normal; /* Allow text to wrap */
+  overflow-wrap: break-word; /* Break words to prevent overflow */
+}
+
+.personDetails h2 span {
+  display: inline-block; /* Make the span an inline-block element */
+  width: 300px; /* Set a fixed width for the span */
+  white-space: normal; /* Allow text to wrap */
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* Add margin above the button */
+}
+
+.Button {
+  background-color: #a31339;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.Button:hover {
+  background-color: #ec2e34;
+}
+
+@media (min-width: 769px) {
+  .friendContainer {
+    flex-direction: row; /* Display items in a row on larger screens */
+    justify-content: center; /* Center items horizontally */
+  }
+
+  .profilePicture {
+    margin-right: 20px; /* Space between profile picture and details */
+    margin-bottom: 0; /* Remove bottom margin */
+  }
+
+  .details {
+    align-items: flex-start; /* Align items to the start of the container */
+  }
+
+  .buttonContainer {
+    justify-content: flex-start; /* Align button to the start of the container */
+    margin-top: 10px; /* Add margin above the button */
+  }
+}
+
+@media (max-width: 768px) {
+  .outerContainer {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+  }
+
+  .friendContainer {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center-align text */
+  }
+
+  .profilePicture {
+    margin: 0 auto 10px; /* Center profile image and add spacing below */
+  }
+
+  .details {
+    width: 100%; /* Ensure details take full width on smaller screens */
+    align-items: center; /* Center items horizontally */
+  }
+
+  .personDetails h1 {
+    font-size: 24px; /* Decrease font size for smaller screens */
+  }
+
+  .personDetails h2 {
+    font-size: 16px; /* Decrease font size for smaller screens */
+  }
+
+  .buttonContainer {
+    width: 100%;
+  }
+
+  .Button {
+    display: block; /* Ensure button behaves as block element */
+    width: 100%; /* Full width button on smaller screens */
+    margin-top: 10px; /* Add space above button */
+  }
+}

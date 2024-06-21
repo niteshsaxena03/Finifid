@@ -1,0 +1,18 @@
+.heading {
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  border: 5px solid #ff4081;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-size: 60px;
+  font-family: 'Great Vibes', cursive;
+  animation: changeGradient 10s infinite alternate, fadeInScaleUp 2s ease-in-out; /* Combined animations */
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 10px;
+  letter-spacing: 2px;
+}
+
+.mainPage{
+    background-color:rgb(210, 129, 187);
+}

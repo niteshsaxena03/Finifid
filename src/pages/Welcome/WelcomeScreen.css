@@ -46,7 +46,8 @@ html {
 .buttonContainer {
   margin-top: 20px; /* Adjust as needed */
   display: flex;
-  justify-content: center;
+  justify-content:center;
+
 }
 
 .button {
@@ -59,6 +60,6 @@ html {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 5%;
-  margin-left: 5%;
+  margin-right: 3%;
+  margin-left: 3%;
 }

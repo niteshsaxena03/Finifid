@@ -1,4 +1,4 @@
-import React from 'react'
+
 import './sidebar.css'
 import { Avatar } from "@mui/material";
 
@@ -37,12 +37,12 @@ const sidebar = () => {
                             </div>
 
                             <div className="userInfoContent sideFont">
-                                <p>Your Follower's</p> 
+                                <p>Your Followers</p> 
                                 <span>500</span>   
                             </div>
 
                             <div className="userInfoContent sideFont">
-                                <p>Total Post's</p> 
+                                <p>Total Posts</p> 
                                 <span>100+</span>   
                             </div>
 

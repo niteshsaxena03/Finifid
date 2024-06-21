@@ -1,58 +1,126 @@
-.heading {
-    font-size: 50px;
-    color: white;
-    padding: 30px;
-    text-align: center;
-    margin: 20px 10px;
-    background: linear-gradient(135deg, #6a0830, #a02775);
-    border: 5px solid #ff4081;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    font-family: 'Arial', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.mainPage {
-    background-color: #6a0830;
-    height: 100vh;
-}
-
+/* General styling for heading and friend screen */
+.heading,
 .friend-screen {
-    max-width: 800px;
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 10px;
+  letter-spacing: 2px;
 }
 
+/* Styling specific to heading */
+.heading {
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  border: 5px solid #ff4081;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-size: 60px;
+  font-family: 'Great Vibes', cursive;
+  animation: changeGradient 10s infinite alternate, fadeInScaleUp 2s ease-in-out; /* Combined animations */
+}
+
+/* Keyframes for changing gradient */
+@keyframes changeGradient {
+  0% {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+  }
+  25% {
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+  }
+  50% {
+    background: linear-gradient(135deg, #9b59b6, #e74c3c);
+  }
+  75% {
+    background: linear-gradient(135deg, #e74c3c, #2980b9);
+  }
+  100% {
+    background: linear-gradient(135deg, #2980b9, #2c3e50);
+  }
+}
+
+
+/* Keyframes for fadeInScaleUp animation */
+@keyframes fadeInScaleUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* Styling specific to friend screen content */
+.friend-screen {
+  background-color: #e23b78;
+  border: 5px solid red;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  font-family: "Arial", sans-serif;
+  animation: slideInFromRight 1.5s ease-out; /* Adding animation to friend screen */
+}
+
+/* Improved animation for the friend screen */
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Styling for the main page background */
+.mainPage {
+  background-color:#cfc8c8;
+  min-height: 100vh; /* Ensure the main page fills the viewport */
+  padding: 20px; /* Added padding for spacing */
+}
+
+/* Tabs styling */
 .tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .tabs button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 18px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 18px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .tabs button:hover {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
 .tabs button.active {
-    background-color: #8e0b3a;
-    color: white;
-    border-radius: 5px;
+  background-color: #8e0b3a;
+  color: white;
+  border-radius: 5px;
 }
 
+/* Styling for tab content */
 .tab-content {
-    margin-top: 20px;
+  margin-top: 20px;
+  animation: fadeIn 1s ease-in-out; /* Adding fadeIn animation to tab content */
+}
+
+/* Animation for tab content */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
