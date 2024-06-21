@@ -43,7 +43,7 @@ function Header() {
             label={"Friends"}
             navigation={"/friends"}
           />
-          <HeaderOptions Avatar={Avatar} label={"User"} />
+          <HeaderOptions Avatar={Avatar} label={"User"} navigation={"/profile"}/>
         </div>
       </div>
     </div>
