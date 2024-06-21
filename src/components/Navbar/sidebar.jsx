@@ -1,57 +1,63 @@
+import { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Avatar } from "@mui/material";
+import { useFirebase } from "../../Firebase/firebaseContext";
 
-const sidebar = () => {
+const Sidebar = () => {
+  const { user, getUserDetailsByEmail } = useFirebase();
+  const [userName, setUserName] = useState("");
+  const [userProfession, setUserProfession] = useState("");
+  const [userHobby, setUserHobby] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (user) {
+        const userDetails = await getUserDetailsByEmail(user.email);
+        if (userDetails) {
+          setUserName(userDetails.name);
+          setUserProfession(userDetails.profession);
+          setUserHobby(userDetails.hobby);
+          setUserEmail(userDetails.email);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, [user, getUserDetailsByEmail]);
+
   return (
     <div className="sidebar">
-      {/* Profile  */}
-
       <div className="profile curveBorder">
         <div className="user">
-          <div className="backPhoto">
-            {/* <img src = "https://static.vecteezy.com/system/resources/thumbnails/002/393/823/small_2x/gradient-blue-background-free-vector.jpg" alt="" /> */}
-          </div>
-
+          <div className="backPhoto"></div>
           <div className="userHeader">
-            {/* avatar */}
             <Avatar />
-            {/* name and info  */}
-            <h4 className="userTitle">Yash Gupta</h4>
-            <p className="userDescription">Web-Developer</p>
+            <h4 className="userTitle">{userName || "Loading..."}</h4>
+            <p className="userDescription">{userProfession}</p>
           </div>
         </div>
-
         <div className="sepLine" />
-
         <div className="userInfo">
           <div className="userInfoContent sideFont">
-            <p>No of views of your profile</p>
-            <span>12,456</span>
+            <p className="email">Email</p>
+            <span>{userEmail}</span>
           </div>
-
           <div className="userInfoContent sideFont">
-            <p>Your Followers</p>
-            <span>500</span>
-          </div>
-
-          <div className="userInfoContent sideFont">
-            <p>Total Posts</p>
-            <span>100+</span>
+            <p className="hobby">Hobby</p>
+            <span>{userHobby}</span>
           </div>
         </div>
       </div>
-
-      {/* Sub Information  */}
-
       <div className="subProfile curveBorder">
         <h4 className="headTrend">
-          <i>Top Tredings of 2024</i>
+          <i>Top Trends of 2024</i>
         </h4>
         <p className="trends">
           <span>#</span>React Js
         </p>
         <p className="trends">
-          <span>#</span>JavaScript
+          <span>#</span>React Native
         </p>
         <p className="trends">
           <span>#</span>Node.js
@@ -73,4 +79,4 @@ const sidebar = () => {
   );
 };
 
-export default sidebar;
+export default Sidebar;
