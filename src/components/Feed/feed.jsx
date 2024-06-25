@@ -28,6 +28,8 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+import { useFirebase } from "../../Firebase/firebaseContext.jsx";
+
 let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
@@ -37,18 +39,37 @@ const Feed = () => {
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
+  const { user, getUserDetailsByEmail } = useFirebase();
+  const [userName, setUserName] = useState("");
+  const [userProfession, setUserProfession] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (user) {
+        const userDetails = await getUserDetailsByEmail(user.email);
+        if (userDetails) {
+          setUserName(userDetails.name);
+          setUserProfession(userDetails.profession);
+          setUserEmail(userDetails.email);
+        }
+      }
+    };
+    fetchUserDetails();
+  }, [user, getUserDetailsByEmail]);
 
   // DataBase Work  Temp :
   const AddPost = async (event) => {
     event.preventDefault();
     try {
       const addPost = await addDoc(collection(db, "userPosts"), {
-        name: "Username",
-        subHeader: "subHeader",
+        name:{userName},
+        subHeader:{userProfession},
         message: input,
         photoURL:
           "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
+        email:{userEmail},
       });
 
       // console.log("Document written with ID: ", addPost.id);

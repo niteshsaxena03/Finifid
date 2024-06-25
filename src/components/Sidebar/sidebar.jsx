@@ -3,8 +3,7 @@ import "./sidebar.css";
 import { Avatar } from "@mui/material";
 import { useFirebase } from "../../Firebase/firebaseContext";
 
-const Sidebar = () => {
-  try{
+function Sidebar() {
   const { user, getUserDetailsByEmail } = useFirebase();
   const [userName, setUserName] = useState("");
   const [userProfession, setUserProfession] = useState("");
@@ -16,6 +15,7 @@ const Sidebar = () => {
     const fetchUserDetails = async () => {
       if (user) {
         const userDetails = await getUserDetailsByEmail(user.email);
+        console.log(userDetails);
         if (userDetails) {
           setUserName(userDetails.name || ""); // Ensure userName is a string
           setUserProfession(userDetails.profession || ""); // Ensure userProfession is a string
@@ -28,9 +28,7 @@ const Sidebar = () => {
     fetchUserDetails();
   }, [user, getUserDetailsByEmail]);
   }
-  catch(err){
-    console.log("error occur") ;
-  }
+ 
 
   return (
     <div className="sidebar">
@@ -83,6 +81,5 @@ const Sidebar = () => {
       </div>
     </div>
   );
-};
 
 export default Sidebar;

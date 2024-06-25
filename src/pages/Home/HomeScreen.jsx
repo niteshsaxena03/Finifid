@@ -1,5 +1,5 @@
 import Header from "../../components/Navbar/header.jsx";
-import Sidebar from "../../components/Navbar/sidebar.jsx";
+import Sidebar from "../../components/Sidebar/sidebar.jsx";
 import Feed from "../../components/Feed/feed.jsx";
 import RightBar from "../../components/RightBar/rightBar.jsx";
 import "./HomeScreen.css";
@@ -11,13 +11,13 @@ function HomeScreen() {
   const navigate = useNavigate();
   const firebase = useFirebase();
   const { isLoggedIn } = useFirebase();
-  
+
   // Check if user is logged in or not.
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/");
     }
-  }, [firebase, navigate,isLoggedIn]);
+  }, [firebase, navigate, isLoggedIn]);
   return (
     // Main Home
     <div className="main">
