@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import "./sidebar.css"
+import "./sidebar.css";
 import { Avatar } from "@mui/material";
 import { useFirebase } from "../../Firebase/firebaseContext";
 
-const Sidebar = () => {
+function Sidebar() {
   const { user, getUserDetailsByEmail } = useFirebase();
   const [userName, setUserName] = useState("");
   const [userProfession, setUserProfession] = useState("");
@@ -14,6 +14,7 @@ const Sidebar = () => {
     const fetchUserDetails = async () => {
       if (user) {
         const userDetails = await getUserDetailsByEmail(user.email);
+        console.log(userDetails);
         if (userDetails) {
           setUserName(userDetails.name);
           setUserProfession(userDetails.profession);
