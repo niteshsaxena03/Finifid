@@ -1,0 +1,100 @@
+.borderBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 140px;   
+    border: 3px solid #8e0b3a;
+    border-radius: 8px;
+    margin: 0 10%;
+    overflow: hidden; 
+    z-index: 1; /* Ensure the pseudo-element doesn't overlap the content */
+   
+}
+
+.borderBox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--bg-image); /* Use the CSS variable here */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: blur(1px); /* Adjust blur as needed */
+    opacity: 0.9; /* Adjust opacity as needed */
+    z-index: -1; /* Ensure the pseudo-element is behind the content */
+    filter: brightness(0.45);
+
+}
+
+.storyIcon {
+    position: relative; /* Ensure content is above the pseudo-element */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+
+    background-color: rgba(255, 255,255,0.1);
+}
+
+.avatarContainer {
+    position: relative;
+    width: 70px; 
+    height: 70px; 
+    margin-bottom: 10px;
+}
+
+.avatarContainer > .MuiAvatar-root {
+    width: 100%;
+    height: 100%;
+    border: 3px solid #ccc;
+}
+
+.plusIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.plusIcon svg{
+    color: #8e0b3a;
+    cursor: pointer;
+
+}
+
+
+.storyFont {
+    text-align: center;
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 23px;
+    font-weight: 500;
+
+    color: #fff ; 
+    letter-spacing: 0.5px;
+
+    width: 100%;
+    height: 30px;
+}
+
+/*  After Story  */
+.afterStoryPost{
+    border: 3px solid #8e0b3a !important;
+    cursor: pointer;
+}
+
+.makeClick{
+    cursor: pointer ;
+}

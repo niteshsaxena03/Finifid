@@ -1,0 +1,14 @@
+body{
+    background-color: #ccc;
+}
+
+.App {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.fontStoryHead{
+    font-size: 40px;
+    color: #000;
+}
+  
