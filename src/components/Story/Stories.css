@@ -1,0 +1,53 @@
+/* Story Part  */
+.StoriesBox{
+ 
+    min-height: max-content ;
+    width: inherit ;
+
+    overflow: hidden;
+    /* padding: 0px 30px; */
+
+
+    margin-left: 1%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+
+.slick-slider ul{
+    margin-top: 1.3%;
+    position: relative   ;
+    bottom: 0 ;
+}
+
+.storyHeader{
+    padding-left: 1.6%;
+    margin-bottom: 0.5%;
+}
+
+@keyframes text-reveal {
+    0% {
+      background-position: +100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+  
+  .storyHeader {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .storyHeader h2 {
+    font-size: 1.5em;
+    font-weight: bolder;
+    background: linear-gradient(to right, #00000063   , #8e0b3a);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: text-reveal 2s ease forwards;
+    background-size: 200%;
+  }
+  

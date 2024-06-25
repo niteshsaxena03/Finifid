@@ -9,15 +9,14 @@ const PostHeader = ({name,subHeader,timestamp,avatar}) => {
                 <div className="postHeaderLeft">
 
                     {/* avatar */}
-
                     <Avatar src={avatar} style={{objectFit : "contain" , height : "50px" , width : "50px" }}/>
 
                     {/* Username and Info  */}
 
                     <div className="username">
 
-                        <h4 className='userTitle'>{name}</h4>
-                        <p className='userDescription'>{subHeader}</p>  
+                        <h4 className='userTitle'>{name.userName}</h4>
+                        <p className='userDescription'>{subHeader.userProfession}</p>  
                         <p className='timeStamp'>{timestamp}</p>
                     </div>
                 </div>
