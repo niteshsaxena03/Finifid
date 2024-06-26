@@ -58,12 +58,26 @@ function ProfileScreen() {
   return (
     <div>
       <Header />
-      <div className="user-details-container">
-        <div className="user-details">
-          <h1>Name: {userName}</h1>
-          <h1>Profession: {userProfession}</h1>
-          <h1>Hobby: {userHobby}</h1>
-          <h1>Email: {userEmail}</h1>
+      <div className="container">
+        <div className="profile-card">
+          <div className="profile-image"></div>
+          <div className="profile-header">
+            <h1>{userName}</h1>
+          </div>
+          <div className="profile-details">
+            <div className="profile-detail">
+              <h2>Email</h2>
+              <p>{userEmail}</p>
+            </div>
+            <div className="profile-detail">
+              <h2>Profession</h2>
+              <p>{userProfession}</p>
+            </div>
+            <div className="profile-detail">
+              <h2>Hobby</h2>
+              <p>{userHobby}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
