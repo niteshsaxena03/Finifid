@@ -7,7 +7,8 @@ import { useNavigate } from "react-router";
 import { useFirebase } from "@/Firebase/firebaseContext.jsx";
 import { useEffect } from "react";
 
-function HomeScreen() {
+function HomeScreen({data}) {
+
   const navigate = useNavigate();
   const firebase = useFirebase();
   const { isLoggedIn } = useFirebase();
@@ -21,10 +22,10 @@ function HomeScreen() {
   return (
     // Main Home
     <div className="main">
-      <Header />
+      <Header data = {data} />
       <div className="appBody">
-        <Sidebar />
-        <Feed />
+        <Sidebar data = {data}/>
+        <Feed data = {data}/>
         <RightBar />
       </div>
     </div>

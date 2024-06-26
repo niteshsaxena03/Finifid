@@ -12,7 +12,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { v4 as uuidv4 } from "uuid";
 
-const Stories = ({ UserData, FriendsData }) => {
+const Stories = ({ UserData, FriendsData , data }) => {
   const { user, getUserDetailsByEmail } = useFirebase();
   const [userName, setUserName] = useState("");
   const settings = {
@@ -41,7 +41,7 @@ const Stories = ({ UserData, FriendsData }) => {
       {/* Heading  */}
 
       <span className="storyHeader">
-        <h2>Hello,{userName}</h2>
+        <h2>Hello,{data.userName}</h2>
       </span>
 
       <Slider {...settings}>

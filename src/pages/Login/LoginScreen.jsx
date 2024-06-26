@@ -24,11 +24,17 @@ export default function LoginScreen() {
     e.preventDefault();
     setError(null); // Clear previous errors
     try {
+
       const result = await loginUserWithEmailAndPassword(email, password);
+
       if (result) {
+        // Checking
         console.log("Login successful:", result);
         navigate("/home");
-      } else {
+
+      } 
+
+      else {
         console.warn("Login result is null or undefined");
         setError("Unexpected error occurred. Please try again.");
       }

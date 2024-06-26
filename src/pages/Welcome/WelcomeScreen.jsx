@@ -29,6 +29,7 @@ function WelcomeScreen() {
   }, []);
   useEffect(() => {
     if (isLoggedIn) {
+      // {consol      }
       navigate("/home");
     }
   }, [firebase, navigate]);

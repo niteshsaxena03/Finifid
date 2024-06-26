@@ -34,7 +34,7 @@ let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
 
-const Feed = () => {
+const Feed = ({data}) => {
 
   //   Hooks :
   let [post, setPost] = useState([]);
@@ -72,7 +72,6 @@ const Feed = () => {
         email:{userEmail},
       });
 
-      // console.log("Document written with ID: ", addPost.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -176,7 +175,7 @@ const Feed = () => {
         <div className="storyPost">
               {/* {console.log(UserData)}; */}
             {/* {console.log(FriendsData)} */}
-            <Stories UserData = {UserData} FriendsData = {FriendsData}/>
+            <Stories UserData = {UserData} FriendsData = {FriendsData} data={data}/>
         </div>
 
           {/* feed input  */}

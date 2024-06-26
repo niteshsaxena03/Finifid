@@ -17,6 +17,9 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+import fetchUserData from "../pages/Database/userData.js";
+
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDnQOUG7G3ozl7WhjwSNPofBy651tTmDb4",
@@ -46,6 +49,7 @@ export { storage };
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -65,6 +69,7 @@ export const FirebaseProvider = (props) => {
   const loginUserWithEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
+
   const getUserDetailsByEmail = async (email) => {
     try {
       const usersRef = collection(db, "users");
@@ -84,6 +89,15 @@ export const FirebaseProvider = (props) => {
     }
   };
 
+  const fetchDetails = async (email) => {
+    try{
+      return await fetchUserData(email) ;
+    }
+    catch(error){
+      console.log(error) ;
+    }
+  };
+
   const isLoggedIn = !!user;
 
   return (
@@ -94,6 +108,7 @@ export const FirebaseProvider = (props) => {
         isLoggedIn,
         user,
         getUserDetailsByEmail,
+        fetchDetails
       }}
     >
       {props.children}
