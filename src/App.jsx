@@ -19,14 +19,20 @@ function App() {
   const { user, fetchDetails } = useFirebase();
   const [data, setData] = useState({});
 
+  // Fetch user data function
+  async function fetchUserData(email) {
+    try {
+      let data = await fetchDetails(email);
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  }
+
   //  @ object -> Data Contain all info !
   useEffect(() => {
     if (user) {
-      async function UserData() {
-        let data = await fetchDetails(user.email);
-        setData(data);
-      }
-      UserData();
+      fetchUserData(user.email);
     }
   }, [user, fetchDetails]);
 
