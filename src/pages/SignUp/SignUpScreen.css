@@ -7,7 +7,7 @@
 }
 
 .cardContainer {
-  width: 100%; /* Adjust this as needed */
-  max-width: 500px; /* Adjust max width as needed */
+  width:100%; /* Adjust this as needed */
+  max-width: 600px; /* Adjust max width as needed */
   padding: 10px; /* Optional: padding for spacing */
 }

@@ -25,7 +25,8 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
-  const [profession, setProfession] = useState(""); // New state for profession
+  const [profession, setProfession] = useState("");
+  const [age, setAge] = useState(""); // New state for age
   const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
@@ -43,7 +44,8 @@ export default function SignUpScreen() {
           name,
           email,
           hobby,
-          profession, // Save profession to Firestore
+          profession,
+          age, // Save age to Firestore
           createdAt: serverTimestamp(),
         });
 
@@ -121,6 +123,17 @@ export default function SignUpScreen() {
                   placeholder="e.g., Engineer"
                   onChange={(e) => setProfession(e.target.value)}
                   value={profession}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="age">Age</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  placeholder="Enter your age"
+                  onChange={(e) => setAge(e.target.value)}
+                  value={age}
                   required
                 />
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Navbar/header";
 import { useFirebase } from "@/Firebase/firebaseContext";
 import "./ProfileScreen.css";
@@ -9,27 +9,19 @@ function ProfileScreen() {
   const [userProfession, setUserProfession] = useState("");
   const [userHobby, setUserHobby] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [age,setAge]=useState("");
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (user) {
-        try {
-          const userDetails = await getUserDetailsByEmail(user.email);
-          console.log(userDetails);
-          if (userDetails) {
-            const { name, profession, hobby, email } = userDetails;
-            setUserName(name);
-            setUserProfession(profession);
-            setUserHobby(hobby);
-            setUserEmail(email);
-          }
-        } catch (err) {
-          console.error(err);
-          setError("Failed to fetch user details");
-        } finally {
-          setLoading(false);
+        const userDetails = await getUserDetailsByEmail(user.email);
+        console.log(userDetails);
+        if (userDetails) {
+          setUserName(userDetails.name);
+          setUserProfession(userDetails.profession);
+          setUserHobby(userDetails.hobby);
+          setUserEmail(userDetails.email);
+          setAge(userDetails.age)
         }
       }
     };
@@ -37,32 +29,16 @@ function ProfileScreen() {
     fetchUserDetails();
   }, [user, getUserDetailsByEmail]);
 
-  if (loading) {
-    return (
-      <div>
-        <Header />
-        <div className="loading">Loading...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div>
-        <Header />
-        <div className="error">{error}</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <Header />
       <div className="container">
         <div className="profile-card">
-          <div className="profile-image"></div>
           <div className="profile-header">
-            <h1>{userName}</h1>
+            <div className="profile-image"></div>
+          </div>
+          <div className="profile-username">
+            <h2>{userName}</h2>
           </div>
           <div className="profile-details">
             <div className="profile-detail">
@@ -76,6 +52,10 @@ function ProfileScreen() {
             <div className="profile-detail">
               <h2>Hobby</h2>
               <p>{userHobby}</p>
+            </div>
+            <div className="profile-detail">
+              <h2>Age</h2>
+              <p>{age}</p>
             </div>
           </div>
         </div>
