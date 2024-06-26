@@ -15,11 +15,9 @@ import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-
-// Stories Section 
-import Stories from '../Story/Stories.jsx';
+// Stories Section
+import Stories from "../Story/Stories.jsx";
 import { UserData, FriendsData } from "../Story/customStoryData";
-
 
 // Icons
 import { Avatar } from "@mui/material";
@@ -63,13 +61,13 @@ const Feed = ({data}) => {
     event.preventDefault();
     try {
       const addPost = await addDoc(collection(db, "userPosts"), {
-        name:{userName},
-        subHeader:{userProfession},
+        name: { userName },
+        subHeader: { userProfession },
         message: input,
         photoURL:
           "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
-        email:{userEmail},
+        email: { userEmail },
       });
 
     } catch (e) {
@@ -168,47 +166,60 @@ const Feed = ({data}) => {
   }, []);
 
   return (
-    <div className="feed">
+<div className="feed">
+      {/* Story Section  */}
+      <div className="storyPost">
+        {/* {console.log(UserData)}; */}
+        {/* {console.log(FriendsData)} */}
+        <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
+      </div>
 
+      {/* feed input  */}
 
-        {/* Story Section  */}
-        <div className="storyPost">
-              {/* {console.log(UserData)}; */}
-            {/* {console.log(FriendsData)} */}
-            <Stories UserData = {UserData} FriendsData = {FriendsData} data={data}/>
+      <div className="feedSearchBox">
+        <div className="feedSearch">
+          <Avatar />
+          <form onSubmit={AddPost}>
+            <input
+              type="text"
+              placeholder="Start a post..."
+              // for the value setting
+              onChange={(event) => setInput(event.target.value)}
+              // for getting value :
+              value={input}
+            />
+            <button>Sumbit</button>
+          </form>
         </div>
 
-          {/* feed input  */}
+        {/* icons  */}
+        <form className="feedIcons">
+          <label htmlFor="photo">
+            <Icon Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} />
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            id="photo"
+            style={{ display: "none" }}
+            onChange={AddPhoto}
+          />
 
+          <label htmlFor="video">
+            <Icon Icon={VideoCallIcon} label={"Video"} idx={1} />
+          </label>
+          <input
+            type="file"
+            accept="video/*"
+            id="video"
+            style={{ display: "none" }}
+            onChange={AddVideo}
+          />
 
-        <div className="feedSearchBox">
-
-          <div className="feedSearch">
-             <Avatar/>
-             <form onSubmit={AddPost}>
-
-                <input type="text" placeholder='Start a post...'
-                // for the value setting      
-                onChange={event => setInput(event.target.value)}
-                // for getting value : 
-                value = {input}     
-                />
-                <button>Sumbit</button>
-             </form>
-          </div>
-
-          {/* icons  */}
-          <form className="feedIcons">
-                <label htmlFor="photo"><Icon Icon = {AddPhotoAlternateIcon} label={"Photo"} idx = {0} /></label> 
-                <input type="file" accept='image/*' id='photo' style={{display :"none"}} onChange={AddPhoto} />
-
-                <label htmlFor="video"><Icon Icon = {VideoCallIcon} label={"Video"} idx = {1} /></label>
-                <input type="file" accept='video/*' id='video' style={{display :"none"}} onChange={AddVideo} />
- 
-                <Icon Icon = {CameraAltIcon} label={"Live"} idx = {2}/>
-                <Icon Icon = {AddCircleIcon} label={"Story"} idx = {3}/>
-          </form>
-          </div>
+          <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
+          <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
+        </form>
+      </div>
 
       {/* @ Post Starts from Here !   */}
 
@@ -228,7 +239,7 @@ const Feed = ({data}) => {
               key={id}
               name={name}
               subHeader={subHeader}
-              message={message} 
+              message={message}
               avatar={photoURL}
               timestamp={timestamp}
             />
