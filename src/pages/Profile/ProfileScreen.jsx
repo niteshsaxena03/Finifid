@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/components/Navbar/header";
 import { useFirebase } from "@/Firebase/firebaseContext";
+import "./ProfileScreen.css";
 
 function ProfileScreen() {
   const { user, getUserDetailsByEmail } = useFirebase();
@@ -40,7 +41,7 @@ function ProfileScreen() {
     return (
       <div>
         <Header />
-        <p>Loading...</p>
+        <div className="loading">Loading...</div>
       </div>
     );
   }
@@ -49,7 +50,7 @@ function ProfileScreen() {
     return (
       <div>
         <Header />
-        <p>{error}</p>
+        <div className="error">{error}</div>
       </div>
     );
   }
@@ -57,11 +58,13 @@ function ProfileScreen() {
   return (
     <div>
       <Header />
-      <div>
-        <h1>Name: {userName}</h1>
-        <h1>Profession: {userProfession}</h1>
-        <h1>Hobby: {userHobby}</h1>
-        <h1>Email: {userEmail}</h1>
+      <div className="user-details-container">
+        <div className="user-details">
+          <h1>Name: {userName}</h1>
+          <h1>Profession: {userProfession}</h1>
+          <h1>Hobby: {userHobby}</h1>
+          <h1>Email: {userEmail}</h1>
+        </div>
       </div>
     </div>
   );
