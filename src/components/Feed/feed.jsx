@@ -69,7 +69,6 @@ const Feed = ({data}) => {
         timestamp: serverTimestamp(),
         email: { userEmail },
       });
-
     } catch (e) {
       console.error("Error adding document: ", e);
     }

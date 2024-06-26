@@ -18,7 +18,7 @@ import {
 } from "../../Firebase/firebaseContext";
 import { doc, setDoc } from "firebase/firestore";
 
-// Data-Base 
+// Data-Base
 import Database from "../Database/Database.js";
 
 export default function SignUpScreen() {
@@ -40,13 +40,12 @@ export default function SignUpScreen() {
       const result = await signUpUserWithEmailAndPassword(email, password);
 
       if (result) {
-
         console.log("Sign up successful:", result);
 
-        // Database Init : 
-        await Database(name , email , hobby , profession ) ;
+        // Database Init :
+        await Database(name, email, hobby, profession);
 
-        // Add user details to Firestore  
+        // Add user details to Firestore
         const userRef = doc(db, "users", result.user.uid);
         await setDoc(userRef, {
           name,
@@ -58,8 +57,7 @@ export default function SignUpScreen() {
         });
 
         navigate("/home"); // Navigate to the home page after successful sign-up
-      } 
-      else {
+      } else {
         console.warn("Sign up result is null or undefined");
         setError("Unexpected error occurred. Please try again.");
       }

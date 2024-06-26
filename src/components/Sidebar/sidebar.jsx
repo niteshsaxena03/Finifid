@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Avatar } from "@mui/material";
-import { useFirebase } from "../../Firebase/firebaseContext";
 
-function Sidebar({data}) {
 
+function Sidebar({ data }) {
   return (
     <div className="sidebar">
       <div className="profile curveBorder">
@@ -12,8 +10,10 @@ function Sidebar({data}) {
           <div className="backPhoto"></div>
           <div className="userHeader">
             <Avatar />
-            <h4 className="userTitle">{ data.userName|| "Loading..."}</h4>
-            <p className="userDescription">{data.profession || "No profession listed"}</p>
+            <h4 className="userTitle">{data.userName || "Loading..."}</h4>
+            <p className="userDescription">
+              {data.profession || "No profession listed"}
+            </p>
           </div>
         </div>
         <div className="sepLine" />
@@ -55,7 +55,7 @@ function Sidebar({data}) {
         </p>
       </div>
     </div>
-  )
-} ;
+  );
+}
 
 export default Sidebar;
