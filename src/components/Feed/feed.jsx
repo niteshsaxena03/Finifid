@@ -60,7 +60,7 @@ const Feed = ({data}) => {
   const AddPost = async (event) => {
     event.preventDefault();
     try {
-      const addPost = await addDoc(collection(db, "userPosts"), {
+      const addPost = await addDoc(collection(db, "userPosts" ), {
         name: { userName },
         subHeader: { userProfession },
         message: input,
