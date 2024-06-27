@@ -47,18 +47,16 @@ const Feed = ({ data }) => {
     event.preventDefault();
     const formattedEmail = formatEmail(data.email);
     try {
-      const addPost = await addDoc(
-        collection(db, "userPosts", formattedEmail, "posts"),
-        {
-          name: data.userName,
-          subHeader: data.profession,
-          message: input,
-          photoURL:
-            "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
-          timestamp: serverTimestamp(),
-          email: data.email,
-        }
-      );
+      const addPost = await addDoc(collection(db, "userPosts"), {
+        name: { userName },
+        subHeader: { userProfession },
+        message: input,
+        photoURL:
+          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        timestamp: serverTimestamp(),
+        email: { userEmail },
+      });
+
     } catch (e) {
       console.error("Error adding document: ", e);
     }

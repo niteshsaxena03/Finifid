@@ -47,7 +47,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    animation: text-reveal 4s ease forwards;
+    animation: text-reveal 3s ease forwards;
     background-size: 200%;
   }
   
