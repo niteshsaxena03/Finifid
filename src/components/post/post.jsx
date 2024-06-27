@@ -1,4 +1,4 @@
-import React from "react";
+
 import "../Navbar/sidebar.css";
 import "./post.css";
 import PostHeader from "./postHeader";

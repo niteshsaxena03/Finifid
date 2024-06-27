@@ -32,42 +32,23 @@ let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
 
-const Feed = ({data}) => {
-
+const Feed = ({ data }) => {
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
-  const { user, getUserDetailsByEmail } = useFirebase();
-  const [userName, setUserName] = useState("");
-  const [userProfession, setUserProfession] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      if (user) {
-        const userDetails = await getUserDetailsByEmail(user.email);
-        if (userDetails) {
-          setUserName(userDetails.name);
-          setUserProfession(userDetails.profession);
-          setUserEmail(userDetails.email);
-        }
-      }
-    };
-    fetchUserDetails();
-  }, [user, getUserDetailsByEmail]);
 
   // DataBase Work  Temp :
   const AddPost = async (event) => {
     event.preventDefault();
     try {
       const addPost = await addDoc(collection(db, "userPosts"), {
-        name: { userName },
-        subHeader: { userProfession },
+        name: data.userName,
+        subHeader: data.profession,
         message: input,
         photoURL:
           "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
-        email: { userEmail },
+        email: data.email,
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -165,7 +146,7 @@ const Feed = ({data}) => {
   }, []);
 
   return (
-<div className="feed">
+    <div className="feed">
       {/* Story Section  */}
       <div className="storyPost">
         {/* {console.log(UserData)}; */}

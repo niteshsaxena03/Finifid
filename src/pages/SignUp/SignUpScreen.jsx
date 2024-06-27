@@ -13,10 +13,8 @@ import "./SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
 import { useNavigate } from "react-router-dom";
 import {
   useFirebase,
-  db,
-  serverTimestamp,
 } from "../../Firebase/firebaseContext";
-import { doc, setDoc } from "firebase/firestore";
+
 
 // Data-Base
 import Database from "../Database/Database.js";
@@ -29,7 +27,7 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
   const [profession, setProfession] = useState("");
-  const [age, setAge] = useState(""); // New state for age
+  const [age, setAge] = useState(""); 
   const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
