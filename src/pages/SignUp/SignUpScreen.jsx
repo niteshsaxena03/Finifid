@@ -43,18 +43,7 @@ export default function SignUpScreen() {
         console.log("Sign up successful:", result);
 
         // Database Init :
-        await Database(name, email, hobby, profession);
-
-        // Add user details to Firestore
-        const userRef = doc(db, "users", result.user.uid);
-        await setDoc(userRef, {
-          name,
-          email,
-          hobby,
-          profession,
-          age, // Save age to Firestore
-          createdAt: serverTimestamp(),
-        });
+        await Database(name, email, hobby, profession,age);
 
         navigate("/home"); // Navigate to the home page after successful sign-up
       } else {

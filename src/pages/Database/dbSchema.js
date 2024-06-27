@@ -7,6 +7,7 @@ const Schema = {
   following: [],
   isStory: false,
   story: [],
+  age:"",
 };
 
 export default Schema;

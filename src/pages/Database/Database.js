@@ -6,7 +6,7 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const Database = async (name, email, hobby, profession, result = null) => {
+const Database = async (name, email, hobby, profession, age = null) => {
   let initDatabase = async () => {
     try {
       //  Init Data
@@ -14,6 +14,7 @@ const Database = async (name, email, hobby, profession, result = null) => {
       Schema.email = email;
       Schema.hobby = hobby;
       Schema.profession = profession;
+      Schema.age=age;
 
       // End Data
 
