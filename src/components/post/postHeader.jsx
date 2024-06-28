@@ -1,4 +1,3 @@
-import React from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 
@@ -16,8 +15,8 @@ const PostHeader = ({ name, subHeader, timestamp, avatar }) => {
         {/* Username and Info  */}
 
         <div className="username">
-          <h4 className="userTitle">{name.userName}</h4>
-          <p className="userDescription">{subHeader.userProfession}</p>
+          <h4 className="userTitle">{name}</h4>
+          <p className="userDescription">{subHeader}</p>
           <p className="timeStamp">{timestamp}</p>
         </div>
       </div>

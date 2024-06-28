@@ -13,12 +13,10 @@ import "./SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
 import { useNavigate } from "react-router-dom";
 import {
   useFirebase,
-  db,
-  serverTimestamp,
 } from "../../Firebase/firebaseContext";
-import { doc, setDoc } from "firebase/firestore";
 
-// Data-Base 
+
+// Data-Base
 import Database from "../Database/Database.js";
 
 export default function SignUpScreen() {
@@ -29,7 +27,7 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
   const [profession, setProfession] = useState("");
-  const [age, setAge] = useState(""); // New state for age
+  const [age, setAge] = useState(""); 
   const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
@@ -40,26 +38,13 @@ export default function SignUpScreen() {
       const result = await signUpUserWithEmailAndPassword(email, password);
 
       if (result) {
-
         console.log("Sign up successful:", result);
 
-        // Database Init : 
-        await Database(name , email , hobby , profession ) ;
-
-        // Add user details to Firestore  
-        const userRef = doc(db, "users", result.user.uid);
-        await setDoc(userRef, {
-          name,
-          email,
-          hobby,
-          profession,
-          age, // Save age to Firestore
-          createdAt: serverTimestamp(),
-        });
+        // Database Init :
+        await Database(name, email, hobby, profession,age);
 
         navigate("/home"); // Navigate to the home page after successful sign-up
-      } 
-      else {
+      } else {
         console.warn("Sign up result is null or undefined");
         setError("Unexpected error occurred. Please try again.");
       }

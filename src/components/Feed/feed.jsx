@@ -10,10 +10,17 @@ import {
   query,
   onSnapshot,
   orderBy,
+  getDocs,
+  getDocsFromServer,
+  collectionGroup,
 } from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+
+// Upload's 
+import { doc, setDoc } from "firebase/firestore";
+import { v4 as uuid  } from "uuid";
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -26,69 +33,110 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { useFirebase } from "../../Firebase/firebaseContext.jsx";
-
 let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
 
-const Feed = ({data}) => {
 
+const formatEmail = (email) => {
+  return email.replace(/[^a-zA-Z0-9]/g, "_");
+};
+
+
+const Feed = ({ data }) => {
+
+ 
+  
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
-  const { user, getUserDetailsByEmail } = useFirebase();
-  const [userName, setUserName] = useState("");
-  const [userProfession, setUserProfession] = useState("");
-  const [userEmail, setUserEmail] = useState("");
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      if (user) {
-        const userDetails = await getUserDetailsByEmail(user.email);
-        if (userDetails) {
-          setUserName(userDetails.name);
-          setUserProfession(userDetails.profession);
-          setUserEmail(userDetails.email);
-        }
-      }
-    };
-    fetchUserDetails();
-  }, [user, getUserDetailsByEmail]);
 
   // DataBase Work  Temp :
-  const AddPost = async (event) => {
-    event.preventDefault();
-    try {
-      const addPost = await addDoc(collection(db, "userPosts" ), {
-        name: { userName },
-        subHeader: { userProfession },
-        message: input,
-        photoURL:
-          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
-        timestamp: serverTimestamp(),
-        email: { userEmail },
-      });
 
-    } catch (e) {
-      console.error("Error adding document: ", e);
+
+  // Adding Post To Database  
+
+  const AddPost = async (event) => {
+    
+    event.preventDefault();
+
+    const formattedEmail = formatEmail(data.email);
+
+
+    try{
+
+      const userDocRef = collection(db, 'userPosts',formattedEmail,'posts');
+    
+      let postData = {
+        name : data.userName,
+        subHeader: data.profession,
+        message: input,
+        photoURL:"https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        timestamp: serverTimestamp(),
+        email: data.email,
+      }
+
+      // Upload ! 
+      await addDoc(userDocRef, postData);      
+      setInput("");
+
+
+      // Post After Upload !  
+     await fetchPosts() ;
+
     }
 
-    setInput("");
+    catch(error){
+       console.log("method not work  !",error ) ;
+    }  
+  };
+
+
+  // Fetching Post from Database  
+
+  const fetchPosts = async () => {
+
+    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com"];
+
+    let allPosts = [];
+
+    // Iterate through customUsers
+    for (let i = 0; i < customUsers.length; i++) {
+    
+      // Construct reference to posts collection for each user
+      const userPostsRef = collection(db, 'userPosts',customUsers[i], 'posts');
+
+      console.log("user Post : ",userPostsRef) ;
+
+      try {
+        const querySnapshot = await getDocs(userPostsRef);
+
+        querySnapshot.forEach((doc) => {
+          allPosts.push({id: doc.id, ...doc.data() });
+        });
+      } catch (error) {
+        console.error(`Error fetching posts for user ${customUsers[i]}:`, error);
+      }
+    }
+
+    console.log(allPosts)
+    setPost(allPosts);
+    
   };
 
   useEffect(() => {
-    const q = query(collection(db, "userPosts"), orderBy("timestamp", "desc"));
+    async function fetchCurrent(){
+        await fetchPosts();
+    }
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setPost(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
-  }, []);
+    if (data && data.email) {
+    fetchCurrent() ; 
+    }
+  }, [data]);
+
+
+
 
   // Photo Work
 
@@ -166,7 +214,7 @@ const Feed = ({data}) => {
   }, []);
 
   return (
-<div className="feed">
+    <div className="feed">
       {/* Story Section  */}
       <div className="storyPost">
         {/* {console.log(UserData)}; */}
@@ -223,8 +271,10 @@ const Feed = ({data}) => {
 
       {/* @ Post Starts from Here !   */}
 
-      {post.map(
-        ({ id, data: { name, subHeader, message, photoURL, timestamp } }) => {
+      
+    {
+      post.map(
+        ({ id, name, subHeader, message, photoURL, timestamp }) => {
           // Converting time :
           {
             if (timestamp != null) {
@@ -245,7 +295,8 @@ const Feed = ({data}) => {
             />
           );
         }
-      )}
+      )
+    }
 
       {/* @Post - Images Start from here */}
 

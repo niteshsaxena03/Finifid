@@ -6,49 +6,48 @@ import NotificationScreen from "./pages/Notifications/NotificationScreen";
 import ProfileScreen from "./pages/Profile/ProfileScreen";
 import SignUpScreen from "./pages/SignUp/SignUpScreen";
 import WelcomeScreen from "./pages/Welcome/WelcomeScreen";
-import { Routes, Route } from "react-router"; 
+import { Routes, Route } from "react-router";
 import MainStory from "./components/Story/mainStory";
 import SeeFriendStory from "./components/Story/SeeFriendStory";
 
-
-// DataBase Imports : 
+// DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
+  
+  // Data From Database :
+  const { user, fetchDetails } = useFirebase();
+  const [data, setData] = useState({});
 
-  // Data From Database : 
-  const { user , fetchDetails  } = useFirebase();
-  const [data , setData ] = useState({}) ;
-
-
-
-  //  @ object -> Data Contain all info !  
-  useEffect(()=>{
-    
-      if(user){
-        async function UserData(){
-          let data = await fetchDetails(user.email) ; 
-          setData(data) ;
-        }
-        UserData() ; 
+  // Fetch user data function
+  async function fetchUserData(email) {
+    try {
+      let data = await fetchDetails(email);
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
   }
-      
-  },[user , fetchDetails]) ;
 
+  //  @ object -> Data Contain all info !
+  useEffect(() => {
+    if (user) {
+      fetchUserData(user.email);
+    }
+  }, [user, fetchDetails]);
 
   return (
     <Routes>
       <Route path="/" element={<WelcomeScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/signup" element={<SignUpScreen />} />
-      <Route path="/home" element={<HomeScreen data = {data}/>} />
-      <Route path="/friends" element={<FriendScreen/>}/>
-      <Route path="/notifications" element={<NotificationScreen/>}/>
-      <Route path="/profile" element={<ProfileScreen/>}/>
-      <Route path="/story" element={<MainStory/>} />
-      <Route path="/story/friend/:name" element={<SeeFriendStory/>} />
-
+      <Route path="/home" element={<HomeScreen data={data} />} />
+      <Route path="/friends" element={<FriendScreen />} />
+      <Route path="/notifications" element={<NotificationScreen />} />
+      <Route path="/profile" element={<ProfileScreen />} />
+      <Route path="/story" element={<MainStory />} />
+      <Route path="/story/friend/:name" element={<SeeFriendStory />} />
     </Routes>
   );
 }

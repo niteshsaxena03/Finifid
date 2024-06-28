@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-import { Button } from "@/components/ui/button"; // Adjust the import path as per your project structure
+import { Button } from "@/components/ui/button";
 import "./WelcomeScreen.css";
 import { useNavigate } from "react-router-dom";
 import { useFirebase } from "@/Firebase/firebaseContext";
@@ -13,7 +12,7 @@ function WelcomeScreen() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 768); // Example breakpoint for small screen
+      setIsSmallScreen(window.innerWidth < 768); 
     };
 
     // Initial check on mount
@@ -27,9 +26,10 @@ function WelcomeScreen() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  //function to detect if user is already logged in
   useEffect(() => {
     if (isLoggedIn) {
-      // {consol      }
       navigate("/home");
     }
   }, [firebase, navigate]);
