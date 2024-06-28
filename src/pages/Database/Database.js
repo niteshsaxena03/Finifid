@@ -24,7 +24,7 @@ const Database = async (name, email, hobby, profession, age = null) => {
       const userDocRef = doc(
         db,
         "users",
-        formattedEmail.toString().toLowerCase()
+        formattedEmail.toLowerCase()
       );
       await setDoc(userDocRef, Schema);
     } catch (error) {

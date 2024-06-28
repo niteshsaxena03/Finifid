@@ -11,10 +11,16 @@ import {
   onSnapshot,
   orderBy,
   getDocs,
+  getDocsFromServer,
+  collectionGroup,
 } from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+
+// Upload's 
+import { doc, setDoc } from "firebase/firestore";
+import { v4 as uuid  } from "uuid";
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -27,99 +33,110 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { useFirebase } from "../../Firebase/firebaseContext.jsx";
-
 let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
+
 
 const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
+
 const Feed = ({ data }) => {
+
+ 
+  
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
 
+
   // DataBase Work  Temp :
+
+
+  // Adding Post To Database  
+
   const AddPost = async (event) => {
+    
     event.preventDefault();
+
     const formattedEmail = formatEmail(data.email);
-    try {
-      const addPost = await addDoc(collection(db, "userPosts",formattedEmail,"posts"), {
-        name: data.name,
+
+
+    try{
+
+      const userDocRef = collection(db, 'userPosts',formattedEmail,'posts');
+    
+      let postData = {
+        name : data.userName,
         subHeader: data.profession,
         message: input,
-        photoURL:
-          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        photoURL:"https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
-        email:data.email,
-      });
+        email: data.email,
+      }
 
-    } catch (e) {
-      console.error("Error adding document: ", e);
+      // Upload ! 
+      await addDoc(userDocRef, postData);      
+      setInput("");
+
+
+      // Post After Upload !  
+     await fetchPosts() ;
+
     }
-    setInput("");
+
+    catch(error){
+       console.log("method not work  !",error ) ;
+    }  
   };
 
-  // useEffect(() => {
-  //   const q = query(collection(db, "userPosts"), orderBy("timestamp", "desc"));
 
-  //   const unsubscribe = onSnapshot(q, (snapshot) => {
-  //     setPost(
-  //       snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         data: doc.data(),
-  //       }))
-  //     );
-  //   });
-  // }, []);
+  // Fetching Post from Database  
+
+  const fetchPosts = async () => {
+
+    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com"];
+
+    let allPosts = [];
+
+    // Iterate through customUsers
+    for (let i = 0; i < customUsers.length; i++) {
+    
+      // Construct reference to posts collection for each user
+      const userPostsRef = collection(db, 'userPosts',customUsers[i], 'posts');
+
+      console.log("user Post : ",userPostsRef) ;
+
+      try {
+        const querySnapshot = await getDocs(userPostsRef);
+
+        querySnapshot.forEach((doc) => {
+          allPosts.push({id: doc.id, ...doc.data() });
+        });
+      } catch (error) {
+        console.error(`Error fetching posts for user ${customUsers[i]}:`, error);
+      }
+    }
+
+    console.log(allPosts)
+    setPost(allPosts);
+    
+  };
 
   useEffect(() => {
-    const fetchAllPosts = async () => {
-      try {
-        const userPostsCollection = collection(db, "userPosts");
-        const userPostsSnapshot = await getDocs(userPostsCollection);
+    async function fetchCurrent(){
+        await fetchPosts();
+    }
 
-        console.log(userPostsCollection);
-        console.log(userPostsSnapshot);
+    if (data && data.email) {
+    fetchCurrent() ; 
+    }
+  }, [data]);
 
-        let allPosts = [];
 
-        // Loop through each user's document in userPosts collection
-        userPostsSnapshot.forEach(async (userDoc) => {
-          const formattedEmail = userDoc.id; // Document ID is the formatted email
 
-          // Reference to the subcollection "posts" for the current user
-          const userPostsRef = collection(
-            db,
-            "userPosts",
-            formattedEmail,
-            "posts"
-          );
-          // Query to get all documents (posts) in the "posts" subcollection, ordered by timestamp
-          const q = query(userPostsRef, orderBy("timestamp", "desc"));
-          const snapshot = await getDocs(q);
-
-          // Iterate through each post document and collect them
-          snapshot.forEach((postDoc) => {
-            allPosts.push({
-              id: postDoc.id, // Document ID of the post
-              data: postDoc.data(), // Post data
-            });
-          });
-        });
-
-        // Set all collected posts to state
-        setPost(allPosts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-    // Call fetchAllPosts function when component mounts
-    fetchAllPosts();
-  }, []); // Empty dependency array ensures it runs only once on mount
 
   // Photo Work
 
@@ -254,8 +271,10 @@ const Feed = ({ data }) => {
 
       {/* @ Post Starts from Here !   */}
 
-      {post.map(
-        ({ id, data: { name, subHeader, message, photoURL, timestamp } }) => {
+      
+    {
+      post.map(
+        ({ id, name, subHeader, message, photoURL, timestamp }) => {
           // Converting time :
           {
             if (timestamp != null) {
@@ -276,7 +295,8 @@ const Feed = ({ data }) => {
             />
           );
         }
-      )}
+      )
+    }
 
       {/* @Post - Images Start from here */}
 
