@@ -97,7 +97,7 @@ const Feed = ({ data }) => {
 
   const fetchPosts = async () => {
 
-    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com"];
+    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com","abcd_gmail_com"];
 
     let allPosts = [];
 
