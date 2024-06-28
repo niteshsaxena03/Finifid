@@ -47,14 +47,14 @@ const Feed = ({ data }) => {
     event.preventDefault();
     const formattedEmail = formatEmail(data.email);
     try {
-      const addPost = await addDoc(collection(db, "userPosts"), {
-        name: { userName },
-        subHeader: { userProfession },
+      const addPost = await addDoc(collection(db, "userPosts",formattedEmail,"posts"), {
+        name: data.name,
+        subHeader: data.profession,
         message: input,
         photoURL:
           "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
-        email: { userEmail },
+        email:data.email,
       });
 
     } catch (e) {
@@ -81,6 +81,9 @@ const Feed = ({ data }) => {
       try {
         const userPostsCollection = collection(db, "userPosts");
         const userPostsSnapshot = await getDocs(userPostsCollection);
+
+        console.log(userPostsCollection);
+        console.log(userPostsSnapshot);
 
         let allPosts = [];
 
@@ -114,7 +117,6 @@ const Feed = ({ data }) => {
         console.error("Error fetching posts:", error);
       }
     };
-
     // Call fetchAllPosts function when component mounts
     fetchAllPosts();
   }, []); // Empty dependency array ensures it runs only once on mount
