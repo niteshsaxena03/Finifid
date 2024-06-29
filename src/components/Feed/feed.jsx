@@ -11,16 +11,14 @@ import {
   onSnapshot,
   orderBy,
   getDocs,
-  getDocsFromServer,
-  collectionGroup,
 } from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-// Upload's 
+// Upload's
 import { doc, setDoc } from "firebase/firestore";
-import { v4 as uuid  } from "uuid";
+import { v4 as uuid } from "uuid";
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -37,106 +35,113 @@ let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
 
-
 const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-
 const Feed = ({ data }) => {
-
- 
-  
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
-
+  const [emails, setEmails] = useState([]);
 
   // DataBase Work  Temp :
 
-
-  // Adding Post To Database  
+  // Adding Post To Database
 
   const AddPost = async (event) => {
-    
     event.preventDefault();
 
     const formattedEmail = formatEmail(data.email);
 
+    try {
+      const userDocRef = collection(db, "userPosts", formattedEmail, "posts");
 
-    try{
-
-      const userDocRef = collection(db, 'userPosts',formattedEmail,'posts');
-    
       let postData = {
-        name : data.userName,
+        name: data.userName,
         subHeader: data.profession,
         message: input,
-        photoURL:"https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        photoURL:
+          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
         email: data.email,
-      }
+      };
 
-      // Upload ! 
-      await addDoc(userDocRef, postData);      
+      // Upload !
+      await addDoc(userDocRef, postData);
       setInput("");
 
-
-      // Post After Upload !  
-     await fetchPosts() ;
-
+      // Post After Upload !
+      await fetchPosts();
+    } catch (error) {
+      console.log("method not work  !", error);
     }
-
-    catch(error){
-       console.log("method not work  !",error ) ;
-    }  
   };
 
+  // Function to fetch all emails from users collection
+  const fetchUserEmails = async () => {
+    const usersRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersRef);
+    const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
+    return userEmails;
+  };
+  
+  useEffect(() => {
+    const getUserEmails = async () => {
+      try {
+        const emailsArray = await fetchUserEmails();
+        setEmails(emailsArray);
+        //console.log("User Emails: ", emailsArray); // Array of emails
+      } catch (error) {
+        console.error("Error fetching user emails: ", error);
+      }
+    };
 
-  // Fetching Post from Database  
+    getUserEmails();
+  }, []);
+  console.log(emails);
+
+  // Fetching Post from Database
 
   const fetchPosts = async () => {
-
-    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com","abcd_gmail_com"];
 
     let allPosts = [];
 
     // Iterate through customUsers
-    for (let i = 0; i < customUsers.length; i++) {
-    
+    for (let i = 0; i < emails.length; i++) {
       // Construct reference to posts collection for each user
-      const userPostsRef = collection(db, 'userPosts',customUsers[i], 'posts');
+      const formattedEmail=formatEmail(emails[i]);
+      const userPostsRef = collection(db, "userPosts",formattedEmail, "posts");
 
-      console.log("user Post : ",userPostsRef) ;
+      //console.log("user Post : ", userPostsRef);
 
       try {
         const querySnapshot = await getDocs(userPostsRef);
 
         querySnapshot.forEach((doc) => {
-          allPosts.push({id: doc.id, ...doc.data() });
+          allPosts.push({ id: doc.id, ...doc.data() });
         });
       } catch (error) {
-        console.error(`Error fetching posts for user ${customUsers[i]}:`, error);
+        console.error(
+          `Error fetching posts for user ${emails[i]}:`,
+          error
+        );
       }
     }
 
-    console.log(allPosts)
+    console.log(allPosts);
     setPost(allPosts);
-    
   };
 
   useEffect(() => {
-    async function fetchCurrent(){
-        await fetchPosts();
+    async function fetchCurrent() {
+      await fetchPosts();
     }
 
     if (data && data.email) {
-    fetchCurrent() ; 
+      fetchCurrent();
     }
   }, [data]);
-
-
-
 
   // Photo Work
 
@@ -271,32 +276,27 @@ const Feed = ({ data }) => {
 
       {/* @ Post Starts from Here !   */}
 
-      
-    {
-      post.map(
-        ({ id, name, subHeader, message, photoURL, timestamp }) => {
-          // Converting time :
-          {
-            if (timestamp != null) {
-              timestamp = timestamp.toDate();
-              timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
-              overAllTime = timestamp;
-            }
+      {post.map(({ id, name, subHeader, message, photoURL, timestamp }) => {
+        // Converting time :
+        {
+          if (timestamp != null) {
+            timestamp = timestamp.toDate();
+            timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
+            overAllTime = timestamp;
           }
-
-          return (
-            <Post
-              key={id}
-              name={name}
-              subHeader={subHeader}
-              message={message}
-              avatar={photoURL}
-              timestamp={timestamp}
-            />
-          );
         }
-      )
-    }
+
+        return (
+          <Post
+            key={id}
+            name={name}
+            subHeader={subHeader}
+            message={message}
+            avatar={photoURL}
+            timestamp={timestamp}
+          />
+        );
+      })}
 
       {/* @Post - Images Start from here */}
 
