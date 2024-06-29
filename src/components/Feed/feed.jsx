@@ -85,58 +85,65 @@ const Feed = ({ data }) => {
     const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
     return userEmails;
   };
-  
-  useEffect(() => {
-    const getUserEmails = async () => {
-      try {
-        const emailsArray = await fetchUserEmails();
-        setEmails(emailsArray);
-        //console.log("User Emails: ", emailsArray); // Array of emails
-      } catch (error) {
-        console.error("Error fetching user emails: ", error);
-      }
-    };
 
-    getUserEmails();
-  }, []);
-  console.log(emails);
+  // useEffect(() => {
+  //   const getUserEmails = async () => {
+  //     try {
+  //       const emailsArray = await fetchUserEmails();
+  //       setEmails(emailsArray);
+  //       //console.log("User Emails: ", emailsArray); // Array of emails
+  //     } catch (error) {
+  //       console.error("Error fetching user emails: ", error);
+  //     }
+  //   };
+
+  //   getUserEmails();
+  // }, []);
+  // console.log(emails);
+
+  const checkUsersWithPosts = async (userEmails) => {
+    const usersWithPosts = [];
+
+    for (let email of userEmails) {
+      const formattedEmail = formatEmail(email);
+      const userPostsRef = collection(db, "userPosts", formattedEmail, "posts");
+
+      const postsSnapshot = await getDocs(userPostsRef);
+
+      if (!postsSnapshot.empty) {
+        usersWithPosts.push(formattedEmail);
+      }
+    }
+
+    return usersWithPosts;
+  };
+  const fetchPostsForUsers = async (usersWithPosts) => {
+    let allPosts = [];
+
+    for (let userEmail of usersWithPosts) {
+      const userPostsRef = collection(db, "userPosts", userEmail, "posts");
+      const postsSnapshot = await getDocs(userPostsRef);
+
+      postsSnapshot.forEach((doc) => {
+        allPosts.push({ id: doc.id, ...doc.data() });
+      });
+    }
+
+    return allPosts;
+  };
 
   // Fetching Post from Database
 
   const fetchPosts = async () => {
     try {
-      // Fetch all users
-      const usersRef = collection(db, "users");
-      const usersSnapshot = await getDocs(usersRef);
-      const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
+      // Fetch all user emails
+      const userEmails = await fetchUserEmails();
 
-      let allPosts = [];
+      // Check which users have posts
+      const usersWithPosts = await checkUsersWithPosts(userEmails);
 
-      for (let email of userEmails) {
-        const formattedEmail = formatEmail(email);
-        const userPostsRef = collection(
-          db,
-          "userPosts",
-          formattedEmail,
-          "posts"
-        );
-
-        try {
-          const postsSnapshot = await getDocs(userPostsRef);
-
-          if (postsSnapshot.empty) {
-            // No posts for this user, continue to the next
-            console.log(`No posts found for user ${email}`);
-            continue;
-          }
-
-          postsSnapshot.forEach((doc) => {
-            allPosts.push({ id: doc.id, ...doc.data() });
-          });
-        } catch (error) {
-          console.error(`Error fetching posts for user ${email}:`, error);
-        }
-      }
+      // Fetch posts for users who have posts
+      const allPosts = await fetchPostsForUsers(usersWithPosts);
 
       console.log(allPosts);
       setPost(allPosts);
@@ -144,7 +151,6 @@ const Feed = ({ data }) => {
       console.error("Error fetching posts:", error);
     }
   };
-
 
   useEffect(() => {
     async function fetchCurrent() {
