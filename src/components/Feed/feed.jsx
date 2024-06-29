@@ -131,26 +131,36 @@ const Feed = ({ data }) => {
 
     return allPosts;
   };
+const shuffleArray = (array) => {
+  let shuffledArray = array.slice(); // Create a copy of the array
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+  }
+  return shuffledArray;
+};
 
-  // Fetching Post from Database
+const fetchPosts = async () => {
+  try {
+    // Fetch all user emails
+    const userEmails = await fetchUserEmails();
 
-  const fetchPosts = async () => {
-    try {
-      // Fetch all user emails
-      const userEmails = await fetchUserEmails();
+    // Check which users have posts
+    const usersWithPosts = await checkUsersWithPosts(userEmails);
 
-      // Check which users have posts
-      const usersWithPosts = await checkUsersWithPosts(userEmails);
+    // Fetch posts for users who have posts
+    const allPosts = await fetchPostsForUsers(usersWithPosts);
 
-      // Fetch posts for users who have posts
-      const allPosts = await fetchPostsForUsers(usersWithPosts);
+    // Shuffle the posts array
+    const shuffledPosts = shuffleArray(allPosts);
 
-      console.log(allPosts);
-      setPost(allPosts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
+    console.log(shuffledPosts);
+    setPost(shuffledPosts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
+};
+
 
   useEffect(() => {
     async function fetchCurrent() {
