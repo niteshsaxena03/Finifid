@@ -104,34 +104,47 @@ const Feed = ({ data }) => {
   // Fetching Post from Database
 
   const fetchPosts = async () => {
+    try {
+      // Fetch all users
+      const usersRef = collection(db, "users");
+      const usersSnapshot = await getDocs(usersRef);
+      const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
 
-    let allPosts = [];
+      let allPosts = [];
 
-    // Iterate through customUsers
-    for (let i = 0; i < emails.length; i++) {
-      // Construct reference to posts collection for each user
-      const formattedEmail=formatEmail(emails[i]);
-      const userPostsRef = collection(db, "userPosts",formattedEmail, "posts");
-
-      //console.log("user Post : ", userPostsRef);
-
-      try {
-        const querySnapshot = await getDocs(userPostsRef);
-
-        querySnapshot.forEach((doc) => {
-          allPosts.push({ id: doc.id, ...doc.data() });
-        });
-      } catch (error) {
-        console.error(
-          `Error fetching posts for user ${emails[i]}:`,
-          error
+      for (let email of userEmails) {
+        const formattedEmail = formatEmail(email);
+        const userPostsRef = collection(
+          db,
+          "userPosts",
+          formattedEmail,
+          "posts"
         );
-      }
-    }
 
-    console.log(allPosts);
-    setPost(allPosts);
+        try {
+          const postsSnapshot = await getDocs(userPostsRef);
+
+          if (postsSnapshot.empty) {
+            // No posts for this user, continue to the next
+            console.log(`No posts found for user ${email}`);
+            continue;
+          }
+
+          postsSnapshot.forEach((doc) => {
+            allPosts.push({ id: doc.id, ...doc.data() });
+          });
+        } catch (error) {
+          console.error(`Error fetching posts for user ${email}:`, error);
+        }
+      }
+
+      console.log(allPosts);
+      setPost(allPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
   };
+
 
   useEffect(() => {
     async function fetchCurrent() {
