@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // Upload's
 import { doc, setDoc } from "firebase/firestore";
-import { v4 as uuid } from "uuid";
+;
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -43,7 +43,6 @@ const Feed = ({ data }) => {
   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
-  const [emails, setEmails] = useState([]);
 
   // DataBase Work  Temp :
 
@@ -86,21 +85,6 @@ const Feed = ({ data }) => {
     return userEmails;
   };
 
-  // useEffect(() => {
-  //   const getUserEmails = async () => {
-  //     try {
-  //       const emailsArray = await fetchUserEmails();
-  //       setEmails(emailsArray);
-  //       //console.log("User Emails: ", emailsArray); // Array of emails
-  //     } catch (error) {
-  //       console.error("Error fetching user emails: ", error);
-  //     }
-  //   };
-
-  //   getUserEmails();
-  // }, []);
-  // console.log(emails);
-
   const checkUsersWithPosts = async (userEmails) => {
     const usersWithPosts = [];
 
@@ -131,36 +115,38 @@ const Feed = ({ data }) => {
 
     return allPosts;
   };
-const shuffleArray = (array) => {
-  let shuffledArray = array.slice(); // Create a copy of the array
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
-  }
-  return shuffledArray;
-};
+  const shuffleArray = (array) => {
+    let shuffledArray = array.slice(); // Create a copy of the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ]; // Swap elements
+    }
+    return shuffledArray;
+  };
 
-const fetchPosts = async () => {
-  try {
-    // Fetch all user emails
-    const userEmails = await fetchUserEmails();
+  const fetchPosts = async () => {
+    try {
+      // Fetch all user emails
+      const userEmails = await fetchUserEmails();
 
-    // Check which users have posts
-    const usersWithPosts = await checkUsersWithPosts(userEmails);
+      // Check which users have posts
+      const usersWithPosts = await checkUsersWithPosts(userEmails);
 
-    // Fetch posts for users who have posts
-    const allPosts = await fetchPostsForUsers(usersWithPosts);
+      // Fetch posts for users who have posts
+      const allPosts = await fetchPostsForUsers(usersWithPosts);
 
-    // Shuffle the posts array
-    const shuffledPosts = shuffleArray(allPosts);
+      // Shuffle the posts array
+      const shuffledPosts = shuffleArray(allPosts);
 
-    console.log(shuffledPosts);
-    setPost(shuffledPosts);
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-  }
-};
-
+      console.log(shuffledPosts);
+      setPost(shuffledPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
   useEffect(() => {
     async function fetchCurrent() {
@@ -181,31 +167,47 @@ const fetchPosts = async () => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setImg(file);
+    // Format the file reference using the email
+    const email = formatEmail(data.email);
+    const imgRef = ref(storage, `Photo/${email}/${file.name}`);
 
-    const imgRef = ref(storage, `Photo/${uuidv4()}`);
     try {
+      // Upload the photo
       await uploadBytes(imgRef, file);
       const url = await getDownloadURL(imgRef);
-      setImgUrl((prevUrls) => [...prevUrls, url]);
+
+      // Save metadata and URL to Firestore
+      const photoData = {
+        url: url,
+        name: data.userName,
+        subHeader: data.profession,
+        timestamp: serverTimestamp(),
+        email: data.email,
+      };
+      await addDoc(collection(db, "photos"), photoData);
+
+      // Update state with new photo URL
+      setImgUrl((prevUrls) => [...prevUrls, { ...photoData, id: uuidv4() }]);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const listRef = ref(storage, "Photo");
-        const res = await listAll(listRef);
-        const urls = await Promise.all(
-          res.items.map((itemRef) => getDownloadURL(itemRef))
-        );
-        setImgUrl(urls);
+        const photosRef = collection(db, "photos");
+        const photosSnapshot = await getDocs(photosRef);
+        const photos = photosSnapshot.docs.map((doc) => doc.data());
+
+        // Assuming photos are sorted by timestamp if needed
+        setImgUrl(photos);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
     };
+
 
     fetchImages();
   }, []);
@@ -329,7 +331,7 @@ const fetchPosts = async () => {
 
       {/* @Post - Images Start from here */}
 
-      {imgurl.map((url) => (
+      {/* {imgurl.map((url) => (
         <Post
           key={uuidv4()}
           name={"Username"}
@@ -339,6 +341,22 @@ const fetchPosts = async () => {
           timestamp={overAllTime}
           postImage={url}
           caption="This is the Random Caption"
+        />
+      ))} */}
+      {imgurl.map(({ id, url, name, subHeader, timestamp }) => (
+        <Post
+          key={id}
+          name={name}
+          subHeader={subHeader}
+          message={""}
+          avatar={photo}
+          timestamp={
+            timestamp
+              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
+              : ""
+          }
+          postImage={url}
+          caption="This is a random caption"
         />
       ))}
 
