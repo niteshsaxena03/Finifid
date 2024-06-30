@@ -222,29 +222,46 @@ const Feed = ({ data }) => {
 
     setVideo(file);
 
-    const vidRef = ref(storage, `Video/${uuidv4()}`);
+    const formattedEmail = formatEmail(data.email); // Format email for storage reference
+    const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
+
     try {
+      // Upload the video
       await uploadBytes(vidRef, file);
       const url = await getDownloadURL(vidRef);
-      setVidUrl((prevUrls) => [...prevUrls, url]);
+
+      // Save metadata and URL to Firestore
+      const videoData = {
+        url: url,
+        name: data.userName,
+        subHeader: data.profession,
+        timestamp: serverTimestamp(),
+        email: data.email,
+      };
+      await addDoc(collection(db, "videos"), videoData);
+
+      // Update state with new video URL
+      setVidUrl((prevUrls) => [...prevUrls, { ...videoData, id: uuidv4() }]);
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
 
+
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const listRef = ref(storage, "Video");
-        const res = await listAll(listRef);
-        const urls = await Promise.all(
-          res.items.map((itemRef) => getDownloadURL(itemRef))
-        );
-        setVidUrl(urls);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
+   const fetchVideos = async () => {
+     try {
+       const videosRef = collection(db, "videos");
+       const videosSnapshot = await getDocs(videosRef);
+       const videos = videosSnapshot.docs.map((doc) => doc.data());
+
+       // Assuming videos are sorted by timestamp if needed
+       setVidUrl(videos);
+     } catch (error) {
+       console.error("Error fetching videos:", error);
+     }
+   };
+
 
     fetchVideos();
   }, []);
@@ -356,21 +373,25 @@ const Feed = ({ data }) => {
               : ""
           }
           postImage={url}
-          caption="This is a random caption"
+          caption=""
         />
       ))}
 
       {/* @Post - Videos Start from here */}
 
-      {videoUrl.map((url) => (
+      {videoUrl.map(({ id, url, name, subHeader, timestamp }) => (
         <Post
-          key={uuidv4()}
-          name={"Username"}
-          subHeader={"subHeader"}
+          key={id}
+          name={name}
+          subHeader={subHeader}
           message={""}
           avatar={photo}
-          timestamp={overAllTime}
-          caption="This is the Random Caption"
+          timestamp={
+            timestamp
+              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
+              : ""
+          }
+          caption=""
           postvideo={url}
         />
       ))}
