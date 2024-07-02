@@ -289,7 +289,7 @@ const Feed = ({ data }) => {
               // for getting value :
               value={input}
             />
-            <button>Sumbit</button>
+            <button>Submit</button>
           </form>
         </div>
 
@@ -348,18 +348,7 @@ const Feed = ({ data }) => {
 
       {/* @Post - Images Start from here */}
 
-      {/* {imgurl.map((url) => (
-        <Post
-          key={uuidv4()}
-          name={"Username"}
-          subHeader={"subHeader"}
-          message={""}
-          avatar={photo}
-          timestamp={overAllTime}
-          postImage={url}
-          caption="This is the Random Caption"
-        />
-      ))} */}
+     
       {imgurl.map(({ id, url, name, subHeader, timestamp }) => (
         <Post
           key={id}
