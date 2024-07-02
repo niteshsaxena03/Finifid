@@ -11,16 +11,14 @@ import {
   onSnapshot,
   orderBy,
   getDocs,
-  getDocsFromServer,
-  collectionGroup,
 } from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
-// Upload's 
+// Upload's
 import { doc, setDoc } from "firebase/firestore";
-import { v4 as uuid  } from "uuid";
+;
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -37,7 +35,6 @@ let photo =
   "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
 let overAllTime;
 
-
 const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
@@ -45,104 +42,123 @@ const formatEmail = (email) => {
 
 const Feed = ({ data , profile , friends }) => {
 
- 
-  
-  //   Hooks :
+   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
 
-
   // DataBase Work  Temp :
 
-
-  // Adding Post To Database  
+  // Adding Post To Database
 
   const AddPost = async (event) => {
-
     event.preventDefault();
 
     const formattedEmail = formatEmail(data.email);
 
+    try {
+      const userDocRef = collection(db, "userPosts", formattedEmail, "posts");
 
-    try{
-
-      const userDocRef = collection(db, 'userPosts',formattedEmail,'posts');
-    
       let postData = {
-        name : data.userName,
+        name: data.userName,
         subHeader: data.profession,
         message: input,
-        photoURL:"https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        photoURL:
+          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
         timestamp: serverTimestamp(),
         email: data.email,
-      }
+      };
 
-      // Upload ! 
-      await addDoc(userDocRef, postData);      
+      // Upload !
+      await addDoc(userDocRef, postData);
       setInput("");
 
-
-      // Post After Upload !  
-     await fetchPosts() ;
-
+      // Post After Upload !
+      await fetchPosts();
+    } catch (error) {
+      console.log("method not work  !", error);
     }
-
-    catch(error){
-       console.log("method not work  !",error ) ;
-    }  
   };
 
+  // Function to fetch all emails from users collection
+  const fetchUserEmails = async () => {
+    const usersRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersRef);
+    const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
+    return userEmails;
+  };
 
-  // Fetching Post from Database  
+  const checkUsersWithPosts = async (userEmails) => {
+    const usersWithPosts = [];
 
-  const fetchPosts = async (email) => {    
-    let customUsers ;
+    for (let email of userEmails) {
+      const formattedEmail = formatEmail(email);
+      const userPostsRef = collection(db, "userPosts", formattedEmail, "posts");
 
+      const postsSnapshot = await getDocs(userPostsRef);
 
-    if( profile == true ){
-      console.log(email) ;
-      customUsers = [formatEmail(email)] ;
-    }
-    else{
-      customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com",formatEmail(email)];
-    }
-
-    let allPosts = [];
-
-    // Iterate through customUsers
-    for (let i = 0; i < customUsers.length; i++) {
-    
-      // Construct reference to posts collection for each user
-      const userPostsRef = collection(db, 'userPosts',customUsers[i], 'posts');
-
-
-      try {
-        const querySnapshot = await getDocs(userPostsRef);
-
-        querySnapshot.forEach((doc) => {
-          allPosts.push({id: doc.id, ...doc.data() });
-        });
-      } catch (error) {
-        console.error(`Error fetching posts for user ${customUsers[i]}:`, error);
+      if (!postsSnapshot.empty) {
+        usersWithPosts.push(formattedEmail);
       }
     }
 
-    setPost(allPosts);
-    
+    return usersWithPosts;
+  };
+  const fetchPostsForUsers = async (usersWithPosts) => {
+    let allPosts = [];
+
+    for (let userEmail of usersWithPosts) {
+      const userPostsRef = collection(db, "userPosts", userEmail, "posts");
+      const postsSnapshot = await getDocs(userPostsRef);
+
+      postsSnapshot.forEach((doc) => {
+        allPosts.push({ id: doc.id, ...doc.data() });
+      });
+    }
+
+    return allPosts;
+  };
+  const shuffleArray = (array) => {
+    let shuffledArray = array.slice(); // Create a copy of the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ]; // Swap elements
+    }
+    return shuffledArray;
+  };
+
+  const fetchPosts = async () => {
+    try {
+      // Fetch all user emails
+      const userEmails = await fetchUserEmails();
+
+      // Check which users have posts
+      const usersWithPosts = await checkUsersWithPosts(userEmails);
+
+      // Fetch posts for users who have posts
+      const allPosts = await fetchPostsForUsers(usersWithPosts);
+
+      // Shuffle the posts array
+      const shuffledPosts = shuffleArray(allPosts);
+
+      console.log(shuffledPosts);
+      setPost(shuffledPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
   };
 
   useEffect(() => {
-    async function fetchCurrent(){
-        await fetchPosts(data.email);
+    async function fetchCurrent() {
+      await fetchPosts();
     }
 
     if (data && data.email) {
-    fetchCurrent() ; 
+      fetchCurrent();
     }
   }, [data]);
-
-
-
 
   // Photo Work
 
@@ -153,31 +169,47 @@ const Feed = ({ data , profile , friends }) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setImg(file);
+    // Format the file reference using the email
+    const email = formatEmail(data.email);
+    const imgRef = ref(storage, `Photo/${email}/${file.name}`);
 
-    const imgRef = ref(storage, `Photo/${uuidv4()}`);
     try {
+      // Upload the photo
       await uploadBytes(imgRef, file);
       const url = await getDownloadURL(imgRef);
-      setImgUrl((prevUrls) => [...prevUrls, url]);
+
+      // Save metadata and URL to Firestore
+      const photoData = {
+        url: url,
+        name: data.userName,
+        subHeader: data.profession,
+        timestamp: serverTimestamp(),
+        email: data.email,
+      };
+      await addDoc(collection(db, "photos"), photoData);
+
+      // Update state with new photo URL
+      setImgUrl((prevUrls) => [...prevUrls, { ...photoData, id: uuidv4() }]);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const listRef = ref(storage, "Photo");
-        const res = await listAll(listRef);
-        const urls = await Promise.all(
-          res.items.map((itemRef) => getDownloadURL(itemRef))
-        );
-        setImgUrl(urls);
+        const photosRef = collection(db, "photos");
+        const photosSnapshot = await getDocs(photosRef);
+        const photos = photosSnapshot.docs.map((doc) => doc.data());
+
+        // Assuming photos are sorted by timestamp if needed
+        setImgUrl(photos);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
     };
+
 
     fetchImages();
   }, []);
@@ -192,29 +224,46 @@ const Feed = ({ data , profile , friends }) => {
 
     setVideo(file);
 
-    const vidRef = ref(storage, `Video/${uuidv4()}`);
+    const formattedEmail = formatEmail(data.email); // Format email for storage reference
+    const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
+
     try {
+      // Upload the video
       await uploadBytes(vidRef, file);
       const url = await getDownloadURL(vidRef);
-      setVidUrl((prevUrls) => [...prevUrls, url]);
+
+      // Save metadata and URL to Firestore
+      const videoData = {
+        url: url,
+        name: data.userName,
+        subHeader: data.profession,
+        timestamp: serverTimestamp(),
+        email: data.email,
+      };
+      await addDoc(collection(db, "videos"), videoData);
+
+      // Update state with new video URL
+      setVidUrl((prevUrls) => [...prevUrls, { ...videoData, id: uuidv4() }]);
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
 
+
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const listRef = ref(storage, "Video");
-        const res = await listAll(listRef);
-        const urls = await Promise.all(
-          res.items.map((itemRef) => getDownloadURL(itemRef))
-        );
-        setVidUrl(urls);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
+   const fetchVideos = async () => {
+     try {
+       const videosRef = collection(db, "videos");
+       const videosSnapshot = await getDocs(videosRef);
+       const videos = videosSnapshot.docs.map((doc) => doc.data());
+
+       // Assuming videos are sorted by timestamp if needed
+       setVidUrl(videos);
+     } catch (error) {
+       console.error("Error fetching videos:", error);
+     }
+   };
+
 
     fetchVideos();
   }, []);
@@ -294,36 +343,31 @@ const Feed = ({ data , profile , friends }) => {
 
       {/* @ Post Starts from Here !   */}
 
-      
-    {
-      post.map(
-        ({ id, name, subHeader, message, photoURL, timestamp }) => {
-          // Converting time :
-          {
-            if (timestamp != null) {
-              timestamp = timestamp.toDate();
-              timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
-              overAllTime = timestamp;
-            }
+      {post.map(({ id, name, subHeader, message, photoURL, timestamp }) => {
+        // Converting time :
+        {
+          if (timestamp != null) {
+            timestamp = timestamp.toDate();
+            timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
+            overAllTime = timestamp;
           }
-
-          return (
-            <Post
-              key={id}
-              name={name}
-              subHeader={subHeader}
-              message={message}
-              avatar={photoURL}
-              timestamp={timestamp}
-            />
-          );
         }
-      )
-    }
+
+        return (
+          <Post
+            key={id}
+            name={name}
+            subHeader={subHeader}
+            message={message}
+            avatar={photoURL}
+            timestamp={timestamp}
+          />
+        );
+      })}
 
       {/* @Post - Images Start from here */}
 
-      {imgurl.map((url) => (
+      {/* {imgurl.map((url) => (
         <Post
           key={uuidv4()}
           name={"Username"}
@@ -334,19 +378,39 @@ const Feed = ({ data , profile , friends }) => {
           postImage={url}
           caption="This is the Random Caption"
         />
+      ))} */}
+      {imgurl.map(({ id, url, name, subHeader, timestamp }) => (
+        <Post
+          key={id}
+          name={name}
+          subHeader={subHeader}
+          message={""}
+          avatar={photo}
+          timestamp={
+            timestamp
+              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
+              : ""
+          }
+          postImage={url}
+          caption=""
+        />
       ))}
 
       {/* @Post - Videos Start from here */}
 
-      {videoUrl.map((url) => (
+      {videoUrl.map(({ id, url, name, subHeader, timestamp }) => (
         <Post
-          key={uuidv4()}
-          name={"Username"}
-          subHeader={"subHeader"}
+          key={id}
+          name={name}
+          subHeader={subHeader}
           message={""}
           avatar={photo}
-          timestamp={overAllTime}
-          caption="This is the Random Caption"
+          timestamp={
+            timestamp
+              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
+              : ""
+          }
+          caption=""
           postvideo={url}
         />
       ))}

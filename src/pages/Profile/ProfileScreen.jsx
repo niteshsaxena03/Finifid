@@ -22,6 +22,7 @@ import Trends from "../../components/Sidebar/Trends.jsx";
 import RightBarHead from '../../components/RightBar/rightBarHead.jsx';
 import RecentsView from '../../components/RightBar/recentsView.jsx';
 import FunctionSection from "./functionSelection";
+import {v4 as uuid } from 'uuid' ;
 
 // DATA FROM API
 import getTrendingSearches from "./GoogleTendsAPI.js";
@@ -89,7 +90,7 @@ function ProfileScreen({data}) {
 
               {/* All user Post's */}
               <div className="userFeed">
-                  <Feed data={data.email} profile={true}/>
+                  <Feed key={uuid()} data={data.email} profile={true}/>
               </div>
 
           </div>
