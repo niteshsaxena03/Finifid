@@ -43,7 +43,7 @@ const formatEmail = (email) => {
 };
 
 
-const Feed = ({ data }) => {
+const Feed = ({ data , profile , friends }) => {
 
  
   
@@ -58,7 +58,7 @@ const Feed = ({ data }) => {
   // Adding Post To Database  
 
   const AddPost = async (event) => {
-    
+
     event.preventDefault();
 
     const formattedEmail = formatEmail(data.email);
@@ -95,9 +95,17 @@ const Feed = ({ data }) => {
 
   // Fetching Post from Database  
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (email) => {    
+    let customUsers ;
 
-    let customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com"];
+
+    if( profile == true ){
+      console.log(email) ;
+      customUsers = [formatEmail(email)] ;
+    }
+    else{
+      customUsers = ["redux_gmail_com", "ryzenPost_gmail_com", "yashgupta32343a_gmail_com",formatEmail(email)];
+    }
 
     let allPosts = [];
 
@@ -107,7 +115,6 @@ const Feed = ({ data }) => {
       // Construct reference to posts collection for each user
       const userPostsRef = collection(db, 'userPosts',customUsers[i], 'posts');
 
-      console.log("user Post : ",userPostsRef) ;
 
       try {
         const querySnapshot = await getDocs(userPostsRef);
@@ -120,14 +127,13 @@ const Feed = ({ data }) => {
       }
     }
 
-    console.log(allPosts)
     setPost(allPosts);
     
   };
 
   useEffect(() => {
     async function fetchCurrent(){
-        await fetchPosts();
+        await fetchPosts(data.email);
     }
 
     if (data && data.email) {
@@ -216,15 +222,29 @@ const Feed = ({ data }) => {
   return (
     <div className="feed">
       {/* Story Section  */}
-      <div className="storyPost">
+
+      
+      {
+        ( profile == true ) ?  
+        null 
+        :
+        <div className="storyPost">
         {/* {console.log(UserData)}; */}
         {/* {console.log(FriendsData)} */}
         <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
       </div>
+  
+      }
 
       {/* feed input  */}
 
+
+    { 
+      (friends == true) ? 
+      null 
+      : 
       <div className="feedSearchBox">
+
         <div className="feedSearch">
           <Avatar />
           <form onSubmit={AddPost}>
@@ -268,6 +288,9 @@ const Feed = ({ data }) => {
           <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
         </form>
       </div>
+
+ 
+     }
 
       {/* @ Post Starts from Here !   */}
 

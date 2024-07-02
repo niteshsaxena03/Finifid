@@ -16,6 +16,7 @@ const Database = async (name, email, hobby, profession, age = null) => {
       Schema.profession = profession;
       Schema.age=age;
 
+
       // End Data
 
       // Data uploading to firebase is taking place from below !

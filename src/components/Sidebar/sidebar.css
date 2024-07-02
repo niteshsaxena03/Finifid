@@ -1,15 +1,11 @@
-.sidebar{
+#sidebar{
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 0.21;
-    height: 400px;
-    width: 210px;
-    
-    /* border:  1px solid black; */
+    height: max-content;
+    flex : 0.25;
 
-    margin-left: 6%;
     margin-top: 1.5%;
 }   
 
@@ -18,11 +14,12 @@
     background-color: #fff;
 
     height: 195px;
-    width: 210px;
+    width: 85% !important;
 
-    /* border:  1px solid black; */
 
     overflow: hidden;
+
+    box-shadow: 0 0 1px #8e0b3a;
 
 }
 
@@ -39,7 +36,8 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-}
+
+    }
 
 
 .user{
@@ -53,6 +51,11 @@
     width: 100%;
 }
 
+.userHeader .MuiAvatar-root{
+    height: 50px;
+    width: 50px;
+}
+
 .userHeader{
     display: flex;
     flex-direction: column;
@@ -60,13 +63,21 @@
     align-items: center;
 
     position: relative;
-    bottom: 25px;
+    bottom: 19px;
 
 }
 
 .userTitle{
     font-weight: bold ;
     font-size: 15px;
+}
+
+.userHomeProfileHeader{
+    font-size: 16px !important;
+}
+
+.userHomeProfileDes{
+    font-size: 14px !important;
 }
 
 .userDescription{
@@ -86,7 +97,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* margin: 4% 0 ; */
     height: 75px;
 }
 
@@ -98,35 +108,28 @@
 }
 
 .sideFont{
-    font-size: 11px;
+    font-size: 15px !important;
     color: #333;
     font-weight: 500;
 }
 
 .subProfile{
 
-    height: 195px;
-    width: 210px;
+    height: max-content !important;
+    width: 85% !important;
 
-    border-bottom: 1px solid #000;
     background-color: #fff;
 
     padding: 10px;
     margin: 10px 0 ;
     position: sticky;
-    top: 60px;
+    top: 766px;
 
+    box-shadow: 0 0 1px #8e0b3a;
 }
 
-.trends span{
-    font-weight: bold ;  
-    font-size: 13px; 
-    margin-right: 7px ;
-    color: #333;
-}
 
-.subProfile .headTrend{
-    font-size: 14px;
+.subProfile #headTrend{
     color: #0e0e0e;
     margin-bottom: 3%;
 }
@@ -135,10 +138,39 @@
     display: flex;   
     align-items: center;
     color: #333;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .email,.hobby{
-    font-size: 12px;
+    font-size: 14px !important;
     font-weight: bold;
+}
+
+/* Div Images  */
+.icon-container {
+    display: flex; /* Arrange icons in a row */
+    gap: 10px; /* Spacing between icons */
+
+
+}
+
+.icon-container img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover; 
+
+
+    border-radius: 8px ;
+    box-shadow: 0 0 1px black;
+    /* border: 1px solid #000;  */
+}
+
+
+.trendsTitle{
+    font-weight: 550;
+    color: #333;
+}
+
+.reposts{
+    font-size: 14px !important;
 }

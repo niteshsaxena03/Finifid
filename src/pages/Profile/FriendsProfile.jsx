@@ -25,10 +25,8 @@ import FunctionSection from "./functionSelection";
 
 // DATA FROM API
 import getTrendingSearches from "./GoogleTendsAPI.js";
-import { currentDate } from "./GoogleTendsAPI.js";
 
-function ProfileScreen({data}) {
-
+function FriendsProfile({data}) {
 
 
   const [trends, setTrends] = useState(null);
@@ -46,11 +44,6 @@ function ProfileScreen({data}) {
     fetchTrends();
   }, []);
 
-
-  //  Random Data for Follower Function : 
-
-  let Emails = ["redux@gmail.com", "ryzen@gmail.com","randomUser@gmail.com"] ; 
-
   
   return (
      <div className="profileScreen">
@@ -66,30 +59,22 @@ function ProfileScreen({data}) {
 
           {/* Profile  */}
           <div className="profileSection">
-                <ProfileSection/>
+                <ProfileSection friends = {true}/>
           </div>
 
           {/* Post Part */}
 
           <div className="mainUserFeed">
             
-              <div className="postTag">
+              <div className="postTag friendPostTag">
 
                   <h2>All Posts</h2>
-
-
-                  {/* Edit Button  */}
-
-                  <div className="editProfile ">
-                      <button type = 'button' ><EditIcon style={{color : '#8e0b3a'}}/> <a href="" style={{color : "#8e0b3a"}}>Edit Profile</a></button>
-                  </div> 
-
 
               </div>
 
               {/* All user Post's */}
               <div className="userFeed">
-                  <Feed data={data.email} profile={true}/>
+                  <Feed data={data.email} profile={true} friends = {true} />
               </div>
 
           </div>
@@ -119,9 +104,9 @@ function ProfileScreen({data}) {
 
         {/* Activity's */}
         {/* <RecentsView/> */}
-        <RecentsView profile={true} Email = {Emails[0]} data ={data}/>
-        <RecentsView profile={true} Email = {Emails[1]} data ={data} />
-        <RecentsView profile={true} end = {true} Email = {Emails[2]}  data ={data}/>
+        <RecentsView profile={true}/>
+        <RecentsView profile={true}   />
+        <RecentsView profile={true} end = {true}/>
 
 
         
@@ -136,7 +121,7 @@ function ProfileScreen({data}) {
                 {/* Header */}
 
                 <h4 id="headTrend">
-                <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {currentDate}/>
+                <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {"Sunday , 30 June 2024"}/>
                 </h4>
 
 
@@ -160,4 +145,4 @@ function ProfileScreen({data}) {
   );
 }
 
-export default ProfileScreen;
+export default FriendsProfile;

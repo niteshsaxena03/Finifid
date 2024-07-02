@@ -9,6 +9,7 @@ import WelcomeScreen from "./pages/Welcome/WelcomeScreen";
 import { Routes, Route } from "react-router";
 import MainStory from "./components/Story/mainStory";
 import SeeFriendStory from "./components/Story/SeeFriendStory";
+import FriendsProfile from "./pages/Profile/FriendsProfile";
 
 // DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
@@ -24,6 +25,7 @@ function App() {
   async function fetchUserData(email) {
     try {
       let data = await fetchDetails(email);
+      console.log("main data" ,  data) ;
       setData(data);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -45,9 +47,10 @@ function App() {
       <Route path="/home" element={<HomeScreen data={data} />} />
       <Route path="/friends" element={<FriendScreen />} />
       <Route path="/notifications" element={<NotificationScreen />} />
-      <Route path="/profile" element={<ProfileScreen />} />
+      <Route path="/profile" element={<ProfileScreen data = {data}/>} />
       <Route path="/story" element={<MainStory />} />
       <Route path="/story/friend/:name" element={<SeeFriendStory />} />
+      <Route path="/profile/friend" element={<FriendsProfile data={data}/>} />
     </Routes>
   );
 }

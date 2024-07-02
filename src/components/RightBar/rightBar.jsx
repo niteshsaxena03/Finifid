@@ -43,7 +43,7 @@ const rightBar = () => {
         <RightBarHead Icon = {ScheduleIcon} newsHeader = {"Recent's"} idx = {-1}/>
 
         {/* Activity's */}
-        <RecentsView/>
+        {/* <RecentsView/> */}
         <RecentsView/>
         <RecentsView/>
         <RecentsView/>

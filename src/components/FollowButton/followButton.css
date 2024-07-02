@@ -1,0 +1,11 @@
+.MuiButtonBase-root{
+    border-color: #8e0b3a  !important;
+    color: #8e0b3a !important;
+    background-color: #fff !important;
+    text-transform: capitalize !important;
+    width: 25% !important;
+}
+
+.MuiButtonBase-root:hover{
+    background-color: #8e0b3b12 !important;
+}

@@ -1,31 +1,36 @@
-import NewsAPI from 'newsapi';
 import axios from 'axios';
 
-let q = 'Google' ; 
-const newsapi = `https://newsapi.org/v2/everything?q=${q}&apiKey=1f16c9c0ce704f0898301082e53998ff`
-let Data ; 
-let filterNews = [] ; 
+let q = 'Facebook';
+const newsapi = `https://newsapi.org/v2/everything?q=${q}&apiKey=1f16c9c0ce704f0898301082e53998ff`;
 
+async function getNews() {
+  try {
+    const response = await axios.get(newsapi);
+    let data = response.data.articles;
 
-async function getNews(){
-    let Data = (await axios.get(newsapi)).data.articles ; 
-    //  Filter News : Top 5 news : 
-    
-     for( let i = 2 ; i<=6 ; i++ ){
-        let randomNews = Data[(Math.floor(Math.random()*10))] ; 
-
-        ( randomNews.title !== "[Removed]" ? filterNews.push(randomNews) : "" ) ;
+    // Ensure we have enough articles to choose from
+    if (data.length < 5) {
+      throw new Error('Not enough articles to select from');
     }
 
-    return filterNews ; 
-} 
+    let filterNews = [];
+    let indicesUsed = new Set();
 
+    while (filterNews.length < 5) {
+      let randomIndex = Math.floor(Math.random() * data.length);
 
+      // Ensure unique index and valid article
+      if (!indicesUsed.has(randomIndex) && data[randomIndex].title !== "[Removed]") {
+        indicesUsed.add(randomIndex);
+        filterNews.push(data[randomIndex]);
+      }
+    }
 
+    return filterNews;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return [];
+  }
+}
 
-
-
-
-export { getNews } ;
-
-
+export { getNews };

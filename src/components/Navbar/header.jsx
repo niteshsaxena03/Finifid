@@ -12,7 +12,7 @@ import {
 } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 
-function Header() {
+function Header({profile = true }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -43,7 +43,11 @@ function Header() {
             label={"Friends"}
             navigation={"/friends"}
           />
-          <HeaderOptions Avatar={Avatar} label={"User"} navigation={"/profile"}/>
+          { (profile == true ) ? 
+             <HeaderOptions Avatar={Avatar} label={"User"} navigation={"/profile"}/>
+             :
+             null   
+          }
         </div>
       </div>
     </div>
