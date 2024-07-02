@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // Upload's
 import { doc, setDoc } from "firebase/firestore";
-;
+
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";

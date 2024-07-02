@@ -70,7 +70,7 @@ function NotificationScreen() {
   }, [firebase, navigate,isLoggedIn]);
   return (
     <div>
-      <Header />
+      <Header notifications={false}/>
       <div className="mainPage">
         <div className="heading">
           <h1>Notifications</h1>

@@ -69,7 +69,7 @@ const followingData = [
 
   return (
     <div>
-      <Header />
+      <Header friends={false}/>
       <div className="mainPage">
         <div className="heading">
           <h1>Friends</h1>

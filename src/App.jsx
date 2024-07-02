@@ -14,6 +14,7 @@ import FriendsProfile from "./pages/Profile/FriendsProfile";
 // DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
 import { useState, useEffect } from "react";
+import SearchUser from "./pages/SearchUser/SearchUser";
 
 function App() {
   
@@ -51,6 +52,7 @@ function App() {
       <Route path="/story" element={<MainStory />} />
       <Route path="/story/friend/:name" element={<SeeFriendStory />} />
       <Route path="/profile/friend" element={<FriendsProfile data={data}/>} />
+      <Route path="/searchuser" element={<SearchUser/>}/>
     </Routes>
   );
 }
