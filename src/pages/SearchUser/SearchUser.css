@@ -12,18 +12,22 @@
   width: 80%; /* Set width to 80% of the page width */
   max-width: 1200px; /* Maximum width for larger screens */
   padding: 20px;
-  background-color: #ffffff; /* White background for results area */
+  background-color: #cfda6c; /* White background for results area */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   border-radius: 8px; /* Rounded corners */
   border: 1px solid #ddd; /* Light border for the box */
   margin-top: 20px; /* Space above the results box */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center contents horizontally */
 }
 
 h2 {
   text-align: center; /* Center the heading */
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 34px;
   color: #333; /* Darker text color */
+  font-weight: bold;
 }
 
 .no-results {
@@ -39,11 +43,25 @@ h2 {
   text-align: center; /* Center the text */
 }
 
-/* Styles for FriendComponent container */
-.friend-component-container {
+/* Styles for individual FriendComponent */
+.friend-component-wrapper {
+  width: 100%; /* Full width of the container */
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 20px; /* Space between items */
+  justify-content: center; /* Center horizontally */
+  margin-bottom: 20px; /* Space below each component */
+}
+
+.friend-component {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 20px;
+  width: 100%; /* Ensure full width of the wrapper */
+  max-width: 600px; /* Maximum width for each component */
+  background-color: #ffffff; /* White background for each component */
+  border: 1px solid #ddd; /* Light border for each component */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for each component */
 }
 
 /* Media Queries for responsiveness */
@@ -65,6 +83,11 @@ h2 {
   .search-query-message {
     font-size: 16px;
   }
+
+  .friend-component {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -84,5 +107,10 @@ h2 {
   .no-results,
   .search-query-message {
     font-size: 14px;
+  }
+
+  .friend-component {
+    padding: 8px;
+    margin-bottom: 10px;
   }
 }

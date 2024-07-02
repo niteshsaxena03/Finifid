@@ -39,16 +39,15 @@ function SearchUser() {
         <h2>Search Results</h2>
         {searchQuery ? (
           users.length > 0 ? (
-            <div className="friend-component-container">
-              {users.map((user, index) => (
+            users.map((user, index) => (
+              <div key={index} className="friend-component">
                 <FriendComponent
-                  key={index}
                   name={user.name}
                   about={user.profession || "No profession available"} // Display profession or fallback text
                   image={user.image} // Ensure image field is available
                 />
-              ))}
-            </div>
+              </div>
+            ))
           ) : (
             <p className="no-results">No Users Found</p>
           )
