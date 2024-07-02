@@ -1,4 +1,4 @@
-
+import { useEffect } from "react";
 import "../Navbar/sidebar.css";
 import "./post.css";
 import PostHeader from "./postHeader";
@@ -14,6 +14,10 @@ const Post = ({
   postvideo,
   caption = "",
 }) => {
+
+ 
+
+
   return (
     <div className="posts">
       <PostHeader
@@ -36,7 +40,9 @@ const Post = ({
               <i>{caption != "" ? caption : null}</i>
             </p>
             <div className="sepLine"></div>
-            <img src={postImage} className="postBodyContent"></img>
+            <div className="imageContainer">
+                <img src={postImage} className="postBodyContent" alt="Post" />
+            </div>
           </div>
         ) : // else
         null}

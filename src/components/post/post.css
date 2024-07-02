@@ -1,67 +1,62 @@
-.posts{
-    display: flex ;
+.posts {
+    display: flex;
+    justify-content: center;
     flex-direction: column;
     flex: 0.50;
 
+    
     background-color: #fff;
-
     box-shadow: 0 0 1px black;
-
-
     margin-top: 1.5%;
     padding: 0 10px;
-
-
     border-radius: 10px;
 
-    transition: all 1s 0.9s linear ;
+    box-shadow: 0 0 2px #8e0b3a;
+
 }
 
-
-.postHeader{
+.postHeader {
     display: flex;
-    flex : 1 ; 
+    flex: 1; 
     justify-content: space-between;
     align-items: center;
-
     margin-top: 1.5%;
 }
 
-.postHeaderLeft{
+.postHeaderLeft {
     display: flex;
     flex: 1;
     align-items: center;
 }
 
-.timeStamp{
+.timeStamp {
     font-size: 10px;
     color: #333;
     font-weight: 500;
 }
 
-.postHeaderRight{
-
+.postHeaderRight {
 }
 
-
-.postHeaderLeft .username{
+.postHeaderLeft .username {
     margin-left: 2%;
 }
 
-.postBody{
+.postBody {
     padding: 3px 7px;
-    min-height: 150px ;
+    min-height: 150px;
     margin-bottom: 1%;
-
 }
 
-img{
-   
-    border-radius: 20px ;
+img {
+    border-radius: 20px;
     width: 100%;
+    height: auto;
+    object-fit: cover;
+    max-height: 400px;
 }
 
-.imagePost,.videoPost{
+.imagePost, .videoPost {
     display: flex;
     flex-direction: column;
 }
@@ -71,31 +66,42 @@ img{
     background-color: #ccc;
 }
 
-.vidLine{
+.vidLine {
     margin: 1%;
 }
 
-.caption{
+.caption {
     font-size: 15px;
     color: #333;
 }
 
-
-.postBodyContent{
+.postBodyContent {
     margin-top: 1.5%;
 }
 
-.postFooter{
+.postFooter {
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-
     border-top: 1px solid #ccc;
-
     height: 40px;
-
-
-    font-size:smaller;  
+    font-size: smaller;  
     cursor: pointer;
 }
 
+.imageContainer {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.imageContainer.large img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+}

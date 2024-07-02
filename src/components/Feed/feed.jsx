@@ -39,8 +39,10 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const Feed = ({ data }) => {
-  //   Hooks :
+
+const Feed = ({ data , profile , friends }) => {
+
+   //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
 
@@ -269,15 +271,29 @@ const Feed = ({ data }) => {
   return (
     <div className="feed">
       {/* Story Section  */}
-      <div className="storyPost">
+
+      
+      {
+        ( profile == true ) ?  
+        null 
+        :
+        <div className="storyPost">
         {/* {console.log(UserData)}; */}
         {/* {console.log(FriendsData)} */}
         <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
       </div>
+  
+      }
 
       {/* feed input  */}
 
+
+    { 
+      (friends == true) ? 
+      null 
+      : 
       <div className="feedSearchBox">
+
         <div className="feedSearch">
           <Avatar />
           <form onSubmit={AddPost}>
@@ -321,6 +337,9 @@ const Feed = ({ data }) => {
           <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
         </form>
       </div>
+
+ 
+     }
 
       {/* @ Post Starts from Here !   */}
 

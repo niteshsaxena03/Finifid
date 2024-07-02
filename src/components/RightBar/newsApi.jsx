@@ -11,7 +11,12 @@ const newsApi = ({end}) => {
     } ; 
     
     useEffect(()=>{
-       realNews() ; 
+      
+      async function getNews(){
+        await realNews() ; 
+      }
+
+      getNews() ; 
     },[])
 
 

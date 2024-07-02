@@ -1,17 +1,45 @@
 import "./sidebar.css";
+
+// Component's
+import RightBarHead from "../RightBar/rightBarHead.jsx";
+import Trends from "./Trends";
+import { useEffect, useState } from "react";
+
+// DATA FROM API
+import getTrendingSearches from "../../pages/Profile/GoogleTendsAPI.js";
+
+// Icon's
 import { Avatar } from "@mui/material";
 
+import { currentDate } from "../../pages/Profile/GoogleTendsAPI.js";
 
 function Sidebar({ data }) {
+  const [trends, setTrends] = useState(null);
+
+  useEffect(() => {
+    async function fetchTrends() {
+      try {
+        const trendsData = await getTrendingSearches();
+        setTrends(trendsData);
+      } catch (error) {
+        console.error("Error fetching trends:", error);
+      }
+    }
+
+    fetchTrends();
+  }, []);
+
   return (
-    <div className="sidebar">
+    <div id="sidebar">
       <div className="profile curveBorder">
         <div className="user">
           <div className="backPhoto"></div>
           <div className="userHeader">
             <Avatar />
-            <h4 className="userTitle">{data.userName || "Loading..."}</h4>
-            <p className="userDescription">
+            <h4 className="userTitle userHomeProfileHeader">
+              {data.userName || "Loading..."}
+            </h4>
+            <p className="userDescription userHomeProfileDes">
               {data.profession || "No profession listed"}
             </p>
           </div>
@@ -28,31 +56,21 @@ function Sidebar({ data }) {
           </div>
         </div>
       </div>
+
       <div className="subProfile curveBorder">
-        <h4 className="headTrend">
-          <i>Top Trends of 2024</i>
+        {/* Header */}
+
+        <h4 id="headTrend">
+          <RightBarHead
+            newsHeader={"Trending's"}
+            idx={-1}
+            Date={true}
+            label={currentDate}
+          />
         </h4>
-        <p className="trends">
-          <span>#</span>React Js
-        </p>
-        <p className="trends">
-          <span>#</span>React Native
-        </p>
-        <p className="trends">
-          <span>#</span>Node.js
-        </p>
-        <p className="trends">
-          <span>#</span>FireBase
-        </p>
-        <p className="trends">
-          <span>#</span>Next JS
-        </p>
-        <p className="trends">
-          <span>#</span>MongoDB
-        </p>
-        <p className="trends">
-          <span>#</span>PostMan
-        </p>
+
+        {/* Trending's In India  */}
+        {trends != null ? <Trends Trends={trends} /> : null}
       </div>
     </div>
   );
