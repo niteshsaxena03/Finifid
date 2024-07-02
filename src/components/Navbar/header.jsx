@@ -49,7 +49,7 @@ function Header({
             <SearchIcon />
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search Any User"
               name="searchData"
               value={searchQuery}
               onChange={handleSearchChange}

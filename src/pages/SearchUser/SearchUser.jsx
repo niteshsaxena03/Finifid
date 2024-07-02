@@ -36,7 +36,7 @@ function SearchUser() {
     <div className="search-user-container">
       <Header />
       <div className="search-results-wrapper">
-        <h2>Search Results</h2>
+        <h2 className="main-heading">Search Results</h2>
         {searchQuery ? (
           users.length > 0 ? (
             users.map((user, index) => (

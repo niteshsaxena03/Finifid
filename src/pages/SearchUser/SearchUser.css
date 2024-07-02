@@ -22,7 +22,7 @@
   align-items: center; /* Center contents horizontally */
 }
 
-h2 {
+.main-heading{
   text-align: center; /* Center the heading */
   margin-bottom: 20px;
   font-size: 34px;
@@ -31,10 +31,11 @@ h2 {
 }
 
 .no-results {
-  font-size: 24px; /* Larger font size for no results message */
+  font-size: 30px; /* Larger font size for no results message */
   text-align: center; /* Center the text */
   color: #e74c3c; /* Red color for the no results message */
   margin-top: 40px; /* Space above the no results message */
+  font-weight: bold;
 }
 
 .search-query-message {
