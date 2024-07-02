@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useFirebase } from "@/Firebase/firebaseContext";
 import FriendComponent from "@/components/Friend/FriendComponent";
 import Header from "@/components/Navbar/header";
+import "./SearchUser.css"; // Import the CSS file
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -32,25 +33,27 @@ function SearchUser() {
   }, [searchQuery, getUsersByQuery]);
 
   return (
-    <div>
+    <div className="search-user-container">
       <Header />
-      <div>
+      <div className="search-results-wrapper">
         <h2>Search Results</h2>
         {searchQuery ? (
           users.length > 0 ? (
-            users.map((user, index) => (
-              <FriendComponent
-                key={index}
-                name={user.name}
-                about={user.profession || "No profession available"} // Display profession or fallback text
-                image={user.image} // Ensure image field is available
-              />
-            ))
+            <div className="friend-component-container">
+              {users.map((user, index) => (
+                <FriendComponent
+                  key={index}
+                  name={user.name}
+                  about={user.profession || "No profession available"} // Display profession or fallback text
+                  image={user.image} // Ensure image field is available
+                />
+              ))}
+            </div>
           ) : (
-            <p>No users found.</p>
+            <p className="no-results">No Users Found</p>
           )
         ) : (
-          <p>Please enter a search query.</p>
+          <p className="search-query-message">Please enter a search query.</p>
         )}
       </div>
     </div>
