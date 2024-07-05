@@ -45,13 +45,15 @@
     height: 170px;
     width: 170px;
 
-    height: max-content;
-
     object-fit: cover ;
 
     border: 2px solid black;
 
     margin-left: 1%;
+}
+
+.subImage .css-1pqm26d-MuiAvatar-img{
+    height: 100% !important;
 }
 
 

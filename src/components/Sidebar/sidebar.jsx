@@ -3,6 +3,8 @@
   // Component's 
   import RightBarHead from "../RightBar/rightBarHead.jsx";
   import Trends from "./Trends";
+  import { currentDate } from "../../pages/Profile/GoogleTendsAPI.js";
+
   import { useEffect, useState } from "react";
 
 
@@ -14,7 +16,6 @@
 
 
   function Sidebar({ data }) {
-
 
     const [trends, setTrends] = useState(null);
 
@@ -32,16 +33,19 @@
     }, []);
 
 
+
   return (
     <div id="sidebar">
       <div className="profile curveBorder">
-        <div className="user">
+        <div className="user">  
           <div className="backPhoto"></div>
-          <div className="userHeader">
-            <Avatar />
-            <h4 className="userTitle userHomeProfileHeader">{data.userName || "Loading..."}</h4>
+          <div className="userHeader" id="sideProfileuserAvatar">
+          {/* data.ProfileDetails.profileImg  */}
+          <Avatar 
+              src={ data && data.ProfileDetails ? data.ProfileDetails.profileImg : "Loading..."}/>
+            <h4 className="userTitle userHomeProfileHeader">{ data && data.name || "Loading..."}</h4>
             <p className="userDescription userHomeProfileDes">
-              {data.profession || "No profession listed"}
+              {data && data.profession || "No profession listed"}
             </p>
           </div>
         </div>
@@ -49,11 +53,11 @@
         <div className="userInfo">
           <div className="userInfoContent sideFont">
             <p className="email">Email</p>
-            <span>{data.email || "No email available"}</span>
+            <span>{data && data.email || "No email available"}</span>
           </div>
           <div className="userInfoContent sideFont">
             <p className="hobby">Hobby</p>
-            <span>{data.hobby || "No hobby listed"}</span>
+            <span>{data && data.hobby || "No hobby listed"}</span>
           </div>
         </div>
       </div>
@@ -64,7 +68,7 @@
         {/* Header */}
 
         <h4 id="headTrend">
-        <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {"Sunday , 30 June 2024"}/>
+        <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {currentDate}/>
         </h4>
 
 

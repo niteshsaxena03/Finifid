@@ -134,9 +134,10 @@
 
 /* avatar  */
 .recentsView  .MuiAvatar-circular{
-    height: 35px;
-    width: 35px;
+    height: 45px;
+    width: 45px;
     object-fit: contain;
+    cursor: pointer;
 }
 
 

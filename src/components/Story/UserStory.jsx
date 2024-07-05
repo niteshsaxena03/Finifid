@@ -12,7 +12,7 @@ import "./Story.css";
 import { Avatar } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const UserStory = ({ UserData }) => {
+const UserStory = ({ UserData , data }) => {
   // Photo Work
 
   let [img, setImg] = useState("");
@@ -61,13 +61,13 @@ const UserStory = ({ UserData }) => {
   };
 
   return (
-    <div className="borderBox" style={{ "--bg-image": `url(${UserData.url})` }}>
+    <div className="borderBox" style={{ "--bg-image": `url(${data.ProfileDetails && data.ProfileDetails.profileImg ? data.ProfileDetails.profileImg : ""})` }}>
       <div className="storyIcon">
         <span
           className="avatarContainer userContainer"
           onClick={UserData.isStory == true ? seeStory : null}
         >
-          <Avatar src={UserData.url} />
+          <Avatar src={data.ProfileDetails && data.ProfileDetails.profileImg ? data.ProfileDetails.profileImg : ""} />
 
           <label htmlFor="iconPlus">
             <span className="plusIcon">
@@ -81,7 +81,7 @@ const UserStory = ({ UserData }) => {
             id="iconPlus"
           />
         </span>
-        <h4 className="storyFont">{UserData.name}</h4>
+        <h4 className="storyFont">{data.name}</h4>
       </div>
     </div>
   );

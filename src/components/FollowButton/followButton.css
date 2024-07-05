@@ -1,11 +1,23 @@
-.MuiButtonBase-root{
+.follow{
     border-color: #8e0b3a  !important;
     color: #8e0b3a !important;
+}
+
+.MuiButtonBase-root{
     background-color: #fff !important;
     text-transform: capitalize !important;
-    width: 25% !important;
+    width: 30% !important;
 }
 
 .MuiButtonBase-root:hover{
     background-color: #8e0b3b12 !important;
+}
+
+.unfollow{
+    border-color: #333  !important;
+    color: #333 !important;
+}
+
+.unfollow:hover{
+    background-color: #33333310 !important;
 }

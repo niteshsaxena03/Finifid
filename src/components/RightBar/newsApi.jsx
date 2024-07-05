@@ -23,7 +23,7 @@ const newsApi = ({end}) => {
 
 
    function conciseDescription(text){
-      return text.split(" ").slice(0,3).join(" ") ; 
+      return text != null ? text.split(" ").slice(0,3).join(" ") : "Sorry !,News Not Available" ; 
    }
       
 

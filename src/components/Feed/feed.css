@@ -22,6 +22,12 @@
 
 }
 
+.feedSearch .MuiAvatar-root {
+    height: 50px;
+    width: 50px;
+    border: 1px solid black;
+}
+
 .feedSearch form button{
     display: none;
 }

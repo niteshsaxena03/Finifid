@@ -14,23 +14,63 @@ import FollowButton from '../../components/FollowButton/followButton.jsx';
 // Css 
 import './ProfileSection.css'
 import './FriendsProfile.css' ;
+import { useSelector } from 'react-redux';
 
-const ProfileSection = ({friends}) => {
+const ProfileSection = ({data,friends,updatedFollowers,updatedFollowing,userData}) => {    
+
+
+   // For post count ! : 
+   const postCount = useSelector((State)=> State.postCounter.postCount) ; 
+
+   
+
+  function getJoinedDate(userJoinDate){ 
+
+     if(userJoinDate){
+          let date = userJoinDate.toDate().toString().split(" ").slice(1,4).join(" ") ; 
+          date =  date.toString().split(" ") ;
+          return `Joined ${date[0] +" "+date[2]}`
+     }
+     else{
+          return 'Loading ...'
+     }
+
+    }  
+
+
+    function checkExists(userFollowings,email ){
+     
+          if(userFollowings != undefined ){
+                
+               for(let i = 0 ; i<userFollowings.length ; i++ ){
+          
+                    if( userFollowings[i] === email ){
+                         return true  ;
+                    }
+               }
+               return false ; 
+          }
+ 
+   }
+
+
   return (
-    <>
+    <>    
     
     <div className="upperProfile">
+
 
         {/* Main Image  */}
 
         <div className="backgroundImage">
-            <img src="https://pbs.twimg.com/profile_banners/18839785/1718111779/1500x500" alt="background-Img"/>
+            <img src={data.ProfileDetails && data.ProfileDetails.backgroundImg ? data.ProfileDetails.backgroundImg : ""}/>
 
 
         {/* Sub Image  */}
             <div className="subImage">
-            <Avatar src='https://pbs.twimg.com/profile_images/1800516892370595841/NCnKrUga_400x400.jpg'/>
+            <Avatar src={data.ProfileDetails && data.ProfileDetails.profileImg ? data.ProfileDetails.profileImg : ""}/>
            </div>
+
 
         </div>
 
@@ -40,43 +80,50 @@ const ProfileSection = ({friends}) => {
         {/* Lower Segment  */}
         <div className="informationBox">
 
-            <div className="profileName">
-                 <h2 className='headProfileName'>Narendra Modi</h2>
-                 <h4 className='subProfilenName fontProfile'>@Narendra Modi</h4>
+            <div className="profileName">    
+                 <h2 className='headProfileName'>{data.name}</h2>
+                 <h4 className='subProfilenName fontProfile'>{data.ProfileDetails && data.ProfileDetails.username ? data.ProfileDetails.username : ""}</h4>
             </div>
 
             <div className="bioSection">
-                 <p className='bio fontProfile'>Prime Minister of India | Head of Foreign Exchange | National Leader</p>
+                 <p className='bio fontProfile'>{data.ProfileDetails && data.ProfileDetails.bio ? data.ProfileDetails.bio : ""}</p>
             </div>
                
             <div className="sepLine profileLineSep"></div>
 
             <div className="userPersonalSection">
-                    <Icon Icon={LocationOnIcon} label={"India"} idx={0} />
-                    <Icon Icon={WorkOutlineIcon} label={"PMO"} idx={1} />
-                    <Icon Icon={StarIcon} label={"Exploring"} idx={2} />
-                    <Icon Icon={CalendarMonthIcon} label={"Joined January 2009"} idx={3} />
+                    <Icon Icon={LocationOnIcon} label={data.ProfileDetails && data.ProfileDetails.location ? data.ProfileDetails.location : "Loading ..."} idx={0} />
+                    <Icon Icon={WorkOutlineIcon} label={data.ProfileDetails && data.ProfileDetails.work ? data.ProfileDetails.work : "Loading ..."} idx={1} />
+                    <Icon Icon={StarIcon} label={data.ProfileDetails && data.ProfileDetails.favourite ? data.ProfileDetails.favourite : "Loading ..."} idx={2} />
+                    <Icon Icon={CalendarMonthIcon} label={`${getJoinedDate(data.joinedDate)}`} idx={3} />
             </div>
 
             <div className="userDataSection fontProfile ">
-
                     <div className="dataDesign">
-                         <span className='dataDesignNo'><h3>100</h3></span>
+                         <span className='dataDesignNo'><h3>{data && data.ProfileDetails ? data.ProfileDetails.post < postCount.ProfileDetails.post ? postCount.ProfileDetails.post : data.ProfileDetails.post  :  0}</h3></span>
                          <h2 className='dataDesignFont'>Posts</h2>
                     </div>
 
                     <div className="dataDesign">
-                         <span className='dataDesignNo'><h3>1986</h3></span>
+                         <span className='dataDesignNo'><h3>{ data  && data.followers ? updatedFollowers == 0  ?  data.followers.length  : updatedFollowers :  0 }</h3></span>
+
+                         
                     {
-                         (friends == true ) ? 
-                         <span className='followButton'><FollowButton/></span>
+                         (friends == true  ) ? 
+                         ( userData != undefined && data != undefined ) ?
+                         checkExists(userData.following ,data.email) ?
+                         <span className='followButton'><FollowButton userData={userData} otherUser={data} value={true}/></span>
+                         :
+                         <span className='followButton'><FollowButton userData={userData} otherUser={data} value={false}/></span>
+                         :
+                         "Loading"
                          :
                          <h2 className='dataDesignFont'>Follower</h2>
                     }
                     </div>
 
                     <div className="dataDesign">
-                         <span className='dataDesignNo'><h3>1000</h3></span>
+                         <span className='dataDesignNo'><h3>{ data && data.following ? updatedFollowing == 0  ? data.following.length : updatedFollowing :  0}</h3></span>
                          <h2 className='dataDesignFont'>Following</h2>
                     </div>
 

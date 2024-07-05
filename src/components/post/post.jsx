@@ -4,6 +4,8 @@ import "./post.css";
 import PostHeader from "./postHeader";
 import PostFooter from "./postFooter";
 
+import  { v4 as uuidv4 } from 'uuid'
+
 const Post = ({
   name,
   subHeader,
@@ -12,6 +14,7 @@ const Post = ({
   timestamp,
   postImage,
   postvideo,
+  email ,
   caption = "",
 }) => {
 
@@ -19,19 +22,20 @@ const Post = ({
 
 
   return (
-    <div className="posts">
+    <div  key={uuidv4()} className="posts">
       <PostHeader
         name={name}
         subHeader={subHeader}
         avatar={avatar}
         timestamp={timestamp}
+        email = {email}
       />
-
       <div className="postBody">
         {/* 1 */}
-        {message != "" ? (
+        {message != "" ? <>
+          <div className="sepLine"></div>
           <div className="postBodyContent">{message}</div>
-        ) : null}
+          </> : null}
 
         {/* 2 */}
         {postImage != undefined ? (

@@ -5,9 +5,11 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
+
 const fetchUserData = async (email) => {
   try {
     const formattedEmail = formatEmail(email);
+    console.log("user searching mail :"  , formattedEmail) ;
     const userDocRef = doc(db, "users", formattedEmail);
     const userDoc = await getDoc(userDocRef);
 

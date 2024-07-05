@@ -1,62 +1,67 @@
-import React from 'react'
-import './rightBar.css' ;
-import NewsApi from './newsApi';
-import RightBarHead from './rightBarHead.jsx';
-import RecentsView from './recentsView.jsx';
+  import React, { useEffect } from 'react'
+  import './rightBar.css' ;
+  import NewsApi from './newsApi';
+  import RightBarHead from './rightBarHead.jsx';
+  import RecentsView from './recentsView.jsx';
 
-// icon 
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-
-
-const rightBar = () => {
-  return (
-    <div className='rightBar '>
+  // icon 
+  import NewspaperIcon from '@mui/icons-material/Newspaper';
+  import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 
-        {/* News Section  */}  
-
-        <div className="news curveBorder newsSection">
-
-        {/* header  */}
-        <RightBarHead Icon = {NewspaperIcon} newsHeader = {"Stay up to date"} idx = {-1}/>
-      
-        {/* news Listing  */}
-
-        <div className="mainNewsBox">
-
-                <NewsApi end = {true}/>
-                
-        </div>
-
-        </div>
+  
+// Redux - Refresh
+import { useSelector } from 'react-redux';
 
 
+  const rightBar = ({data}) => {
 
 
+    let refresh = useSelector((State)=> State.postCounter.refresh) ;
 
-        {/* Recents message's  */}
+    useEffect(()=>{
 
-        <div className="recentSection curveBorder">
+    },[refresh])
+
+    return (
+      <div className='rightBar '>
+
+
+          {/* News Section  */}  
+
+          <div className="news curveBorder newsSection">
+
+          {/* header  */}
+          <RightBarHead Icon = {NewspaperIcon} newsHeader = {"Stay up to date"} idx = {-1}/>
         
-        {/* header  */}
-        <RightBarHead Icon = {ScheduleIcon} newsHeader = {"Recent's"} idx = {-1}/>
+          {/* news Listing  */}
 
-        {/* Activity's */}
-        {/* <RecentsView/> */}
-        <RecentsView/>
-        <RecentsView/>
-        <RecentsView/>
-        <RecentsView/>
-        <RecentsView end = {true}/>
+          <div className="mainNewsBox">
 
+                  <NewsApi end = {true}/>
+                  
+          </div>
 
-        
-        </div>
+          </div>
 
 
-    </div>
-  )
-}
 
-export default rightBar
+
+
+          {/* Recents message's  */}
+
+          <div className="recentSection curveBorder">
+          
+          {/* header  */}
+          <RightBarHead Icon = {TaskAltIcon} newsHeader = {"You might like"} idx = {-1}/>
+
+          {/* Activity's */}
+              <RecentsView userData={data} />
+          </div>
+
+
+      </div>
+    )
+  }
+
+  export default rightBar

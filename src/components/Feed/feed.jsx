@@ -4,21 +4,13 @@ import Icon from "../IconComponent/Icon.jsx";
 import Post from "../Post/post";
 import { db } from "../../Firebase/firebaseContext.jsx";
 import { serverTimestamp } from "../../Firebase/firebaseContext.jsx";
-import {
-  collection,
-  addDoc,
-  query,
-  onSnapshot,
-  orderBy,
-  getDocs,
-} from "firebase/firestore";
+import {collection,addDoc,query,orderBy,getDocs,where,doc,setDoc,getDoc} from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 // Upload's
-import { doc, setDoc } from "firebase/firestore";
-;
+
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -30,40 +22,114 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useDispatch } from "react-redux";
+import { incCount } from "../../features/postCounter.js";
 
-let photo =
-  "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg";
+
 let overAllTime;
 
 const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-
-const Feed = ({ data , profile , friends }) => {
-
-   //   Hooks :
+const Feed = ({ data, profile, friends }) => {
+  //   Hooks :
   let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
 
   // DataBase Work  Temp :
 
+
+
+  const dispatch = useDispatch() ;
+
+  async function updatePostData(){
+
+    const userDocRef = doc(db,"users",data.email);
+    await setDoc(userDocRef, data);
+    console.log("Succesfully Update Post Number ! ") ;
+    
+    const userDoc = await getDoc(userDocRef);
+    dispatch(incCount(userDoc.data().ProfileDetails.post)) ;
+
+  }
+
+
+
+  // This is the common Function For Post Photos Videos 
+
+  async function FetchData(folder){
+
+    try{
+      
+    // Container's 
+    let allPosts = [];
+    const userPostsRef = collection(db,folder);
+    
+    let postsQuery;
+
+    if (profile == true ) {
+      postsQuery = query(userPostsRef, where("email", "==", data.email || "No Email"), orderBy("timestamp", "desc"));
+    } else {
+      postsQuery = query(userPostsRef);
+    }
+
+    const postsSnapshot = await getDocs(postsQuery);
+        
+    postsSnapshot.forEach((doc) => { 
+        allPosts.push({ id: doc.id, ...doc.data() });
+    }); 
+
+    // Checking Belong to Which Collection  
+
+    if( profile != true ){
+
+      if(folder == "userPosts"){
+        setPost(shuffleArray(allPosts) );
+      }
+      else if( folder == "photos"){
+        setImgUrl(shuffleArray(allPosts));
+      }
+      else if(folder == "videos"){
+        setVidUrl(shuffleArray(allPosts));
+      }
+    }
+    else{
+
+      if(folder == "userPosts"){
+        setPost(allPosts) ;
+      }
+      else if (folder == "photos"){
+        setImgUrl(allPosts) ;
+      }
+      else if(folder == "videos"){
+        setVidUrl(allPosts);
+      }
+
+    }
+
+    }
+    catch(err){
+      console.error("Error fetching posts:", err);
+    }
+
+
+
+
+   } 
+
   // Adding Post To Database
-
   const AddPost = async (event) => {
+
     event.preventDefault();
-
-    const formattedEmail = formatEmail(data.email);
-
     try {
-      const userDocRef = collection(db, "userPosts", formattedEmail, "posts");
+      const userDocRef = collection(db, "userPosts");
 
       let postData = {
-        name: data.userName,
+        name: data.name,
         subHeader: data.profession,
         message: input,
-        photoURL:
-          "https://img.freepik.com/free-photo/smiling-young-male-professional-standing-with-arms-crossed-while-making-eye-contact-against-isolated-background_662251-838.jpg",
+        photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
       };
@@ -73,50 +139,18 @@ const Feed = ({ data , profile , friends }) => {
       setInput("");
 
       // Post After Upload !
-      await fetchPosts();
+      await FetchData("userPosts");
+
+      // Update Posts Data 
+      data.ProfileDetails.post ++ ; 
+      await updatePostData() ; 
+
     } catch (error) {
       console.log("method not work  !", error);
     }
   };
 
-  // Function to fetch all emails from users collection
-  const fetchUserEmails = async () => {
-    const usersRef = collection(db, "users");
-    const usersSnapshot = await getDocs(usersRef);
-    const userEmails = usersSnapshot.docs.map((doc) => doc.data().email);
-    return userEmails;
-  };
 
-  const checkUsersWithPosts = async (userEmails) => {
-    const usersWithPosts = [];
-
-    for (let email of userEmails) {
-      const formattedEmail = formatEmail(email);
-      const userPostsRef = collection(db, "userPosts", formattedEmail, "posts");
-
-      const postsSnapshot = await getDocs(userPostsRef);
-
-      if (!postsSnapshot.empty) {
-        usersWithPosts.push(formattedEmail);
-      }
-    }
-
-    return usersWithPosts;
-  };
-  const fetchPostsForUsers = async (usersWithPosts) => {
-    let allPosts = [];
-
-    for (let userEmail of usersWithPosts) {
-      const userPostsRef = collection(db, "userPosts", userEmail, "posts");
-      const postsSnapshot = await getDocs(userPostsRef);
-
-      postsSnapshot.forEach((doc) => {
-        allPosts.push({ id: doc.id, ...doc.data() });
-      });
-    }
-
-    return allPosts;
-  };
   const shuffleArray = (array) => {
     let shuffledArray = array.slice(); // Create a copy of the array
     for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -129,40 +163,18 @@ const Feed = ({ data , profile , friends }) => {
     return shuffledArray;
   };
 
-  const fetchPosts = async () => {
-    try {
-      // Fetch all user emails
-      const userEmails = await fetchUserEmails();
-
-      // Check which users have posts
-      const usersWithPosts = await checkUsersWithPosts(userEmails);
-
-      // Fetch posts for users who have posts
-      const allPosts = await fetchPostsForUsers(usersWithPosts);
-
-      // Shuffle the posts array
-      const shuffledPosts = shuffleArray(allPosts);
-
-      console.log(shuffledPosts);
-      setPost(shuffledPosts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
-
   useEffect(() => {
+
     async function fetchCurrent() {
-      await fetchPosts();
+      await FetchData("userPosts");
     }
 
-    if (data && data.email) {
-      fetchCurrent();
-    }
+    fetchCurrent();
+  
   }, [data]);
 
   // Photo Work
 
-  let [img, setImg] = useState("");
   let [imgurl, setImgUrl] = useState([]);
 
   const AddPhoto = async (event) => {
@@ -181,38 +193,32 @@ const Feed = ({ data , profile , friends }) => {
       // Save metadata and URL to Firestore
       const photoData = {
         url: url,
-        name: data.userName,
+        name: data.name,
         subHeader: data.profession,
+        photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
       };
       await addDoc(collection(db, "photos"), photoData);
 
       // Update state with new photo URL
-      setImgUrl((prevUrls) => [...prevUrls, { ...photoData, id: uuidv4() }]);
+      await FetchData("photos") ; 
+
+      // Update Posts Data 
+      data.ProfileDetails.post ++ ; 
+      await updatePostData() ; 
+
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
-
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const photosRef = collection(db, "photos");
-        const photosSnapshot = await getDocs(photosRef);
-        const photos = photosSnapshot.docs.map((doc) => doc.data());
-
-        // Assuming photos are sorted by timestamp if needed
-        setImgUrl(photos);
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-    };
-
-
-    fetchImages();
-  }, []);
+    async function getImagesReload(){
+       await FetchData("photos");
+    }
+    getImagesReload() ; 
+  }, [data]);
 
   let [video, setVideo] = useState(null);
   let [videoUrl, setVidUrl] = useState([]);
@@ -235,116 +241,103 @@ const Feed = ({ data , profile , friends }) => {
       // Save metadata and URL to Firestore
       const videoData = {
         url: url,
-        name: data.userName,
+        name: data.name,
         subHeader: data.profession,
+        photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
       };
       await addDoc(collection(db, "videos"), videoData);
 
-      // Update state with new video URL
-      setVidUrl((prevUrls) => [...prevUrls, { ...videoData, id: uuidv4() }]);
+
+      await FetchData("videos") ; 
+
+
+      // Update Posts Data 
+      data.ProfileDetails.post ++ ; 
+      await updatePostData() ; 
+
+      
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
 
-
   useEffect(() => {
-   const fetchVideos = async () => {
-     try {
-       const videosRef = collection(db, "videos");
-       const videosSnapshot = await getDocs(videosRef);
-       const videos = videosSnapshot.docs.map((doc) => doc.data());
 
-       // Assuming videos are sorted by timestamp if needed
-       setVidUrl(videos);
-     } catch (error) {
-       console.error("Error fetching videos:", error);
-     }
-   };
+    async function getVideosReload(){
+        await FetchData("videos") ;
+    }
 
-
-    fetchVideos();
-  }, []);
+    getVideosReload();
+  }, [data]);
 
   return (
     <div className="feed">
       {/* Story Section  */}
 
-      
-      {
-        ( profile == true ) ?  
-        null 
-        :
+      {profile == true ? null : (
         <div className="storyPost">
-        {/* {console.log(UserData)}; */}
-        {/* {console.log(FriendsData)} */}
-        <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
-      </div>
-  
-      }
+          {/* {console.log(UserData)}; */}
+          {/* {console.log(FriendsData)} */}
+          <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
+        </div>
+      )}
 
       {/* feed input  */}
 
+      {friends == true ? null : (
+        <div className="feedSearchBox">
+          <div className="feedSearch">
+            <Avatar 
+              src={data && data.ProfileDetails ? data.ProfileDetails.profileImg : ""}/>
+            <form onSubmit={AddPost}>
+              <input
+                type="text"
+                placeholder="Start a post..."
+                // for the value setting
+                onChange={(event) => setInput(event.target.value)}
+                // for getting value :
+                value={input}
+              />
+              <button>Submit</button>
+            </form>
+          </div>
 
-    { 
-      (friends == true) ? 
-      null 
-      : 
-      <div className="feedSearchBox">
-
-        <div className="feedSearch">
-          <Avatar />
-          <form onSubmit={AddPost}>
+          {/* icons  */}
+          <form className="feedIcons">
+            <label htmlFor="photo">
+              <Icon Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} />
+            </label>
             <input
-              type="text"
-              placeholder="Start a post..."
-              // for the value setting
-              onChange={(event) => setInput(event.target.value)}
-              // for getting value :
-              value={input}
+              type="file"
+              accept="image/*"
+              id="photo"
+              style={{ display: "none" }}
+              onChange={AddPhoto}
             />
-            <button>Sumbit</button>
+
+            <label htmlFor="video">
+              <Icon Icon={VideoCallIcon} label={"Video"} idx={1} />
+            </label>
+            <input
+              type="file"
+              accept="video/*"
+              id="video"
+              style={{ display: "none" }}
+              onChange={AddVideo}
+            />
+
+            <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
+            <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
           </form>
         </div>
-
-        {/* icons  */}
-        <form className="feedIcons">
-          <label htmlFor="photo">
-            <Icon Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} />
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            id="photo"
-            style={{ display: "none" }}
-            onChange={AddPhoto}
-          />
-
-          <label htmlFor="video">
-            <Icon Icon={VideoCallIcon} label={"Video"} idx={1} />
-          </label>
-          <input
-            type="file"
-            accept="video/*"
-            id="video"
-            style={{ display: "none" }}
-            onChange={AddVideo}
-          />
-
-          <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
-          <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
-        </form>
-      </div>
-
- 
-     }
+      )}
 
       {/* @ Post Starts from Here !   */}
-
-      {post.map(({ id, name, subHeader, message, photoURL, timestamp }) => {
+      {post.map(({ name, subHeader, message, photoURL, timestamp,email }) => {
         // Converting time :
+
         {
           if (timestamp != null) {
             timestamp = timestamp.toDate();
@@ -355,65 +348,66 @@ const Feed = ({ data , profile , friends }) => {
 
         return (
           <Post
-            key={id}
+            key={uuidv4()}
             name={name}
             subHeader={subHeader}
             message={message}
             avatar={photoURL}
             timestamp={timestamp}
+            email = {email}
           />
         );
       })}
 
       {/* @Post - Images Start from here */}
 
-      {/* {imgurl.map((url) => (
-        <Post
-          key={uuidv4()}
-          name={"Username"}
-          subHeader={"subHeader"}
-          message={""}
-          avatar={photo}
-          timestamp={overAllTime}
-          postImage={url}
-          caption="This is the Random Caption"
-        />
-      ))} */}
-      {imgurl.map(({ id, url, name, subHeader, timestamp }) => (
-        <Post
-          key={id}
-          name={name}
-          subHeader={subHeader}
-          message={""}
-          avatar={photo}
-          timestamp={
-            timestamp
-              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
-              : ""
-          }
-          postImage={url}
-          caption=""
-        />
-      ))}
+      {/* Posts with images */}
+      {imgurl.map(({ url ,photoURL , name, subHeader, timestamp,email }) => {
+        let formattedTimestamp = "";
+        if (timestamp && typeof timestamp.toDate === 'function') {
+          formattedTimestamp = timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
+        } else if (timestamp && typeof timestamp.seconds === 'number') {
+          formattedTimestamp = new Date(timestamp.seconds * 1000).toString().split(" ").slice(1, 4).join("-");
+        }
 
+        return (
+          <Post
+            key={uuidv4()}
+            name={name}
+            subHeader={subHeader}
+            message=""
+            avatar={photoURL}
+            timestamp={formattedTimestamp}
+            postImage={url}
+            email={email}
+            caption=""
+          />
+        );
+      })}
       {/* @Post - Videos Start from here */}
 
-      {videoUrl.map(({ id, url, name, subHeader, timestamp }) => (
-        <Post
-          key={id}
-          name={name}
-          subHeader={subHeader}
-          message={""}
-          avatar={photo}
-          timestamp={
-            timestamp
-              ? timestamp.toDate().toString().split(" ").slice(1, 4).join("-")
-              : ""
-          }
-          caption=""
-          postvideo={url}
-        />
-      ))}
+      {videoUrl.map(({ url, photoURL, name, subHeader, timestamp,email }) => {
+        let formattedTimestamp = "";
+        if (timestamp && typeof timestamp.toDate === 'function') {
+          formattedTimestamp = timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
+        } else if (timestamp && typeof timestamp.seconds === 'number') {
+          formattedTimestamp = new Date(timestamp.seconds * 1000).toString().split(" ").slice(1, 4).join("-");
+        }
+
+        return (
+          <Post
+            key={uuidv4()}
+            name={name}
+            subHeader={subHeader}
+            message=""
+            avatar={photoURL}
+            timestamp={formattedTimestamp}
+            email={email}
+            caption=""
+            postvideo={url}
+          />
+        );
+      })}
     </div>
   );
 };

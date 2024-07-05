@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect  } from "react";
+import { useSelector } from "react-redux";
 
 // importing css 
 import './ProfileScreen.css' ;
@@ -34,6 +35,11 @@ function ProfileScreen({data}) {
 
   const [trends, setTrends] = useState(null);
 
+   // For Followers and following  : 
+   const updatedFollowers =  useSelector((State)=> State.postCounter.followers); 
+   const updatedFollowing =  useSelector((State)=> State.postCounter.following); 
+
+
   useEffect(() => {
     async function fetchTrends() {
       try {
@@ -67,7 +73,7 @@ function ProfileScreen({data}) {
 
           {/* Profile  */}
           <div className="profileSection">
-                <ProfileSection/>
+                <ProfileSection data={data} updatedFollowers={updatedFollowers} updatedFollowing={updatedFollowing} />
           </div>
 
           {/* Post Part */}
@@ -90,7 +96,7 @@ function ProfileScreen({data}) {
 
               {/* All user Post's */}
               <div className="userFeed">
-                  <Feed key={uuid()} data={data.email} profile={true}/>
+                  <Feed key={uuid()} data={data} profile={true}/>
               </div>
 
           </div>
@@ -119,10 +125,8 @@ function ProfileScreen({data}) {
         <RightBarHead Icon = {TaskAltIcon} newsHeader = {"You might like"} idx = {-1}/>
 
         {/* Activity's */}
-        {/* <RecentsView/> */}
-        <RecentsView profile={true} Email = {Emails[0]} data ={data}/>
-        <RecentsView profile={true} Email = {Emails[1]} data ={data} />
-        <RecentsView profile={true} end = {true} Email = {Emails[2]}  data ={data}/>
+        <RecentsView userData = {data}/>
+    
 
 
         

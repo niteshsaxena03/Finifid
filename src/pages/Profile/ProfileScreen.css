@@ -4,7 +4,7 @@
 .mainScreenContent{
   display: flex;
   
-  margin: 2% 4%;
+  margin: 2% 7%;
   width: 100%;
 
 }
@@ -12,7 +12,7 @@
 .mainProfileScreen{
   display: flex;
   flex-direction: column;
-  width: 55%;
+  width: 50%;
 }
 
 .profileSection{
@@ -113,3 +113,9 @@
   margin-left: 5%;
   }
 
+
+.suggestFollow .MuiAvatar-circular{
+  height: 55px !important;
+  width: 55px !important;
+}
+ 

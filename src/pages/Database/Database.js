@@ -2,30 +2,27 @@ import Schema from "./dbSchema";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../Firebase/firebaseContext.jsx";
 
-const formatEmail = (email) => {
-  return email.replace(/[^a-zA-Z0-9]/g, "_");
-};
 
-const Database = async (name, email, hobby, profession, age = null) => {
+const Database = async (name, email, hobby, profession,age,ProfileDetails,newUser) => {
   let initDatabase = async () => {
     try {
       //  Init Data
-      Schema.userName = name;
+      Schema.name = name;
       Schema.email = email;
       Schema.hobby = hobby;
       Schema.profession = profession;
       Schema.age=age;
+      Schema.ProfileDetails = ProfileDetails  ;
+      { (newUser == true ? Schema.joinedDate = new Date() : Schema.joinedDate = Schema.joinedDate )}
 
 
       // End Data
 
       // Data uploading to firebase is taking place from below !
-
-      const formattedEmail = formatEmail(email);
       const userDocRef = doc(
         db,
         "users",
-        formattedEmail.toLowerCase()
+        email
       );
       await setDoc(userDocRef, Schema);
     } catch (error) {

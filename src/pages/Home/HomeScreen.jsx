@@ -25,7 +25,7 @@ function HomeScreen({ data }) {
       <div className="appBody">
         <Sidebar data={data} />
         <Feed data={data} />
-        <RightBar />
+        <RightBar data = {data} />
       </div>
     </div>
   );

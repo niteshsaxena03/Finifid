@@ -8,9 +8,13 @@ import './functionSelection.css' ;
 import "../../components/Sidebar/sidebar.css";
 
 
+// Importing DB   
+import {getDoc,doc} from "firebase/firestore";
+import { db } from "../../Firebase/firebaseContext.jsx";
+
+
 
 // Importing Icon's
-import EditIcon from '@mui/icons-material/Edit';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
@@ -25,12 +29,51 @@ import FunctionSection from "./functionSelection";
 
 // DATA FROM API
 import getTrendingSearches from "./GoogleTendsAPI.js";
+import { currentDate } from "./GoogleTendsAPI.js";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
-function FriendsProfile({data}) {
+function FriendsProfile({currentUserData}) {
 
 
   const [trends, setTrends] = useState(null);
+  const [data , setData ] = useState({}) ;
 
+  let refresh = useSelector((State)=>State.postCounter.refresh) ;
+
+
+  const {email} = useParams() ;
+  console.log(email)
+
+
+  // Fetching User Data   
+  useEffect(()=>{
+
+    async function getFriendDetails(){
+      try {
+        const userDocRef = doc(db, "users", email);
+        const userDoc = await getDoc(userDocRef);
+        console.log("Friend Data", userDoc.data())
+
+        if (userDoc.exists()) {
+            console.log("Friend Data", userDoc.data())
+            setData(userDoc.data()) ;
+        } 
+        else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+
+    getFriendDetails() ; 
+
+  },[email,refresh])
+
+
+
+  // For Trends 
   useEffect(() => {
     async function fetchTrends() {
       try {
@@ -43,6 +86,9 @@ function FriendsProfile({data}) {
 
     fetchTrends();
   }, []);
+
+
+
 
   
   return (
@@ -58,8 +104,16 @@ function FriendsProfile({data}) {
         <div className="mainProfileScreen">
 
           {/* Profile  */}
-          <div className="profileSection">
-                <ProfileSection friends = {true}/>
+          <div className="profileSection">  
+              
+              {
+              
+                <ProfileSection 
+                userData={currentUserData} 
+                data={data} friends = {true}
+                updatedFollowers={data && data.followers ? data.followers.length : 0} updatedFollowing={data && data.following ? data.following.length : 0} /> 
+         
+              }
           </div>
 
           {/* Post Part */}
@@ -74,7 +128,7 @@ function FriendsProfile({data}) {
 
               {/* All user Post's */}
               <div className="userFeed">
-                  <Feed data={data.email} profile={true} friends = {true} />
+                  <Feed data={data} profile={true} friends = {true} />
               </div>
 
           </div>
@@ -103,10 +157,8 @@ function FriendsProfile({data}) {
         <RightBarHead Icon = {TaskAltIcon} newsHeader = {"You might like"} idx = {-1}/>
 
         {/* Activity's */}
-        {/* <RecentsView/> */}
-        <RecentsView profile={true}/>
-        <RecentsView profile={true}   />
-        <RecentsView profile={true} end = {true}/>
+        <RecentsView userData={currentUserData} />
+      
 
 
         
@@ -121,7 +173,7 @@ function FriendsProfile({data}) {
                 {/* Header */}
 
                 <h4 id="headTrend">
-                <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {"Sunday , 30 June 2024"}/>
+                <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label ={currentDate}/>
                 </h4>
 
 

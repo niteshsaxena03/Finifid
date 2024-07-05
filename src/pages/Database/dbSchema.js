@@ -1,5 +1,5 @@
 const Schema = {
-  userName: "",
+  name: "",
   email: "",
   hobby: "",
   profession: "",
@@ -8,6 +8,8 @@ const Schema = {
   isStory: false,
   story: [],
   age:"",
+  ProfileDetails : {} ,
+  joinedDate : ""
 };
 
 export default Schema;

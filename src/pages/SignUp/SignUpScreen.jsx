@@ -11,22 +11,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "./SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
 import { useNavigate } from "react-router-dom";
-import {
-  useFirebase,
-} from "../../Firebase/firebaseContext";
+
+import { setPreviousFormDetails } from "./ProfileDetails";
 
 
-// Data-Base
-import Database from "../Database/Database.js";
+// css 
+import './form.css'
+
 
 export default function SignUpScreen() {
   const navigate = useNavigate();
-  const { signUpUserWithEmailAndPassword } = useFirebase();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hobby, setHobby] = useState("");
-  const [profession, setProfession] = useState("");
+  const [profession, setProfession] = useState("Professional");
   const [age, setAge] = useState(""); 
   const [error, setError] = useState(null);
 
@@ -35,19 +34,9 @@ export default function SignUpScreen() {
     setError(null); // Clear previous errors
     try {
       // Sign up the user
-      const result = await signUpUserWithEmailAndPassword(email, password);
-
-      if (result) {
-        console.log("Sign up successful:", result);
-
-        // Database Init :
-        await Database(name, email, hobby, profession,age);
-
-        navigate("/home"); // Navigate to the home page after successful sign-up
-      } else {
-        console.warn("Sign up result is null or undefined");
-        setError("Unexpected error occurred. Please try again.");
-      }
+      setPreviousFormDetails(email , password , hobby , profession , age  )
+      navigate(`/createProfile/${name}`); // Navigate to the create Profile after successful sign-up
+    
     } catch (error) {
       console.error("Error signing up:", error.message);
       setError("Failed to sign up. Please try again.");
@@ -110,15 +99,15 @@ export default function SignUpScreen() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="profession">Profession</Label>
-                <Input
-                  id="profession"
-                  type="text"
-                  placeholder="e.g., Engineer"
-                  onChange={(e) => setProfession(e.target.value)}
-                  value={profession}
-                  required
-                />
+              <Label htmlFor="profession">Profession</Label>
+              <select onChange={(e)=>setProfession(e.target.value)} name="professionData" id="profession" className="w-full selectedInput">
+                <option value="Professional">Professional</option>
+                <option value="Student">Student</option>
+                <option value="Influencer">Influencer</option>
+                <option value="Artist">Artist</option>
+                <option value="PublicServant">Public Servant</option> 
+                <option value="Freelancer">Freelancer</option>
+              </select>          
               </div>
               <div className="space-y-2">
                 <Label htmlFor="age">Age</Label>
@@ -147,3 +136,4 @@ export default function SignUpScreen() {
     </div>
   );
 }
+

@@ -41,12 +41,12 @@ const Stories = ({ UserData, FriendsData , data }) => {
       {/* Heading  */}
 
       <span className="storyHeader">
-        <h2>Hello,{data.userName}</h2>
+        <h2>Hello,{data && data.name}</h2>
       </span>
 
       <Slider {...settings}>
         {/* User Story  */}
-        <UserStory UserData={UserData} />
+        <UserStory UserData={UserData} data = {data} />
 
         {/* Friend Story  */}
         {FriendsData.map((data) => (
