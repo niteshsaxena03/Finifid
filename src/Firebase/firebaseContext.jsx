@@ -6,7 +6,12 @@ import {
   query,
   where,
   collection,
-  getDocs
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -49,7 +54,6 @@ export { storage };
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -106,17 +110,54 @@ export const FirebaseProvider = (props) => {
     }
   };
 
-
   const fetchDetails = async (email) => {
-    try{
-      return await fetchUserData(email) ;
-    }
-    catch(error){
-      console.log(error) ;
+    try {
+      return await fetchUserData(email);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const isLoggedIn = !!user;
+
+  // Function to get the like status of a post
+  const getPostLikeStatus = async (postId, userEmail) => {
+    const postRef = doc(db, "userPosts", postId);
+    const postSnap = await getDoc(postRef);
+
+    if (postSnap.exists()) {
+      const postData = postSnap.data();
+      return postData.likedBy.includes(userEmail);
+    } else {
+      console.error("No such post!");
+      return false;
+    }
+  };
+
+  // Function to like/unlike a post
+  const toggleLikePost = async (postId, userEmail) => {
+    const postRef = doc(db, "userPosts", postId);
+    const postSnap = await getDoc(postRef);
+
+    if (postSnap.exists()) {
+      const postData = postSnap.data();
+      const isLiked = postData.likedBy.includes(userEmail);
+
+      if (isLiked) {
+        await updateDoc(postRef, {
+          likes: postData.likes - 1,
+          likedBy: arrayRemove(userEmail),
+        });
+      } else {
+        await updateDoc(postRef, {
+          likes: postData.likes + 1,
+          likedBy: arrayUnion(userEmail),
+        });
+      }
+    } else {
+      console.error("No such post!");
+    }
+  };
 
   return (
     <FirebaseContext.Provider
@@ -127,7 +168,9 @@ export const FirebaseProvider = (props) => {
         user,
         getUserDetailsByEmail,
         fetchDetails,
-        getUsersByQuery
+        getUsersByQuery,
+        toggleLikePost,
+        getPostLikeStatus,
       }}
     >
       {props.children}
