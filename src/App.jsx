@@ -19,6 +19,7 @@ import { Provider } from "react-redux";
 
 // Redux 
 import { Store } from "./app/store.js";
+import SearchUser from "./pages/SearchUser/SearchUser";
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
       <Route path="/story/friend/:name" element={<SeeFriendStory />} />
       <Route path="/profile/friend/:email" element={<FriendsProfile currentUserData={data}/>} />
       <Route path="/createProfile/:name" element={<ProfileDetails/>} />
+      <Route path="/searchuser" element={<SearchUser/>}/>
     </Routes>
     </Provider>
   );
