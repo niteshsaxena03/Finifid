@@ -79,6 +79,18 @@ body {
   display: none;
   cursor: pointer;
 }
+.header .search form {
+  display: flex;
+  align-items: center;
+}
+
+.header .search input {
+  border: none;
+  padding: 5px;
+  margin-left: 5px;
+  outline: none;
+}
+
 
 @media (max-width: 768px) {
   .headerLeft {

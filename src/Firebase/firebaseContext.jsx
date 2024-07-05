@@ -88,6 +88,24 @@ export const FirebaseProvider = (props) => {
       return null;
     }
   };
+  const getUsersByQuery = async (searchQuery) => {
+    try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("name", "==", searchQuery)); // Adjust based on the search field
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        return querySnapshot.docs.map((doc) => doc.data());
+      } else {
+        console.warn("No matching documents.");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error.message);
+      return [];
+    }
+  };
+
 
   const fetchDetails = async (email) => {
     try{
@@ -108,7 +126,8 @@ export const FirebaseProvider = (props) => {
         isLoggedIn,
         user,
         getUserDetailsByEmail,
-        fetchDetails
+        fetchDetails,
+        getUsersByQuery
       }}
     >
       {props.children}

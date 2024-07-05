@@ -1,4 +1,5 @@
-import  { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./header.css";
 import HeaderOptions from "./headerOptions.jsx";
 import PublicIcon from "@mui/icons-material/Public";
@@ -12,11 +13,29 @@ import {
 } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 
-function Header({profile = true }) {
+function Header({
+  profile = true,
+  friends = true,
+  notifications = true,
+  home = true,
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/searchuser?query=${searchQuery.trim()}`);
+    }
   };
 
   return (
@@ -26,8 +45,16 @@ function Header({profile = true }) {
           <PublicIcon />
         </div>
         <div className="search">
-          <SearchIcon />
-          <input type="text" placeholder="Search" name="searchData" />
+          <form onSubmit={handleSearchSubmit}>
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search Any User"
+              name="searchData"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </form>
         </div>
       </div>
       <div className="headerRight">
@@ -35,19 +62,31 @@ function Header({profile = true }) {
           <MenuIcon />
         </div>
         <div className={`icons ${isMobileMenuOpen ? "open" : ""}`}>
-          <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
+          {home && (
+            <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
+          )}
           <HeaderOptions Icon={Message} label={"Message"} />
-          <HeaderOptions Icon={NotificationAdd} label={"Notifications"} navigation={"/notifications"}/>
-          <HeaderOptions
-            Icon={GroupIcon}
-            label={"Friends"}
-            navigation={"/friends"}
-          />
-          { (profile == true ) ? 
-             <HeaderOptions Avatar={Avatar} label={"User"} navigation={"/profile"}/>
-             :
-             null   
-          }
+          {notifications && (
+            <HeaderOptions
+              Icon={NotificationAdd}
+              label={"Notifications"}
+              navigation={"/notifications"}
+            />
+          )}
+          {friends && (
+            <HeaderOptions
+              Icon={GroupIcon}
+              label={"Friends"}
+              navigation={"/friends"}
+            />
+          )}
+          {profile && (
+            <HeaderOptions
+              Avatar={Avatar}
+              label={"User"}
+              navigation={"/profile"}
+            />
+          )}
         </div>
       </div>
     </div>

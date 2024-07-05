@@ -21,7 +21,7 @@ function HomeScreen({ data }) {
   return (
     // Main Home
     <div className="main">
-      <Header data={data} />
+      <Header data={data} home={false}/>
       <div className="appBody">
         <Sidebar data={data} />
         <Feed data={data} />

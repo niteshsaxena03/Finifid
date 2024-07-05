@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect , useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Avatar } from "@mui/material";
 import { useNavigate } from 'react-router';
 
@@ -10,6 +11,9 @@ import FollowButton from '../FollowButton/followButton';
 import {getDoc,doc} from "firebase/firestore";
 import { db } from "../../Firebase/firebaseContext.jsx";
 
+// Redux 
+import { refreshPage } from '../../features/postCounter.js';
+
 
 let users = ["doghomeoffical_gmail_com","cathomeoffical_gmail_com","weather_gmail_com","ryzenamd_gmail_com"] ;
 
@@ -18,6 +22,8 @@ const recentsView = ({userData,end}) => {
   const navigate = useNavigate();
 
   const [randomUsers,setUsers] = useState([]) ;
+
+  let refresh = useSelector((State)=>State.refresh)
 
 
 
@@ -72,13 +78,17 @@ const recentsView = ({userData,end}) => {
 
   function checkExists(userFollowings , email ){
     
-    for(let i = 0 ; i<userFollowings.length ; i++ ){
+    if( userFollowings != undefined ){
 
-      if( userFollowings[i] === email ){
+    for(let i = 0 ; i<userFollowings.following.length ; i++ ){
+
+      if( userFollowings.following[i] === email ){
              return true  ;
       }
     }
     return false ; 
+
+  }
 
   }
  
@@ -100,7 +110,7 @@ const recentsView = ({userData,end}) => {
                 </div>
                     {
                       (
-                      checkExists(userData.following ,data.email) ?
+                      checkExists(userData ,data.email ) ?
                       <FollowButton userData={userData} otherUser = {data}  value = {true} /> 
                       : 
                       <FollowButton userData={userData} otherUser = {data}  value = {false}/>  

@@ -1,25 +1,26 @@
-  import "./sidebar.css";
+import { useEffect, useState } from "react";
 
-  // Component's 
-  import RightBarHead from "../RightBar/rightBarHead.jsx";
-  import Trends from "./Trends";
-  import { currentDate } from "../../pages/Profile/GoogleTendsAPI.js";
-
-  import { useEffect, useState } from "react";
-
-
-  // DATA FROM API
-  import getTrendingSearches from "../../pages/Profile/GoogleTendsAPI.js";
-
-  // Icon's 
-  import { Avatar } from "@mui/material";
+// import css 
+import "./sidebar.css";
+// Component's 
+import RightBarHead from "../RightBar/rightBarHead.jsx";
+import Trends from "./Trends";
+import { currentDate } from "../../pages/Profile/GoogleTendsAPI.js";
 
 
-  function Sidebar({ data }) {
+// DATA FROM API
+import getTrendingSearches from "../../pages/Profile/GoogleTendsAPI.js";
 
-    const [trends, setTrends] = useState(null);
+// Icon's
+import { Avatar } from "@mui/material";
 
+
+function Sidebar({ data }) {
+  const [trends, setTrends] = useState(null);
+
+  
     useEffect(() => {
+
       async function fetchTrends() {
         try {
           const trendsData = await getTrendingSearches();
@@ -28,10 +29,9 @@
           console.error("Error fetching trends:", error);
         }
       }
+    fetchTrends();
 
-      fetchTrends();
-    }, []);
-
+  }, []);
 
 
   return (
@@ -62,19 +62,15 @@
         </div>
       </div>
 
-
       <div className="subProfile curveBorder">
-
         {/* Header */}
 
         <h4 id="headTrend">
         <RightBarHead newsHeader = {"Trending's"} idx = {-1} Date = {true}  label = {currentDate}/>
         </h4>
 
-
         {/* Trending's In India  */}
-        { trends != null ?  <Trends Trends ={trends}/> : null   }
-
+        {trends != null ? <Trends Trends={trends} /> : null}
       </div>
     </div>
   );

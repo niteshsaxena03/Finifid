@@ -1,0 +1,117 @@
+/* Base styles for the SearchUser page */
+.search-user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f4; /* Light grey background for the whole page */
+  min-height: 100vh; /* Ensure full height of viewport */
+}
+
+.search-results-wrapper {
+  width: 80%; /* Set width to 80% of the page width */
+  max-width: 1200px; /* Maximum width for larger screens */
+  padding: 20px;
+  background-color: #cfda6c; /* White background for results area */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 8px; /* Rounded corners */
+  border: 1px solid #ddd; /* Light border for the box */
+  margin-top: 20px; /* Space above the results box */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center contents horizontally */
+}
+
+.main-heading{
+  text-align: center; /* Center the heading */
+  margin-bottom: 20px;
+  font-size: 34px;
+  color: #333; /* Darker text color */
+  font-weight: bold;
+}
+
+.no-results {
+  font-size: 30px; /* Larger font size for no results message */
+  text-align: center; /* Center the text */
+  color: #e74c3c; /* Red color for the no results message */
+  margin-top: 40px; /* Space above the no results message */
+  font-weight: bold;
+}
+
+.search-query-message {
+  font-size: 18px;
+  color: #888; /* Gray text color for no query message */
+  text-align: center; /* Center the text */
+}
+
+/* Styles for individual FriendComponent */
+.friend-component-wrapper {
+  width: 100%; /* Full width of the container */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  margin-bottom: 20px; /* Space below each component */
+}
+
+.friend-component {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 20px;
+  width: 100%; /* Ensure full width of the wrapper */
+  max-width: 600px; /* Maximum width for each component */
+  background-color: #ffffff; /* White background for each component */
+  border: 1px solid #ddd; /* Light border for each component */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for each component */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .search-user-container {
+    padding: 15px;
+  }
+
+  .search-results-wrapper {
+    width: 90%; /* Adjust width for smaller screens */
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .no-results,
+  .search-query-message {
+    font-size: 16px;
+  }
+
+  .friend-component {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-user-container {
+    padding: 10px;
+  }
+
+  .search-results-wrapper {
+    width: 95%; /* Adjust width for very small screens */
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .no-results,
+  .search-query-message {
+    font-size: 14px;
+  }
+
+  .friend-component {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+}
