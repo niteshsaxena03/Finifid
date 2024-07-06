@@ -411,6 +411,7 @@ const Feed = ({ data, profile, friends }) => {
               caption=""
               likes={likes}
               likedBy={likedBy}
+              userEmail={data.email}
             />
           );
         }
@@ -459,6 +460,7 @@ const Feed = ({ data, profile, friends }) => {
               postvideo={url}
               likes={likes}
               likedBy={likedBy}
+              userEmail={data.email}
             />
           );
         }

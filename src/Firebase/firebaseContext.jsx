@@ -9,8 +9,7 @@ import {
   getDocs,
   doc,
   updateDoc,
-  arrayUnion,
-  arrayRemove,
+  setDoc,
   getDoc,
 } from "firebase/firestore";
 import { Firestore } from "firebase/firestore";
@@ -123,7 +122,6 @@ export const FirebaseProvider = (props) => {
   // Function to get the like status of a post
   const getPostLikeStatus = async (postId, userEmail) => {
     try {
-      // Debugging log
       console.log("Getting like status for postId:", postId);
       if (!postId) {
         throw new Error("postId is undefined");
@@ -149,7 +147,6 @@ export const FirebaseProvider = (props) => {
     }
   };
 
-  // Function to like/unlike a post
   const toggleLikePost = async (postId, userEmail) => {
     try {
       const postsCollectionRef = collection(db, "userPosts");
@@ -161,19 +158,24 @@ export const FirebaseProvider = (props) => {
 
       if (!postSnap.empty) {
         const postDoc = postSnap.docs[0];
-        const postRef = postDoc.ref;
+        const postDocRef = doc(db, "userPosts", postDoc.id);
         const postData = postDoc.data();
-        const isLiked = postData.likedBy.includes(userEmail);
+        const likedBy = postData.likedBy || [];
+        const likes = postData.likes || 0;
+
+        const isLiked = likedBy.includes(userEmail);
 
         if (isLiked) {
-          await updateDoc(postRef, {
-            likes: postData.likes - 1,
-            likedBy: arrayRemove(userEmail),
+          const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
+          await updateDoc(postDocRef, {
+            likes: likes - 1,
+            likedBy: updatedLikedBy,
           });
         } else {
-          await updateDoc(postRef, {
-            likes: postData.likes + 1,
-            likedBy: arrayUnion(userEmail),
+          const updatedLikedBy = [...likedBy, userEmail];
+          await updateDoc(postDocRef, {
+            likes: likes + 1,
+            likedBy: updatedLikedBy,
           });
         }
       } else {
@@ -183,6 +185,7 @@ export const FirebaseProvider = (props) => {
       console.error("Error toggling like post:", error.message);
     }
   };
+
 
   return (
     <FirebaseContext.Provider
