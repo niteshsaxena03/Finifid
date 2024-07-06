@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useFirebase } from "../../Firebase/firebaseContext.jsx";
 
 const Post = ({
-  postId, // Add postId prop
+  postId,
   name,
   subHeader,
   message,
@@ -18,8 +18,8 @@ const Post = ({
   postvideo,
   email,
   caption = "",
-  likes = 0, // Add likes prop
-  userEmail, // Add userEmail prop
+  likes,
+  likedBy,
 }) => {
   const [likeCount, setLikeCount] = useState(likes);
   const { getPostLikeStatus, toggleLikePost } = useFirebase();
@@ -80,7 +80,7 @@ const Post = ({
         ) : null}
       </div>
 
-      <PostFooter postId={postId} userEmail={userEmail} likes={likeCount} />
+      <PostFooter postId={postId} likes={likeCount} />
     </div>
   );
 };

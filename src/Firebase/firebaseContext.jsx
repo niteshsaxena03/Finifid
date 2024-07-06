@@ -122,11 +122,12 @@ export const FirebaseProvider = (props) => {
 
   // Function to get the like status of a post
   const getPostLikeStatus = async (postId, userEmail) => {
-    const postRef = doc(db, "userPosts", postId);
-    const postSnap = await getDoc(postRef);
+    const postsCollectionRef = collection(db, "userPosts");
+    const postsQuery = query(postsCollectionRef, where("postId", "==", postId));
+    const postSnap = await getDocs(postsQuery);
 
-    if (postSnap.exists()) {
-      const postData = postSnap.data();
+    if (!postSnap.empty) {
+      const postData = postSnap.docs[0].data();
       return postData.likedBy.includes(userEmail);
     } else {
       console.error("No such post!");
@@ -136,11 +137,14 @@ export const FirebaseProvider = (props) => {
 
   // Function to like/unlike a post
   const toggleLikePost = async (postId, userEmail) => {
-    const postRef = doc(db, "userPosts", postId);
-    const postSnap = await getDoc(postRef);
+    const postsCollectionRef = collection(db, "userPosts");
+    const postsQuery = query(postsCollectionRef, where("postId", "==", postId));
+    const postSnap = await getDocs(postsQuery);
 
-    if (postSnap.exists()) {
-      const postData = postSnap.data();
+    if (!postSnap.empty) {
+      const postDoc = postSnap.docs[0];
+      const postRef = postDoc.ref;
+      const postData = postDoc.data();
       const isLiked = postData.likedBy.includes(userEmail);
 
       if (isLiked) {
