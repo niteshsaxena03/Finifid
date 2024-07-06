@@ -4,17 +4,28 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import SendIcon from "@mui/icons-material/Send";
+import { useState, useEffect } from "react";
+import { useFirebase } from "../../Firebase/firebaseContext.jsx";
 
-const PostFooter = ({ likes, isLiked, onLikeClick }) => {
-  // console.log("PostFooter props:", {
-  //   likes,
-  //   isLiked,
-  //   onLikeClick,
-  // });
+const PostFooter = ({
+  postId,
+  likes=0,
+  likedBy = [],
+  userEmail,
+}) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const { toggleLikePost } = useFirebase();
+
+  useEffect(() => {
+    // Check if the user has liked the post
+    setIsLiked(likedBy.includes(userEmail));
+  }, [likedBy, userEmail]);
 
   const handleLikeClick = async () => {
     console.log("PostFooter handleLikeClick called");
-    await onLikeClick(); // Callback to update like state in the parent component
+    await toggleLikePost(postId, userEmail);
+    // Update the like status locally after toggling
+    setIsLiked(!isLiked);
   };
 
   return (

@@ -119,33 +119,6 @@ export const FirebaseProvider = (props) => {
 
   const isLoggedIn = !!user;
 
-  // Function to get the like status of a post
-  const getPostLikeStatus = async (postId, userEmail) => {
-    try {
-      console.log("Getting like status for postId:", postId);
-      if (!postId) {
-        throw new Error("postId is undefined");
-      }
-
-      const postsCollectionRef = collection(db, "userPosts");
-      const postsQuery = query(
-        postsCollectionRef,
-        where("postId", "==", postId)
-      );
-      const postSnap = await getDocs(postsQuery);
-
-      if (!postSnap.empty) {
-        const postData = postSnap.docs[0].data();
-        return postData.likedBy.includes(userEmail);
-      } else {
-        console.error(`No such post with postId: ${postId}!`);
-        return false;
-      }
-    } catch (error) {
-      console.error("Error getting post like status:", error.message);
-      return false;
-    }
-  };
 
   const toggleLikePost = async (postId, userEmail) => {
     try {
@@ -164,6 +137,8 @@ export const FirebaseProvider = (props) => {
         const likes = postData.likes || 0;
 
         const isLiked = likedBy.includes(userEmail);
+
+        console.log({likedBy,likes,isLiked});
 
         if (isLiked) {
           const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
