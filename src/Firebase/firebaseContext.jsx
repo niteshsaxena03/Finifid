@@ -122,7 +122,10 @@ export const FirebaseProvider = (props) => {
 
   const toggleLikePost = async (postId, userEmail) => {
     try {
+      // Get a reference to the userPosts collection
       const postsCollectionRef = collection(db, "userPosts");
+
+      // Query to find the post with the given postId
       const postsQuery = query(
         postsCollectionRef,
         where("postId", "==", postId)
@@ -130,23 +133,25 @@ export const FirebaseProvider = (props) => {
       const postSnap = await getDocs(postsQuery);
 
       if (!postSnap.empty) {
+        // Get the document reference and data
         const postDoc = postSnap.docs[0];
-        const postDocRef = doc(db, "userPosts", postDoc.id);
+        const postDocRef = doc(db, "userPosts", postDoc.id); // Use the document ID from the query snapshot
         const postData = postDoc.data();
-        const likedBy = postData.likedBy || [];
-        const likes = postData.likes || 0;
+        const likedBy = postData.likedBy;
+        const likes = postData.likes ;
 
+        // Determine if the post is currently liked by the user
         const isLiked = likedBy.includes(userEmail);
 
-        console.log({likedBy,likes,isLiked});
-
         if (isLiked) {
+          // If already liked, unlike the post
           const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
           await updateDoc(postDocRef, {
             likes: likes - 1,
             likedBy: updatedLikedBy,
           });
         } else {
+          // If not liked, like the post
           const updatedLikedBy = [...likedBy, userEmail];
           await updateDoc(postDocRef, {
             likes: likes + 1,
@@ -173,7 +178,6 @@ export const FirebaseProvider = (props) => {
         fetchDetails,
         getUsersByQuery,
         toggleLikePost,
-        getPostLikeStatus,
       }}
     >
       {props.children}

@@ -7,18 +7,15 @@ import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect } from "react";
 import { useFirebase } from "../../Firebase/firebaseContext.jsx";
 
-const PostFooter = ({
-  postId,
-  likes=0,
-  likedBy = [],
-  userEmail,
-}) => {
+const PostFooter = ({ postId, likes = 0, likedBy, userEmail }) => {
   const [isLiked, setIsLiked] = useState(false);
   const { toggleLikePost } = useFirebase();
 
   useEffect(() => {
     // Check if the user has liked the post
-    setIsLiked(likedBy.includes(userEmail));
+    if (likedBy != null) {
+      setIsLiked(likedBy.includes(userEmail));
+    }
   }, [likedBy, userEmail]);
 
   const handleLikeClick = async () => {
