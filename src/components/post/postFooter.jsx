@@ -6,13 +6,24 @@ import ShareIcon from "@mui/icons-material/Share";
 import SendIcon from "@mui/icons-material/Send";
 
 const PostFooter = ({ likes, isLiked, onLikeClick }) => {
+  // console.log("PostFooter props:", {
+  //   likes,
+  //   isLiked,
+  //   onLikeClick,
+  // });
+
+  const handleLikeClick = async () => {
+    console.log("PostFooter handleLikeClick called");
+    await onLikeClick(); // Callback to update like state in the parent component
+  };
+
   return (
     <div className="postFooter">
       <Icon
         Icon={isLiked ? ThumbUpIcon : ThumbUpOffAltIcon}
         label={`Likes ${likes}`}
         idx={-1}
-        onClick={onLikeClick} // Use onLikeClick to handle like button click
+        onClick={handleLikeClick}
       />
       <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
       <Icon Icon={ShareIcon} label={"Share"} idx={-1} />

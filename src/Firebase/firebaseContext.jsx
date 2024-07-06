@@ -13,6 +13,7 @@ import {
   arrayRemove,
   getDoc,
 } from "firebase/firestore";
+import { Firestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 import {
@@ -23,7 +24,6 @@ import {
 } from "firebase/auth";
 
 import fetchUserData from "../pages/Database/userData.js";
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -122,44 +122,65 @@ export const FirebaseProvider = (props) => {
 
   // Function to get the like status of a post
   const getPostLikeStatus = async (postId, userEmail) => {
-    const postsCollectionRef = collection(db, "userPosts");
-    const postsQuery = query(postsCollectionRef, where("postId", "==", postId));
-    const postSnap = await getDocs(postsQuery);
+    try {
+      // Debugging log
+      console.log("Getting like status for postId:", postId);
+      if (!postId) {
+        throw new Error("postId is undefined");
+      }
 
-    if (!postSnap.empty) {
-      const postData = postSnap.docs[0].data();
-      return postData.likedBy.includes(userEmail);
-    } else {
-      console.error("No such post!");
+      const postsCollectionRef = collection(db, "userPosts");
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
+
+      if (!postSnap.empty) {
+        const postData = postSnap.docs[0].data();
+        return postData.likedBy.includes(userEmail);
+      } else {
+        console.error(`No such post with postId: ${postId}!`);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error getting post like status:", error.message);
       return false;
     }
   };
 
   // Function to like/unlike a post
   const toggleLikePost = async (postId, userEmail) => {
-    const postsCollectionRef = collection(db, "userPosts");
-    const postsQuery = query(postsCollectionRef, where("postId", "==", postId));
-    const postSnap = await getDocs(postsQuery);
+    try {
+      const postsCollectionRef = collection(db, "userPosts");
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
 
-    if (!postSnap.empty) {
-      const postDoc = postSnap.docs[0];
-      const postRef = postDoc.ref;
-      const postData = postDoc.data();
-      const isLiked = postData.likedBy.includes(userEmail);
+      if (!postSnap.empty) {
+        const postDoc = postSnap.docs[0];
+        const postRef = postDoc.ref;
+        const postData = postDoc.data();
+        const isLiked = postData.likedBy.includes(userEmail);
 
-      if (isLiked) {
-        await updateDoc(postRef, {
-          likes: postData.likes - 1,
-          likedBy: arrayRemove(userEmail),
-        });
+        if (isLiked) {
+          await updateDoc(postRef, {
+            likes: postData.likes - 1,
+            likedBy: arrayRemove(userEmail),
+          });
+        } else {
+          await updateDoc(postRef, {
+            likes: postData.likes + 1,
+            likedBy: arrayUnion(userEmail),
+          });
+        }
       } else {
-        await updateDoc(postRef, {
-          likes: postData.likes + 1,
-          likedBy: arrayUnion(userEmail),
-        });
+        console.error(`No such post with postId: ${postId}!`);
       }
-    } else {
-      console.error("No such post!");
+    } catch (error) {
+      console.error("Error toggling like post:", error.message);
     }
   };
 
