@@ -115,15 +115,15 @@ const Feed = ({ data, profile, friends }) => {
       const userDocRef = collection(db, "userPosts");
 
       let postData = {
-        postId:uuidv4(),
+        postId: uuidv4(),
         name: data.name,
         subHeader: data.profession,
         message: input,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
-        likes:0,
-        likedBy:[],
+        likes: 0,
+        likedBy: [],
       };
 
       // Upload !
@@ -180,15 +180,15 @@ const Feed = ({ data, profile, friends }) => {
 
       // Save metadata and URL to Firestore
       const photoData = {
-        postId:uuidv4(),
+        postId: uuidv4(),
         url: url,
         name: data.name,
         subHeader: data.profession,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
-        likes:0,
-        likedBy:[],
+        likes: 0,
+        likedBy: [],
       };
       await addDoc(collection(db, "photos"), photoData);
 
@@ -230,15 +230,15 @@ const Feed = ({ data, profile, friends }) => {
 
       // Save metadata and URL to Firestore
       const videoData = {
-        postId:uuidv4(),
+        postId: uuidv4(),
         url: url,
         name: data.name,
         subHeader: data.profession,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
-        likes:0,
-        likedBy:[],
+        likes: 0,
+        likedBy: [],
       };
       await addDoc(collection(db, "videos"), videoData);
 
@@ -328,106 +328,141 @@ const Feed = ({ data, profile, friends }) => {
       )}
 
       {/* @ Post Starts from Here !   */}
-      {post.map(({ postId,name, subHeader, message, photoURL, timestamp, email,likes,likedBy }) => {
-        // Converting time :
-
-        {
-          if (timestamp != null) {
-            timestamp = timestamp.toDate();
-            timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
-            overAllTime = timestamp;
+      {post.map(
+        ({
+          postId,
+          name,
+          subHeader,
+          message,
+          photoURL,
+          timestamp,
+          email,
+          likes,
+          likedBy,
+        }) => {
+          // Converting time :
+          {
+            if (timestamp != null) {
+              timestamp = timestamp.toDate();
+              timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
+              overAllTime = timestamp;
+            }
           }
+          return (
+            <Post
+              key={uuidv4()}
+              postId={postId}
+              name={name}
+              subHeader={subHeader}
+              message={message}
+              avatar={photoURL}
+              timestamp={timestamp}
+              email={email}
+              likes={likes}
+              likedBy={likedBy}
+              userEmail={data.email}
+            />
+          );
         }
-
-        return (
-          <Post
-            key={uuidv4()}
-            postId={postId}
-            name={name}
-            subHeader={subHeader}
-            message={message}
-            avatar={photoURL}
-            timestamp={timestamp}
-            email={email}
-            likes={likes}
-            likedBy={likedBy}
-          />
-        );
-      })}
+      )}
 
       {/* @Post - Images Start from here */}
 
       {/* Posts with images */}
-      {imgurl.map(({ postId,url, photoURL, name, subHeader, timestamp, email,likes,likedBy }) => {
-        let formattedTimestamp = "";
-        if (timestamp && typeof timestamp.toDate === "function") {
-          formattedTimestamp = timestamp
-            .toDate()
-            .toString()
-            .split(" ")
-            .slice(1, 4)
-            .join("-");
-        } else if (timestamp && typeof timestamp.seconds === "number") {
-          formattedTimestamp = new Date(timestamp.seconds * 1000)
-            .toString()
-            .split(" ")
-            .slice(1, 4)
-            .join("-");
-        }
+      {imgurl.map(
+        ({
+          postId,
+          url,
+          photoURL,
+          name,
+          subHeader,
+          timestamp,
+          email,
+          likes,
+          likedBy,
+        }) => {
+          let formattedTimestamp = "";
+          if (timestamp && typeof timestamp.toDate === "function") {
+            formattedTimestamp = timestamp
+              .toDate()
+              .toString()
+              .split(" ")
+              .slice(1, 4)
+              .join("-");
+          } else if (timestamp && typeof timestamp.seconds === "number") {
+            formattedTimestamp = new Date(timestamp.seconds * 1000)
+              .toString()
+              .split(" ")
+              .slice(1, 4)
+              .join("-");
+          }
 
-        return (
-          <Post
-            key={uuidv4()}
-            postId={postId}
-            name={name}
-            subHeader={subHeader}
-            message=""
-            avatar={photoURL}
-            timestamp={formattedTimestamp}
-            postImage={url}
-            email={email}
-            caption=""
-            likes={likes}
-            likedBy={likedBy}
-          />
-        );
-      })}
+          return (
+            <Post
+              key={uuidv4()}
+              postId={postId}
+              name={name}
+              subHeader={subHeader}
+              message=""
+              avatar={photoURL}
+              timestamp={formattedTimestamp}
+              postImage={url}
+              email={email}
+              caption=""
+              likes={likes}
+              likedBy={likedBy}
+            />
+          );
+        }
+      )}
       {/* @Post - Videos Start from here */}
 
-      {videoUrl.map(({postId, url, photoURL, name, subHeader, timestamp, email,likes,likedBy }) => {
-        let formattedTimestamp = "";
-        if (timestamp && typeof timestamp.toDate === "function") {
-          formattedTimestamp = timestamp
-            .toDate()
-            .toString()
-            .split(" ")
-            .slice(1, 4)
-            .join("-");
-        } else if (timestamp && typeof timestamp.seconds === "number") {
-          formattedTimestamp = new Date(timestamp.seconds * 1000)
-            .toString()
-            .split(" ")
-            .slice(1, 4)
-            .join("-");
-        }
+      {videoUrl.map(
+        ({
+          postId,
+          url,
+          photoURL,
+          name,
+          subHeader,
+          timestamp,
+          email,
+          likes,
+          likedBy,
+        }) => {
+          let formattedTimestamp = "";
+          if (timestamp && typeof timestamp.toDate === "function") {
+            formattedTimestamp = timestamp
+              .toDate()
+              .toString()
+              .split(" ")
+              .slice(1, 4)
+              .join("-");
+          } else if (timestamp && typeof timestamp.seconds === "number") {
+            formattedTimestamp = new Date(timestamp.seconds * 1000)
+              .toString()
+              .split(" ")
+              .slice(1, 4)
+              .join("-");
+          }
 
-        return (
-          <Post
-            key={uuidv4()}
-            postId={postId}
-            name={name}
-            subHeader={subHeader}
-            message=""
-            avatar={photoURL}
-            timestamp={formattedTimestamp}
-            email={email}
-            caption=""
-            postvideo={url}
-            likes={likes}
-            likedBy={likedBy}
-          />
-        );
-      })}
+          return (
+            <Post
+              key={uuidv4()}
+              postId={postId}
+              name={name}
+              subHeader={subHeader}
+              message=""
+              avatar={photoURL}
+              timestamp={formattedTimestamp}
+              email={email}
+              caption=""
+              postvideo={url}
+              likes={likes}
+              likedBy={likedBy}
+            />
+          );
+        }
+      )}
     </div>
   );
 };
