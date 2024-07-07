@@ -120,7 +120,9 @@ export const FirebaseProvider = (props) => {
   const isLoggedIn = !!user;
 
 
-  const toggleLikePost = async (postId, userEmail) => {
+  const toggleLikePost = async (postId, userEmail,currentUserEmail) => {
+    console.log(userEmail);
+    console.log(currentUserEmail);
     try {
       // Get a reference to the userPosts collection
       const postsCollectionRef = collection(db, "userPosts");
@@ -139,23 +141,22 @@ export const FirebaseProvider = (props) => {
         const postDocRef = doc(db, "userPosts",compositeKey);
         const postData = postDoc.data();
         const likedBy = postData.likedBy;
-        const likes = postData.likes ;
 
         // Determine if the post is currently liked by the user
-        const isLiked = likedBy.includes(userEmail);
+        const isLiked = likedBy.includes(currentUserEmail);
 
         if (isLiked) {
           // If already liked, unlike the post
-          const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
+          const updatedLikedBy = likedBy.filter((email) => email !== currentUserEmail);
           await updateDoc(postDocRef, {
-            likes: likes - 1,
+            likes: updatedLikedBy.length,
             likedBy: updatedLikedBy,
           });
         } else {
           // If not liked, like the post
-          const updatedLikedBy = [...likedBy, userEmail];
+          const updatedLikedBy = [...likedBy, currentUserEmail];
           await updateDoc(postDocRef, {
-            likes: likes + 1,
+            likes: updatedLikedBy.length,
             likedBy: updatedLikedBy,
           });
         }

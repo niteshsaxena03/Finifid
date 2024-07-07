@@ -7,21 +7,27 @@ import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect } from "react";
 import { useFirebase } from "../../Firebase/firebaseContext.jsx";
 
+const formatEmail = (email) => {
+  return email.replace(/[^a-zA-Z0-9]/g, "_");
+};
+
 const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
-  const { toggleLikePost } = useFirebase();
-
+  const { toggleLikePost,user } = useFirebase();
+  
+  const currentUserEmail=formatEmail(user.email);
+  
   useEffect(() => {
     // Check if the user has liked the post
-    setIsLiked(likedBy.includes(userEmail));
+    setIsLiked(likedBy.includes(currentUserEmail));
   }, [likedBy, userEmail]);
 
   const handleLikeClick = async () => {
     console.log("PostFooter handleLikeClick called"); // Ensure this logs to the console
     try {
       // Toggle like and update Firestore
-      await toggleLikePost(postId, userEmail);
+      await toggleLikePost(postId, userEmail,currentUserEmail);
 
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
