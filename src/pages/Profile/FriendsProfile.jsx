@@ -43,7 +43,7 @@ function FriendsProfile({currentUserData}) {
 
 
   const {email} = useParams() ;
-  console.log(email)
+  console.log("search email" , email)
 
 
   // Fetching User Data   

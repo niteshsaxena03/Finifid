@@ -52,7 +52,7 @@ function App() {
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/signup" element={<SignUpScreen />} />
       <Route path="/home" element={<HomeScreen data={data} />} />
-      <Route path="/friends" element={<FriendScreen />} />
+      <Route path="/friends" element={<FriendScreen data = {data} />} />
       <Route path="/notifications" element={<NotificationScreen />} />
       <Route path="/profile" element={<ProfileScreen data = {data}/>} />
       <Route path="/story" element={<MainStory data={data}/>} />

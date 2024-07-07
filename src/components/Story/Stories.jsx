@@ -28,7 +28,7 @@ const Stories = ({ data }) => {
     dots: true,
     infinite: true,
     speed: 100,
-    slidesToShow: followingSize ,  
+    slidesToShow: followingSize <= 4 ? followingSize : 5  ,  
     slidesToScroll: 1,
   };
 

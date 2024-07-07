@@ -1,5 +1,6 @@
 import FriendComponent from "@/components/Friend/FriendComponent"
 
+
 function FollowingList({ following }) {
   return (
     <div>
@@ -7,8 +8,9 @@ function FollowingList({ following }) {
         <FriendComponent
           key={index}
           name={follow.name}
-          about={follow.about}
+          about={follow.profession}
           image={follow.image}
+          email ={follow.email}
         />
       ))}
     </div>

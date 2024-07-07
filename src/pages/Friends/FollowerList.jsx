@@ -7,8 +7,9 @@ function FollowerList({ followers }) {
         <FriendComponent
           key={index}
           name={follower.name}
-          about={follower.about}
+          about={follower.profession}
           image={follower.image}
+          email = {follower.email}
         />
       ))}
     </div>

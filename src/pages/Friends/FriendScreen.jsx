@@ -7,64 +7,79 @@ import { useNavigate } from "react-router";
 import { useFirebase } from "@/Firebase/firebaseContext.jsx";
 import { useEffect } from "react";
 
-function FriendScreen() {
+// Database 
+import { db } from "../../Firebase/firebaseContext";
+import { doc,getDoc } from "firebase/firestore";
+
+function FriendScreen({data}) {
+
   const navigate = useNavigate();
+
   const firebase = useFirebase();
   const { isLoggedIn } = useFirebase();
 
   // Check if user is logged in or not.
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/");
-    }
-  }, [firebase, navigate]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate("/");
+  //   }
+  // }, [firebase, navigate]);
   
   const [activeTab, setActiveTab] = useState("followers"); // 'followers' or 'following'
+  const [followingData , setfollowingData] = useState([]) ;
+  const [followersData , setfollowersData] = useState([]) ;
+
+
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-const followersData = [
-  {
-    name: "Alice Johnson",
-    about: "Software engineer from San Francisco.",
-    image:
-      "https://images.pexels.com/photos/4542178/pexels-photo-4542178.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-  {
-    name: "Bob Smith",
-    about: "Graphic designer and coffee enthusiast.",
-    image:
-      "https://images.pexels.com/photos/6147118/pexels-photo-6147118.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-  {
-    name: "Carla Gomez",
-    about: "Digital marketer with a passion for travel.",
-    image:
-      "https://images.pexels.com/photos/5262292/pexels-photo-5262292.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-];
 
-const followingData = [
-  {
-    name: "Daniel Brown",
-    about: "Photographer and nature lover.",
-    image:
-      "https://images.pexels.com/photos/4890259/pexels-photo-4890259.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-  {
-    name: "Eva White",
-    about: "Fitness coach and healthy living advocate.",
-    image:
-      "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-  {
-    name: "Frank Martin",
-    about: "Musician and songwriter.",
-    image:
-      "https://images.pexels.com/photos/7562313/pexels-photo-7562313.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  },
-];
+
+useEffect(() => {
+  const fetchFriendsData= async () => {
+    // Following Work 
+    if (data && data.following) {
+
+      const userFollowing = data.following.map(async (email) => {
+        const userDocRef = doc(db, "users", email);
+        const newData = await getDoc(userDocRef);
+        let store = newData.data() ;
+        return {
+           name : store.name , 
+           image : store.ProfileDetails.profileImg ,
+           profession : store.profession ,
+           email : store.email  
+          }});
+          const dataFollowing = await Promise.all(userFollowing);
+          console.log("user following : " , userFollowing)
+          setfollowingData(dataFollowing) ;
+          
+      }
+    
+      // Following Work 
+
+      if(data && data.followers){
+
+       const userFollowers = data.followers.map(async (email) => {
+        const userDocRef = doc(db, "users", email);
+        const newData = await getDoc(userDocRef);
+        let store = newData.data() ;
+        return {
+           name : store.name , 
+           image : store.ProfileDetails.profileImg ,
+           profession : store.profession ,
+           email : store.email 
+        }});
+
+        const dataFollowers = await Promise.all(userFollowers);
+        setfollowersData(dataFollowers) ;
+      }
+  };    
+
+  fetchFriendsData();
+}, [data]);
+
 
 
   return (
