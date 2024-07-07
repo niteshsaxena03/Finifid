@@ -112,32 +112,36 @@ const Feed = ({ data, profile, friends }) => {
   const AddPost = async (event) => {
     event.preventDefault();
     try {
-      const userDocRef = collection(db, "userPosts");
+      // Generate a unique postId
+      const postId = uuidv4();
+      const userEmail = data.email; // Get the user's email
+      const compositeKey = userEmail+postId;
+      const postDocRef = doc(db, "userPosts", compositeKey);
 
       let postData = {
-        postId: uuidv4(),
+        postId: postId,
         name: data.name,
         subHeader: data.profession,
         message: input,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
-        email: data.email,
+        email: userEmail,
         likes: 0,
         likedBy: [],
       };
 
-      // Upload !
-      await addDoc(userDocRef, postData);
+      // Upload the post data
+      await setDoc(postDocRef, postData);
       setInput("");
 
-      // Post After Upload !
+      // Fetch updated posts data
       await FetchData("userPosts");
 
-      // Update Posts Data
+      // Update user's post count
       data.ProfileDetails.post++;
       await updatePostData();
     } catch (error) {
-      console.log("method not work  !", error);
+      console.log("Error adding post:", error);
     }
   };
 

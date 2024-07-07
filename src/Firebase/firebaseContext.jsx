@@ -131,11 +131,12 @@ export const FirebaseProvider = (props) => {
         where("postId", "==", postId)
       );
       const postSnap = await getDocs(postsQuery);
+      const compositeKey=userEmail+postId;
 
       if (!postSnap.empty) {
         // Get the document reference and data
         const postDoc = postSnap.docs[0];
-        const postDocRef = doc(db, "userPosts", postDoc.id); // Use the document ID from the query snapshot
+        const postDocRef = doc(db, "userPosts",compositeKey);
         const postData = postDoc.data();
         const likedBy = postData.likedBy;
         const likes = postData.likes ;
