@@ -38,16 +38,22 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
 
   return (
     <div className="postFooter">
-      <button onClick={handleLikeClick}>
+      <button onClick={handleLikeClick} className="iconButton">
         <Icon
           Icon={isLiked ? ThumbUpIcon : ThumbUpOffAltIcon}
           label={`Likes ${likeCount}`}
           idx={-1}
         />
       </button>
-      <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
-      <Icon Icon={ShareIcon} label={"Share"} idx={-1} />
-      <Icon Icon={SendIcon} label={"Send"} idx={-1} />
+      <button className="iconButton">
+        <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
+      </button>
+      <button className="iconButton">
+        <Icon Icon={ShareIcon} label={"Share"} idx={-1} />
+      </button>
+      <button className="iconButton">
+        <Icon Icon={SendIcon} label={"Send"} idx={-1} />
+      </button>
     </div>
   );
 };
