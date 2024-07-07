@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // Icons 
 import { Avatar } from '@mui/material'
@@ -10,6 +10,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 // components 
 import Icon from '../../components/IconComponent/Icon.jsx';
 import FollowButton from '../../components/FollowButton/followButton.jsx';
+import CircularIndeterminate from '../../components/Progress/progress.jsx';
 
 // Css 
 import './ProfileSection.css'
@@ -22,6 +23,8 @@ const ProfileSection = ({data,friends,updatedFollowers,updatedFollowing,userData
    // For post count ! : 
    const postCount = useSelector((State)=> State.postCounter.postCount) ; 
 
+  // Progress     
+   let [ progress , setProgress] = useState(true) ;
    
 
   function getJoinedDate(userJoinDate){ 
@@ -60,9 +63,12 @@ const ProfileSection = ({data,friends,updatedFollowers,updatedFollowing,userData
     <div className="upperProfile">
 
 
-        {/* Main Image  */}
-
+     {
+        progress == true && data.ProfileDetails == undefined ? 
+        <CircularIndeterminate/>
+        :
         <div className="backgroundImage">
+        {/* Main Image  */}
             <img src={data.ProfileDetails && data.ProfileDetails.backgroundImg ? data.ProfileDetails.backgroundImg : ""}/>
 
 
@@ -73,7 +79,7 @@ const ProfileSection = ({data,friends,updatedFollowers,updatedFollowing,userData
 
 
         </div>
-
+     }
       
 
 

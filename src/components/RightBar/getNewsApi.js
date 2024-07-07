@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let q = 'Facebook';
+let q = 'facebook';
 const newsapi = `https://newsapi.org/v2/everything?q=${q}&apiKey=1f16c9c0ce704f0898301082e53998ff`;
 
 async function getNews() {

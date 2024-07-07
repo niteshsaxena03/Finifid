@@ -4,12 +4,10 @@
 }
 
 .StoriesBox{
- 
-    min-height: max-content ;
-    width: inherit ;
+
+    height: 220px;
 
     overflow: hidden;
-    /* padding: 0px 30px; */
 
 
     margin-left: 1%;
@@ -42,11 +40,12 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
-  }
-  
-  .storyHeader h2 {
     font-size: 1.5em;
     font-weight: bolder;
+    color: transparent;
+  }
+  
+  .styleHeader h2 {
     background: linear-gradient(to right, #00000063   , #8e0b3a);
     background-clip: text;
     -webkit-background-clip: text;
@@ -54,4 +53,11 @@
     animation: text-reveal 3s ease forwards;
     background-size: 200%;
   }
-  
+
+  .loader{
+    position: absolute;
+    top: 20%;
+    left: 44%;
+  }
+
+

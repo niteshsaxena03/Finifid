@@ -1,44 +1,40 @@
 import React from 'react'
 import Stories from 'stories-react';
 import 'stories-react/dist/index.css';
-import './mainStory.css' ;  
-import './StoryDesign.css'
+import './mainStory.css' ;
 
 import { useState , useEffect } from 'react';
-import { getDownloadURL, listAll, ref } from "firebase/storage";
-import { storage } from '../../Firebase/firebaseContext';
 
+// Redux
+import { useSelector } from 'react-redux';
 
-import { useParams } from 'react-router-dom';
+function ImagesStories({data}) {
 
-
-function ImagesStories() {
-
-    const [stories, setStories] = useState([]);
-    const { name } = useParams();
-
-
+    const [ stories , setStories ] = useState([]) ;
+ 
+    let story =  useSelector((State)=>State.postCounter.friendStory) ;
 
     useEffect(() => {
+
+        console.log("Data - story " , story );   
+
         const fetchImages = async () => {
           try {
-            const listRef = ref(storage, `Story/Friend/${name}`);
-            const res = await listAll(listRef);
-            const urls = await Promise.all(
-              res.items.map((itemRef) => getDownloadURL(itemRef))
-            );
+           
+            if( story ){
 
-
-            // Fetching Stories 
-            const stories = urls.map((url)=>(
-                    {
-                        type: "image",
-                        url:url,
-                        duration: 5000
-                    }
-            ))
-            
-            setStories(stories) ;
+              // Fetching Stories 
+              const stories = story.map((url)=>(
+                      {
+                          type: "image",
+                          url:url,
+                          duration: 5000
+                      }
+              ))
+              
+              setStories(stories) ;
+            }
+           
 
           } catch (error) {
 
@@ -47,9 +43,11 @@ function ImagesStories() {
           }
 
         };
+
+
     
         fetchImages();
-      }, []);
+      }, [data]);
 
       return (
         <div>
@@ -64,12 +62,13 @@ function ImagesStories() {
 
   
 
-      export default function SeeFriendStory() {
+      export default function MainStory({data}) {
         return (
           <div className="App">
+            {console.log("data at main :" , data )}
             <h1 className='fontStoryHead'>Story</h1>
             <div style={{ display: "flex", justifyContent: "center" }} >
-              <ImagesStories />
+              <ImagesStories data={data}/>
             </div>
           </div>
         );

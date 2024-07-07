@@ -11,7 +11,7 @@ import MainStory from "./components/Story/mainStory";
 import SeeFriendStory from "./components/Story/SeeFriendStory";
 import FriendsProfile from "./pages/Profile/FriendsProfile";
 import ProfileDetails from "./pages/SignUp/ProfileDetails.jsx";
-
+import SearchUser from "./pages/SearchUser/SearchUser";
 // DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
 import { useState, useEffect } from "react";
@@ -55,10 +55,11 @@ function App() {
       <Route path="/friends" element={<FriendScreen />} />
       <Route path="/notifications" element={<NotificationScreen />} />
       <Route path="/profile" element={<ProfileScreen data = {data}/>} />
-      <Route path="/story" element={<MainStory />} />
-      <Route path="/story/friend/:name" element={<SeeFriendStory />} />
+      <Route path="/story" element={<MainStory data={data}/>} />
+      <Route path="/story/friend" element={<SeeFriendStory />} />
       <Route path="/profile/friend/:email" element={<FriendsProfile currentUserData={data}/>} />
       <Route path="/createProfile/:name" element={<ProfileDetails/>} />
+      <Route path="/searchuser" element={<SearchUser/>}/>
     </Routes>
     </Provider>
   );

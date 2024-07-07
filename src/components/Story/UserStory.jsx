@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../Firebase/firebaseContext";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../../Firebase/firebaseContext";
 import { useNavigate } from "react-router-dom";
+import { Timestamp, doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 // css
 import "./Story.css";
@@ -12,63 +12,128 @@ import "./Story.css";
 import { Avatar } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const UserStory = ({ UserData , data }) => {
-  // Photo Work
+// Redux
+import { useDispatch } from "react-redux";
+import { fetchStory } from "../../features/postCounter.js";
 
-  let [img, setImg] = useState("");
-  let [imgurl, setImgUrl] = useState([]);
-  let [isStorySet, setStory] = useState(false);
+// Story Schema
+let Story = {
+  url: "",
+  onTime: "",
+  offTime: ""
+};
 
+
+const UserStory = ({ data }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [currentUserStoryData, setStory] = useState({});
+  const [storyTracker, setStoryTracker] = useState(false);
+
+
+  useEffect(()=>{
+    setStory(data) ;
+  },[])
+
   const seeStory = () => {
-    navigate(`/story`); // Updated method
+    navigate(`/story`);
   };
 
+  const checkOffTime = (offTime) => {
+    const currentTime = new Date();
+    return currentTime >= offTime.toDate();
+  };
+
+  async function storyUrlExtractor(stories) {
+    let storeValidStories = [];
+    let urls = [];
+    let exceeds = false;
+    for (let i = 0; i < stories.story.length; i++) {
+      if (!checkOffTime(stories.story[i].offTime)) {
+        storeValidStories.push(stories.story[i]);
+        urls.push(stories.story[i].url);
+      } else {
+        exceeds = true;
+      }
+    }
+    if (exceeds) {
+      const userDocRef = doc(db, "users", data.email);
+      stories.story = storeValidStories;
+      if (urls.length === 0) {
+        stories.isStory = false;
+        await setDoc(userDocRef, stories);
+        setStoryTracker(false);
+      } else {
+        await setDoc(userDocRef, stories);
+      }
+    }
+    return urls;
+  }
+
   useEffect(() => {
-    if (UserData.isStory == true) {
-      let container = document.querySelector(".userContainer .MuiAvatar-root");
-      container.classList.add("makeClick");
+    async function getStoryDetails() {
+      const currentData = doc(db, "users", data.email);
+      const newData = await getDoc(currentData);
+      const userData = newData.data();
+
+      setStory(userData) ;
+
+      if (userData.isStory) {
+        let urls = await storyUrlExtractor(userData);
+        if (urls.length > 0) {
+          dispatch(fetchStory(urls));
+        }
+      }
+    }
+
+    if (data && data.email) {
+      getStoryDetails();
     }
   }, []);
 
   const addStory = async (event) => {
-    console.log("work");
     const file = event.target.files[0];
     if (!file) return;
 
-    setImg(file);
-
-    const imgRef = ref(storage, `Story/${uuidv4()}`);
     try {
-      //   Upload process :
-
+      const imgRef = ref(storage, `Story/${data.email}/${uuidv4()}`);
       await uploadBytes(imgRef, file);
       const url = await getDownloadURL(imgRef);
-      setImgUrl((prevUrls) => [...prevUrls, url]);
+      const onTime = new Date();
+      const offTime = new Date(onTime.getTime() + 60 * 60 * 1000);
 
-      // after upload :
-      let container = document.querySelector(".userContainer .MuiAvatar-root");
-      console.log(container);
+      Story = {
+        url: url,
+        onTime: Timestamp.fromDate(onTime),
+        offTime: Timestamp.fromDate(offTime)
+      };
 
-      //Show After  Upload :
-      UserData.isStory = true;
-      container.classList.add("afterStoryPost");
-      setStory(true);
+      const userDocRef = doc(db, "users", data.email);
+      await updateDoc(userDocRef, {
+        story: arrayUnion(Story),
+        isStory: true
+      });
+
+      const newData = await getDoc(userDocRef); 
+      setStory(newData.data());
+      setStoryTracker(true); // Set the class name after the story is updated
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
   return (
-    <div className="borderBox" style={{ "--bg-image": `url(${data.ProfileDetails && data.ProfileDetails.profileImg ? data.ProfileDetails.profileImg : ""})` }}>
+    <div className="borderBox" style={{ "--bg-image": `url(${currentUserStoryData.ProfileDetails?.profileImg || ""})` }}>
       <div className="storyIcon">
-        <span
-          className="avatarContainer userContainer"
-          onClick={UserData.isStory == true ? seeStory : null}
-        >
-          <Avatar src={data.ProfileDetails && data.ProfileDetails.profileImg ? data.ProfileDetails.profileImg : ""} />
-
+        {console.log("work")}
+        <span className="avatarContainer userContainer">
+          <Avatar
+            style={ currentUserStoryData && currentUserStoryData.story ? currentUserStoryData.story.length > 0  ? { border : "3px solid #8e0b3a" , cursor : "pointer"} : null : null }
+            onClick={currentUserStoryData.isStory ? seeStory : null}
+            src={currentUserStoryData.ProfileDetails?.profileImg || ""}
+            
+            />
           <label htmlFor="iconPlus">
             <span className="plusIcon">
               <AddIcon />
@@ -81,7 +146,7 @@ const UserStory = ({ UserData , data }) => {
             id="iconPlus"
           />
         </span>
-        <h4 className="storyFont">{data.name}</h4>
+        <h4 className="storyFont">{currentUserStoryData.name}</h4>
       </div>
     </div>
   );

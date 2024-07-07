@@ -4,12 +4,12 @@ import Icon from "../IconComponent/Icon.jsx";
 import Post from "../Post/post";
 import { db } from "../../Firebase/firebaseContext.jsx";
 import { serverTimestamp } from "../../Firebase/firebaseContext.jsx";
-import {collection,addDoc,query,orderBy,getDocs,where,doc,setDoc,getDoc} from "firebase/firestore";
-import { storage } from "../../Firebase/firebaseContext.jsx";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
 
 // Upload's
+import {collection,addDoc,query,orderBy,getDocs,where,doc,setDoc,getDoc} from "firebase/firestore";
+import { storage } from "../../Firebase/firebaseContext.jsx";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 
 
@@ -23,8 +23,13 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { useDispatch } from "react-redux";
-import { incCount } from "../../features/postCounter.js";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { incCount , refreshContent } from "../../features/postCounter.js";
+
+// Components 
+import CircularIndeterminate from '../Progress/progress.jsx'
 
 
 let overAllTime;
@@ -33,15 +38,22 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
+
+
 const Feed = ({ data, profile, friends }) => {
+
+  let refresh = useSelector((State)=>State.postCounter.contentRefresh) ;
+
+  let allRandomPost = [] ; 
+
+  // Set-Auto-Random-Fetch 
+  const [ randomPosts , setRandomPosts ] = useState(allRandomPost) ;  
+  let [ progess , setProgess ] = useState(true) ;
+
   //   Hooks :
-  let [post, setPost] = useState([]);
   let [input, setInput] = useState("");
 
   // DataBase Work  Temp :
-
-
-
   const dispatch = useDispatch() ;
 
   async function updatePostData(){
@@ -55,8 +67,6 @@ const Feed = ({ data, profile, friends }) => {
 
   }
 
-
-
   // This is the common Function For Post Photos Videos 
 
   async function FetchData(folder){
@@ -64,7 +74,6 @@ const Feed = ({ data, profile, friends }) => {
     try{
       
     // Container's 
-    let allPosts = [];
     const userPostsRef = collection(db,folder);
     
     let postsQuery;
@@ -78,44 +87,37 @@ const Feed = ({ data, profile, friends }) => {
     const postsSnapshot = await getDocs(postsQuery);
         
     postsSnapshot.forEach((doc) => { 
-        allPosts.push({ id: doc.id, ...doc.data() });
+        allRandomPost.push({ type : folder , content :{ id: doc.id, ...doc.data() }});
     }); 
 
     // Checking Belong to Which Collection  
 
     if( profile != true ){
-
-      if(folder == "userPosts"){
-        setPost(shuffleArray(allPosts) );
-      }
-      else if( folder == "photos"){
-        setImgUrl(shuffleArray(allPosts));
-      }
-      else if(folder == "videos"){
-        setVidUrl(shuffleArray(allPosts));
+      // Video Folder is last folder ! 
+      if(folder == "videos"){
+        console.log("Not profile") ;
+        setRandomPosts(shuffleArray(allRandomPost));
+        return true ; 
       }
     }
     else{
 
-      if(folder == "userPosts"){
-        setPost(allPosts) ;
-      }
-      else if (folder == "photos"){
-        setImgUrl(allPosts) ;
-      }
-      else if(folder == "videos"){
-        setVidUrl(allPosts);
-      }
+    // Video Folder is last folder ! 
+    if(folder == "videos" ){
 
+      allRandomPost = allRandomPost.sort((a, b) => b.content.timestamp - a.content.timestamp);  
+      setRandomPosts(()=>{
+        return [...allRandomPost] ;
+      }) ;
+      console.log("After post",randomPosts) ; 
+    }
+    
     }
 
     }
     catch(err){
       console.error("Error fetching posts:", err);
     }
-
-
-
 
    } 
 
@@ -140,7 +142,7 @@ const Feed = ({ data, profile, friends }) => {
       setInput("");
 
       // Post After Upload !
-      await FetchData("userPosts");
+      dispatch(refreshContent())
 
       // Update Posts Data 
       data.ProfileDetails.post ++ ; 
@@ -151,33 +153,7 @@ const Feed = ({ data, profile, friends }) => {
     }
   };
 
-
-  const shuffleArray = (array) => {
-    let shuffledArray = array.slice(); // Create a copy of the array
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [
-        shuffledArray[j],
-        shuffledArray[i],
-      ]; // Swap elements
-    }
-    return shuffledArray;
-  };
-
-  useEffect(() => {
-
-    async function fetchCurrent() {
-      await FetchData("userPosts");
-    }
-
-    fetchCurrent();
-  
-  }, [data]);
-
   // Photo Work
-
-  let [imgurl, setImgUrl] = useState([]);
-
   const AddPhoto = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -203,7 +179,8 @@ const Feed = ({ data, profile, friends }) => {
       await addDoc(collection(db, "photos"), photoData);
 
       // Update state with new photo URL
-      await FetchData("photos") ; 
+      dispatch(refreshContent())
+
 
       // Update Posts Data 
       data.ProfileDetails.post ++ ; 
@@ -213,16 +190,6 @@ const Feed = ({ data, profile, friends }) => {
       console.error("Error uploading image:", error);
     }
   };
-
-  useEffect(() => {
-    async function getImagesReload(){
-       await FetchData("photos");
-    }
-    getImagesReload() ; 
-  }, [data]);
-
-  let [video, setVideo] = useState(null);
-  let [videoUrl, setVidUrl] = useState([]);
 
   // Video WorK
   const AddVideo = async (event) => {
@@ -251,7 +218,7 @@ const Feed = ({ data, profile, friends }) => {
       await addDoc(collection(db, "videos"), videoData);
 
 
-      await FetchData("videos") ; 
+      dispatch(refreshContent())
 
 
       // Update Posts Data 
@@ -264,19 +231,36 @@ const Feed = ({ data, profile, friends }) => {
     }
   };
 
+  //Shuffle 
+  function shuffleArray(array) {
+    let shuffledArray = array.slice(); 
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+    }
+    return shuffledArray;
+  }
+
+  // Fetch All Over Data 
   useEffect(() => {
 
-    async function getVideosReload(){
-        await FetchData("videos") ;
+    async function fetchCurrent() { 
+      allRandomPost = [] ;
+      setProgess(true) ;
+      await FetchData("userPosts");
+      await FetchData("photos");
+      await FetchData("videos") ;
+      setProgess(false) ;
     }
 
-    getVideosReload();
-  }, [data]);
+    fetchCurrent();
+  
+  }, [data,refresh]);   
+
 
   return (
     <div className="feed">
       {/* Story Section  */}
-
       {profile == true ? null : (
         <div className="storyPost">
           {/* {console.log(UserData)}; */}
@@ -336,80 +320,90 @@ const Feed = ({ data, profile, friends }) => {
       )}
 
       {/* @ Post Starts from Here !   */}
-      {post.map(({ name, subHeader, message, photoURL, timestamp,email }) => {
-        // Converting time :
+    
+    {/* Content Loading - Bar */}
+  
+    {
+      ( progess == true ) ? 
+      <CircularIndeterminate/> 
+      :
+      randomPosts.map((post)=>{
+         
+        switch(post.type){
 
-        {
-          if (timestamp != null) {
-            timestamp = timestamp.toDate();
-            timestamp = timestamp.toString().split(" ").slice(1, 4).join("-");
-            overAllTime = timestamp;
+          case "userPosts" : 
+          {
+            if (post.content && post.content.timestamp && typeof post.content.timestamp.toDate === "function") {
+              post.content.timestamp = post.content.timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
+              overAllTime = post.content.timestamp;
+            }
           }
+  
+          return (
+            <Post
+              key={uuidv4()}
+              name={post.content.name}
+              subHeader={post.content.subHeader}
+              message={post.content.message}
+              avatar={post.content.photoURL}
+              timestamp={post.content.timestamp}
+              email = {post.content.email}
+            />
+          );
+
+          case "photos" :
+            {
+              if (post.content && post.content.timestamp && typeof post.content.timestamp.toDate === "function") {
+                post.content.timestamp = post.content.timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
+                overAllTime = post.content.timestamp;
+              }
+            }
+    
+            return (
+              <Post
+                key={uuidv4()}
+                name={post.content.name}
+                subHeader={post.content.subHeader}
+                 message=""
+                avatar={post.content.photoURL}
+                timestamp={post.content.timestamp}
+                email = {post.content.email}
+                postImage={post.content.url}
+                caption=""
+
+              />
+            );
+
+            case "videos" : 
+            {
+              if (post.content && post.content.timestamp && typeof post.content.timestamp.toDate === "function") {
+                post.content.timestamp = post.content.timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
+                overAllTime = post.content.timestamp;
+              }
+            }
+    
+            return (
+              <Post
+                key={uuidv4()}
+                name={post.content.name}
+                subHeader={post.content.subHeader}
+                message=""
+                avatar={post.content.photoURL}
+                timestamp={post.content.timestamp}
+                email = {post.content.email}
+                postvideo={post.content.url}
+                caption=""
+
+              />
+            );  
+
+
+
         }
-
-        return (
-          <Post
-            key={uuidv4()}
-            name={name}
-            subHeader={subHeader}
-            message={message}
-            avatar={photoURL}
-            timestamp={timestamp}
-            email = {email}
-          />
-        );
-      })}
-
-      {/* @Post - Images Start from here */}
-
-      {/* Posts with images */}
-      {imgurl.map(({ url ,photoURL , name, subHeader, timestamp,email }) => {
-        let formattedTimestamp = "";
-        if (timestamp && typeof timestamp.toDate === 'function') {
-          formattedTimestamp = timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
-        } else if (timestamp && typeof timestamp.seconds === 'number') {
-          formattedTimestamp = new Date(timestamp.seconds * 1000).toString().split(" ").slice(1, 4).join("-");
-        }
-
-        return (
-          <Post
-            key={uuidv4()}
-            name={name}
-            subHeader={subHeader}
-            message=""
-            avatar={photoURL}
-            timestamp={formattedTimestamp}
-            postImage={url}
-            email={email}
-            caption=""
-          />
-        );
-      })}
-      {/* @Post - Videos Start from here */}
-
-      {videoUrl.map(({ url, photoURL, name, subHeader, timestamp,email }) => {
-        let formattedTimestamp = "";
-        if (timestamp && typeof timestamp.toDate === 'function') {
-          formattedTimestamp = timestamp.toDate().toString().split(" ").slice(1, 4).join("-");
-        } else if (timestamp && typeof timestamp.seconds === 'number') {
-          formattedTimestamp = new Date(timestamp.seconds * 1000).toString().split(" ").slice(1, 4).join("-");
-        }
-
-        return (
-          <Post
-            key={uuidv4()}
-            name={name}
-            subHeader={subHeader}
-            message=""
-            avatar={photoURL}
-            timestamp={formattedTimestamp}
-            email={email}
-            caption=""
-            postvideo={url}
-          />
-        );
-      })}
+      })
+     }
     </div>
+
   );
 };
 

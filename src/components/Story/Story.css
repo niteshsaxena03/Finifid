@@ -53,11 +53,12 @@
     margin-bottom: 10px;
 }
 
-.avatarContainer > .MuiAvatar-root {
-    width: 100%;
-    height: 100%;
+.avatarContainer >.MuiAvatar-root{
+    width: 100% !important;
+    height: 100% !important;
     border: 3px solid #ccc;
 }
+
 
 .plusIcon {
     position: absolute;
@@ -70,8 +71,7 @@
 
 .plusIcon svg{
     color: #8e0b3a;
-    cursor: pointer;
-
+    cursor: pointer;        
 }
 
 
@@ -90,11 +90,9 @@
 }
 
 /*  After Story  */
-.afterStoryPost{
+.makeStoryVisible{
     border: 3px solid #8e0b3a !important;
-    cursor: pointer;
-}
-
-.makeClick{
     cursor: pointer ;
 }
+
+

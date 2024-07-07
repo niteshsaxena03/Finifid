@@ -4,34 +4,37 @@ import 'stories-react/dist/index.css';
 import './mainStory.css' ;
 
 import { useState , useEffect } from 'react';
-import { getDownloadURL, listAll, ref } from "firebase/storage";
-import { storage } from '../../Firebase/firebaseContext';
 
-function ImagesStories() {
+// Redux
+import { useSelector } from 'react-redux';
 
-    const [stories, setStories] = useState([]);
+function ImagesStories({data}) {
 
+    const [ stories , setStories ] = useState([]) ;
+ 
+    let story =  useSelector((State)=>State.postCounter.Story) ;
 
     useEffect(() => {
+
+        console.log("Data - story " , story );   
+
         const fetchImages = async () => {
           try {
-            const listRef = ref(storage, "Story");
-            const res = await listAll(listRef);
-            const urls = await Promise.all(
-              res.items.map((itemRef) => getDownloadURL(itemRef))
-            );
+           
+            if( story ){
 
-
-            // Fetching Stories 
-            const stories = urls.map((url)=>(
-                    {
-                        type: "image",
-                        url:url,
-                        duration: 5000
-                    }
-            ))
-            
-            setStories(stories) ;
+              // Fetching Stories 
+              const stories = story.map((url)=>(
+                      {
+                          type: "image",
+                          url:url,
+                          duration: 5000
+                      }
+              ))
+              
+              setStories(stories) ;
+            }
+           
 
           } catch (error) {
 
@@ -40,9 +43,11 @@ function ImagesStories() {
           }
 
         };
+
+
     
         fetchImages();
-      }, []);
+      }, [data]);
 
       return (
         <div>
@@ -57,12 +62,13 @@ function ImagesStories() {
 
   
 
-      export default function MainStory() {
+      export default function MainStory({data}) {
         return (
           <div className="App">
+            {console.log("data at main :" , data )}
             <h1 className='fontStoryHead'>Story</h1>
             <div style={{ display: "flex", justifyContent: "center" }} >
-              <ImagesStories />
+              <ImagesStories data={data}/>
             </div>
           </div>
         );

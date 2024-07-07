@@ -98,3 +98,13 @@
 }
 
 
+/* Loading bar  */
+.css-k008qs {
+    justify-content: center;
+    margin-top: 12%;
+}
+
+.css-1idz92c-MuiCircularProgress-svg{
+    color: #8e0b3bdc !important;
+}
+

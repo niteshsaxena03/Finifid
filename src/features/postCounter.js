@@ -10,7 +10,10 @@ const initialState = {
     ,
     followers : 0 ,
     following : 0 ,
-    refresh : 0 
+    refresh : 0 ,  // for Side Button's
+    contentRefresh : 0 ,// For page refresh 
+    Story : [] ,
+    friendStory : []
 } ; 
 
 
@@ -30,11 +33,24 @@ const postCounter = createSlice({
         refreshPage(state ){
             state.refresh++  ; 
         }
+        ,
+        refreshContent(state){
+            state.contentRefresh++ ; 
+        }
+        ,
+        fetchStory(state , action ){
+          state.Story = action.payload ;  
+        }
+        ,
+        fetchFriendStory(state , action ){
+            state.friendStory    = action.payload ;  
+          }
+
 
     }
 })
 
 
-export const { incCount , updateFollowAndFollowers, refreshPage} = postCounter.actions ; 
+export const { incCount , updateFollowAndFollowers, refreshPage , refreshContent , fetchStory , fetchFriendStory } = postCounter.actions ; 
 export default postCounter.reducer ; 
 
