@@ -6,8 +6,13 @@ import {
   query,
   where,
   collection,
-  getDocs
+  getDocs,
+  doc,
+  updateDoc,
+  setDoc,
+  getDoc,
 } from "firebase/firestore";
+import { Firestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 import {
@@ -18,7 +23,6 @@ import {
 } from "firebase/auth";
 
 import fetchUserData from "../pages/Database/userData.js";
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -49,7 +53,6 @@ export { storage };
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -106,17 +109,64 @@ export const FirebaseProvider = (props) => {
     }
   };
 
-
   const fetchDetails = async (email) => {
-    try{
-      return await fetchUserData(email) ;
-    }
-    catch(error){
-      console.log(error) ;
+    try {
+      return await fetchUserData(email);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const isLoggedIn = !!user;
+
+
+  const toggleLikePost = async (postId, userEmail) => {
+    try {
+      // Get a reference to the userPosts collection
+      const postsCollectionRef = collection(db, "userPosts");
+
+      // Query to find the post with the given postId
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
+      const compositeKey=userEmail+postId;
+
+      if (!postSnap.empty) {
+        // Get the document reference and data
+        const postDoc = postSnap.docs[0];
+        const postDocRef = doc(db, "userPosts",compositeKey);
+        const postData = postDoc.data();
+        const likedBy = postData.likedBy;
+        const likes = postData.likes ;
+
+        // Determine if the post is currently liked by the user
+        const isLiked = likedBy.includes(userEmail);
+
+        if (isLiked) {
+          // If already liked, unlike the post
+          const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
+          await updateDoc(postDocRef, {
+            likes: likes - 1,
+            likedBy: updatedLikedBy,
+          });
+        } else {
+          // If not liked, like the post
+          const updatedLikedBy = [...likedBy, userEmail];
+          await updateDoc(postDocRef, {
+            likes: likes + 1,
+            likedBy: updatedLikedBy,
+          });
+        }
+      } else {
+        console.error(`No such post with postId: ${postId}!`);
+      }
+    } catch (error) {
+      console.error("Error toggling like post:", error.message);
+    }
+  };
+
 
   return (
     <FirebaseContext.Provider
@@ -127,7 +177,8 @@ export const FirebaseProvider = (props) => {
         user,
         getUserDetailsByEmail,
         fetchDetails,
-        getUsersByQuery
+        getUsersByQuery,
+        toggleLikePost,
       }}
     >
       {props.children}

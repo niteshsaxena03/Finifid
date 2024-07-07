@@ -4,14 +4,12 @@ import Icon from "../IconComponent/Icon.jsx";
 import Post from "../Post/post";
 import { db } from "../../Firebase/firebaseContext.jsx";
 import { serverTimestamp } from "../../Firebase/firebaseContext.jsx";
+import { v4 as uuidv4 } from "uuid";
 
 // Upload's
 import {collection,addDoc,query,orderBy,getDocs,where,doc,setDoc,getDoc} from "firebase/firestore";
 import { storage } from "../../Firebase/firebaseContext.jsx";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-
-
 
 // Stories Section
 import Stories from "../Story/Stories.jsx";
@@ -30,7 +28,6 @@ import { incCount , refreshContent } from "../../features/postCounter.js";
 
 // Components 
 import CircularIndeterminate from '../Progress/progress.jsx'
-
 
 let overAllTime;
 
@@ -56,15 +53,14 @@ const Feed = ({ data, profile, friends }) => {
   // DataBase Work  Temp :
   const dispatch = useDispatch() ;
 
-  async function updatePostData(){
+  async function updatePostData(){  
 
     const userDocRef = doc(db,"users",data.email);
     await setDoc(userDocRef, data);
-    console.log("Succesfully Update Post Number ! ") ;
-    
-    const userDoc = await getDoc(userDocRef);
-    dispatch(incCount(userDoc.data().ProfileDetails.post)) ;
+    console.log("Succesfully Update Post Number ! ");
 
+    const userDoc = await getDoc(userDocRef);
+    dispatch(incCount(userDoc.data().ProfileDetails.post));
   }
 
   // This is the common Function For Post Photos Videos 
@@ -121,35 +117,41 @@ const Feed = ({ data, profile, friends }) => {
 
    } 
 
+ 
   // Adding Post To Database
   const AddPost = async (event) => {
-
     event.preventDefault();
     try {
-      const userDocRef = collection(db, "userPosts");
+      // Generate a unique postId
+      const postId = uuidv4();
+      const userEmail = data.email; // Get the user's email
+      const compositeKey = userEmail+postId;
+      const postDocRef = doc(db, "userPosts", compositeKey);
 
       let postData = {
+        postId: postId,
         name: data.name,
         subHeader: data.profession,
         message: input,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
-        email: data.email,
+        email: userEmail,
+        likes: 0,
+        likedBy: [],
       };
 
-      // Upload !
-      await addDoc(userDocRef, postData);
+      // Upload the post data
+      await setDoc(postDocRef, postData);
       setInput("");
 
       // Post After Upload !
       dispatch(refreshContent())
 
-      // Update Posts Data 
-      data.ProfileDetails.post ++ ; 
-      await updatePostData() ; 
-
+      // Update user's post count
+      data.ProfileDetails.post++;
+      await updatePostData();
     } catch (error) {
-      console.log("method not work  !", error);
+      console.log("Error adding post:", error);
     }
   };
 
@@ -169,12 +171,15 @@ const Feed = ({ data, profile, friends }) => {
 
       // Save metadata and URL to Firestore
       const photoData = {
+        postId: uuidv4(),
         url: url,
         name: data.name,
         subHeader: data.profession,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
+        likes: 0,
+        likedBy: [],
       };
       await addDoc(collection(db, "photos"), photoData);
 
@@ -186,6 +191,9 @@ const Feed = ({ data, profile, friends }) => {
       data.ProfileDetails.post ++ ; 
       await updatePostData() ; 
 
+      // Update Posts Data
+      data.ProfileDetails.post++;
+      await updatePostData();
     } catch (error) {
       console.error("Error uploading image:", error);
     }
@@ -208,15 +216,19 @@ const Feed = ({ data, profile, friends }) => {
 
       // Save metadata and URL to Firestore
       const videoData = {
+        postId: uuidv4(),
         url: url,
         name: data.name,
         subHeader: data.profession,
         photoURL: data.ProfileDetails.profileImg,
         timestamp: serverTimestamp(),
         email: data.email,
+        likes: 0,
+        likedBy: [],
       };
       await addDoc(collection(db, "videos"), videoData);
 
+      await FetchData("videos");
 
       dispatch(refreshContent())
 
@@ -260,6 +272,7 @@ const Feed = ({ data, profile, friends }) => {
 
   return (
     <div className="feed">
+      {console.log("feed working  !   ")}
       {/* Story Section  */}
       {profile == true ? null : (
         <div className="storyPost">
@@ -269,9 +282,9 @@ const Feed = ({ data, profile, friends }) => {
         </div>
       )}
 
-      {/* feed input  */}
+     {/* feed input  */}
 
-      {friends == true ? null : (
+     {friends == true ? null : (
         <div className="feedSearchBox">
           <div className="feedSearch">
             <Avatar 
@@ -288,7 +301,7 @@ const Feed = ({ data, profile, friends }) => {
               <button>Submit</button>
             </form>
           </div>
-
+          
           {/* icons  */}
           <form className="feedIcons">
             <label htmlFor="photo">
@@ -348,6 +361,12 @@ const Feed = ({ data, profile, friends }) => {
               avatar={post.content.photoURL}
               timestamp={post.content.timestamp}
               email = {post.content.email}
+              postId={post.content.postId}
+              likes={post.content.likes}
+              likedBy={post.content.likedBy}
+              userEmail={post.content.email}
+
+              
             />
           );
 
@@ -364,12 +383,16 @@ const Feed = ({ data, profile, friends }) => {
                 key={uuidv4()}
                 name={post.content.name}
                 subHeader={post.content.subHeader}
-                 message=""
+                message=""
                 avatar={post.content.photoURL}
                 timestamp={post.content.timestamp}
                 email = {post.content.email}
                 postImage={post.content.url}
                 caption=""
+                postId={post.content.postId}
+                likes={post.content.likes}
+                likedBy={post.content.likedBy}
+                userEmail={post.content.email}
 
               />
             );
@@ -393,12 +416,13 @@ const Feed = ({ data, profile, friends }) => {
                 email = {post.content.email}
                 postvideo={post.content.url}
                 caption=""
+                postId={post.content.postId}
+                likes={post.content.likes}
+                likedBy={post.content.likedBy}
+                userEmail={post.content.email}
 
               />
             );  
-
-
-
         }
       })
      }

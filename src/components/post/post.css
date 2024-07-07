@@ -117,3 +117,46 @@ img {
     width: auto;
     object-fit: cover;
 }
+
+/* Add this to your existing post.css */
+
+/* Styling for the button container within postFooter */
+.postFooter {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; /* Adjust alignment to center items vertically */
+    border-top: 1px solid #ccc;
+    height: 40px;
+    font-size: smaller;  
+}
+
+/* Button styling within the postFooter */
+.postFooter button {
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    padding: 5px; /* Add some padding around the icon */
+    margin: 0 5px; /* Add horizontal margin between buttons */
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+/* Icon styling within the button */
+.postFooter button svg {
+    font-size: 20px; /* Adjust icon size */
+    color: #555; /* Set default icon color */
+    transition: color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+/* Change icon color on hover */
+.postFooter button:hover svg {
+    color: #007bff; /* Blue color on hover */
+}
+
+/* Change background on hover */
+.postFooter button:hover {
+    background-color: #e6e6e6; /* Light gray background on hover */
+    border-radius: 4px; /* Rounded corners */
+    transform: scale(1.05); /* Slight zoom effect */
+}

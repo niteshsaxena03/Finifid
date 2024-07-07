@@ -1,12 +1,10 @@
-import { useEffect } from "react";
 import "../Navbar/sidebar.css";
 import "./post.css";
 import PostHeader from "./postHeader";
 import PostFooter from "./postFooter";
 
-import  { v4 as uuidv4 } from 'uuid'
-
 const Post = ({
+  postId,
   name,
   subHeader,
   message,
@@ -14,57 +12,61 @@ const Post = ({
   timestamp,
   postImage,
   postvideo,
-  email ,
+  email,
   caption = "",
+  likes,
+  likedBy,
+  userEmail, // Ensure userEmail is passed to the component
 }) => {
-
- 
-
-
   return (
-    <div  key={uuidv4()} className="posts">
+    <div key={postId} className="posts">
       <PostHeader
         name={name}
         subHeader={subHeader}
         avatar={avatar}
         timestamp={timestamp}
-        email = {email}
+        email={email}
       />
       <div className="postBody">
-        {/* 1 */}
-        {message != "" ? <>
-          <div className="sepLine"></div>
-          <div className="postBodyContent">{message}</div>
-          </> : null}
+        {/* Message */}
+        {message && (
+          <>
+            <div className="sepLine"></div>
+            <div className="postBodyContent">{message}</div>
+          </>
+        )}
 
-        {/* 2 */}
-        {postImage != undefined ? (
+        {/* Image */}
+        {postImage && (
           <div className="imagePost">
             <p className="caption">
-              <i>{caption != "" ? caption : null}</i>
+              <i>{caption}</i>
             </p>
             <div className="sepLine"></div>
             <div className="imageContainer">
-                <img src={postImage} className="postBodyContent" alt="Post" />
+              <img src={postImage} className="postBodyContent" alt="Post" />
             </div>
           </div>
-        ) : // else
-        null}
+        )}
 
-        {/* 3*/}
-        {postvideo != undefined ? (
+        {/* Video */}
+        {postvideo && (
           <div className="videoPost">
             <p className="caption">
-              <i>{caption != "" ? caption : null}</i>
+              <i>{caption}</i>
             </p>
             <div className="sepLine vidLine"></div>
             <video src={postvideo} controls></video>
           </div>
-        ) : // else
-        null}
+        )}
       </div>
 
-      <PostFooter />
+      <PostFooter
+        postId={postId}
+        likes={likes}
+        likedBy={likedBy}
+        userEmail={userEmail}
+      />
     </div>
   );
 };
