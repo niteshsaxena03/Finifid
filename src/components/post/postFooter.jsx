@@ -12,9 +12,10 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName }) => {
+const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,comments={},commentsCount=0 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
+   const [commentCount, setCommentCount] = useState(commentsCount);
   const { toggleLikePost,user } = useFirebase();
   const navigate = useNavigate();
   
@@ -46,7 +47,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
   };
 
    const handleCommentClick = () => {
-     navigate("/comments", { state: { postId, userEmail, collectionName } });
+     navigate("/comments", { state: { postId, userEmail, collectionName,comments,commentsCount } });
    };
 
   return (
@@ -59,7 +60,8 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
         />
       </button>
       <button onClick={handleCommentClick} className="iconButton">
-        <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
+        <Icon Icon={ChatBubbleOutlineIcon} label={`Comments`} idx={-1} />
+        <span className="commentCount">{commentCount}</span>
       </button>
       <button className="iconButton">
         <Icon Icon={ShareIcon} label={"Share"} idx={-1} />

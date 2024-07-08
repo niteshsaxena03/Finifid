@@ -18,6 +18,8 @@ const Post = ({
   likedBy,
   userEmail,
   collectionName,
+  comments,
+  commentsCount,
 }) => {
   return (
     <div key={postId} className="posts">
@@ -68,6 +70,8 @@ const Post = ({
         likedBy={likedBy}
         userEmail={userEmail}
         collectionName={collectionName}
+        commentsCount={commentsCount}
+        comments={comments}
       />
     </div>
   );

@@ -392,6 +392,8 @@ const Feed = ({ data, profile, friends }) => {
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
                   collectionName={"userPosts"}
+                  comments={post.content.comments}
+                  commentsCount={post.content.commentsCount}
                 />
               );
 
@@ -428,6 +430,8 @@ const Feed = ({ data, profile, friends }) => {
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
                   collectionName={"photos"}
+                  comments={post.content.comments}
+                  commentsCount={post.content.commentsCount}
                 />
               );
 
@@ -464,6 +468,8 @@ const Feed = ({ data, profile, friends }) => {
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
                   collectionName={"videos"}
+                  comments={post.content.comments}
+                  commentsCount={post.content.commentsCount}
                 />
               );
           }
