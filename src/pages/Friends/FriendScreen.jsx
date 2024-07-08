@@ -7,12 +7,11 @@ import { useNavigate } from "react-router";
 import { useFirebase } from "@/Firebase/firebaseContext.jsx";
 import { useEffect } from "react";
 
-// Database 
+// Database
 import { db } from "../../Firebase/firebaseContext";
-import { doc,getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-function FriendScreen({data}) {
-
+function FriendScreen({ data }) {
   const navigate = useNavigate();
 
   const firebase = useFirebase();
@@ -24,67 +23,61 @@ function FriendScreen({data}) {
   //     navigate("/");
   //   }
   // }, [firebase, navigate]);
-  
+
   const [activeTab, setActiveTab] = useState("followers"); // 'followers' or 'following'
-  const [followingData , setfollowingData] = useState([]) ;
-  const [followersData , setfollowersData] = useState([]) ;
-
-
+  const [followingData, setfollowingData] = useState([]);
+  const [followersData, setfollowersData] = useState([]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-
-useEffect(() => {
-  const fetchFriendsData= async () => {
-    // Following Work 
-    if (data && data.following) {
-
-      const userFollowing = data.following.map(async (email) => {
-        const userDocRef = doc(db, "users", email);
-        const newData = await getDoc(userDocRef);
-        let store = newData.data() ;
-        return {
-           name : store.name , 
-           image : store.ProfileDetails.profileImg ,
-           profession : store.profession ,
-           email : store.email  
-          }});
-          const dataFollowing = await Promise.all(userFollowing);
-          console.log("user following : " , userFollowing)
-          setfollowingData(dataFollowing) ;
-          
+  useEffect(() => {
+    const fetchFriendsData = async () => {
+      // Following Work
+      if (data && data.following) {
+        const userFollowing = data.following.map(async (email) => {
+          const userDocRef = doc(db, "users", email);
+          const newData = await getDoc(userDocRef);
+          let store = newData.data();
+          return {
+            name: store.name,
+            image: store.ProfileDetails.profileImg,
+            profession: store.profession,
+            email: store.email,
+          };
+        });
+        const dataFollowing = await Promise.all(userFollowing);
+        console.log("user following : ", userFollowing);
+        setfollowingData(dataFollowing);
       }
-    
-      // Following Work 
 
-      if(data && data.followers){
+      // Following Work
 
-       const userFollowers = data.followers.map(async (email) => {
-        const userDocRef = doc(db, "users", email);
-        const newData = await getDoc(userDocRef);
-        let store = newData.data() ;
-        return {
-           name : store.name , 
-           image : store.ProfileDetails.profileImg ,
-           profession : store.profession ,
-           email : store.email 
-        }});
+      if (data && data.followers) {
+        const userFollowers = data.followers.map(async (email) => {
+          const userDocRef = doc(db, "users", email);
+          const newData = await getDoc(userDocRef);
+          let store = newData.data();
+          return {
+            name: store.name,
+            image: store.ProfileDetails.profileImg,
+            profession: store.profession,
+            email: store.email,
+          };
+        });
 
         const dataFollowers = await Promise.all(userFollowers);
-        setfollowersData(dataFollowers) ;
+        setfollowersData(dataFollowers);
       }
-  };    
+    };
 
-  fetchFriendsData();
-}, [data]);
-
-
+    fetchFriendsData();
+  }, [data]);
 
   return (
     <div>
-      <Header friends={false}/>
+      <Header friends={false} />
       <div className="mainPage">
         <div className="heading">
           <h1>Friends</h1>
