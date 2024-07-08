@@ -120,12 +120,12 @@ export const FirebaseProvider = (props) => {
   const isLoggedIn = !!user;
 
 
-  const toggleLikePost = async (postId, userEmail,currentUserEmail) => {
+  const toggleLikePost = async (postId, userEmail,currentUserEmail,collectionName) => {
     console.log(userEmail);
     console.log(currentUserEmail);
     try {
       // Get a reference to the userPosts collection
-      const postsCollectionRef = collection(db, "userPosts");
+      const postsCollectionRef = collection(db,collectionName);
 
       // Query to find the post with the given postId
       const postsQuery = query(
@@ -138,7 +138,7 @@ export const FirebaseProvider = (props) => {
       if (!postSnap.empty) {
         // Get the document reference and data
         const postDoc = postSnap.docs[0];
-        const postDocRef = doc(db, "userPosts",compositeKey);
+        const postDocRef = doc(db, collectionName,compositeKey);
         const postData = postDoc.data();
         const likedBy = postData.likedBy;
 

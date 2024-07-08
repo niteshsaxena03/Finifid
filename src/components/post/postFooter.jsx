@@ -11,7 +11,7 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
+const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
   const { toggleLikePost,user } = useFirebase();
@@ -27,7 +27,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
     console.log("PostFooter handleLikeClick called"); // Ensure this logs to the console
     try {
       // Toggle like and update Firestore
-      await toggleLikePost(postId, userEmail,currentUserEmail);
+      await toggleLikePost(postId, userEmail,currentUserEmail,collectionName);
 
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {

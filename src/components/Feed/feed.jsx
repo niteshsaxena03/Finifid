@@ -174,9 +174,14 @@ const Feed = ({ data, profile, friends }) => {
       await uploadBytes(imgRef, file);
       const url = await getDownloadURL(imgRef);
 
+      const postId = uuidv4();
+      const userEmail = data.email; // Get the user's email
+      const compositeKey = userEmail + postId;
+      const postDocRef = doc(db, "photos", compositeKey);
+
       // Save metadata and URL to Firestore
       const photoData = {
-        postId: uuidv4(),
+        postId: postId,
         url: url,
         name: data.name,
         subHeader: data.profession,
@@ -186,7 +191,7 @@ const Feed = ({ data, profile, friends }) => {
         likes: 0,
         likedBy: [],
       };
-      await addDoc(collection(db, "photos"), photoData);
+      await setDoc(postDocRef, photoData);
 
       // Update state with new photo URL
       dispatch(refreshContent());
@@ -218,9 +223,13 @@ const Feed = ({ data, profile, friends }) => {
       await uploadBytes(vidRef, file);
       const url = await getDownloadURL(vidRef);
 
+      const postId = uuidv4();
+      const userEmail = data.email; // Get the user's email
+      const compositeKey = userEmail + postId;
+
       // Save metadata and URL to Firestore
       const videoData = {
-        postId: uuidv4(),
+        postId: postId,
         url: url,
         name: data.name,
         subHeader: data.profession,
@@ -230,7 +239,7 @@ const Feed = ({ data, profile, friends }) => {
         likes: 0,
         likedBy: [],
       };
-      await addDoc(collection(db, "videos"), videoData);
+      await addDoc(collection(db, "videos",compositeKey), videoData);
 
       await FetchData("videos");
 
@@ -377,6 +386,7 @@ const Feed = ({ data, profile, friends }) => {
                   likes={post.content.likes}
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
+                  collectionName={"userPosts"}
                 />
               );
 
@@ -412,6 +422,7 @@ const Feed = ({ data, profile, friends }) => {
                   likes={post.content.likes}
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
+                  collectionName={"photos"}
                 />
               );
 
@@ -447,6 +458,7 @@ const Feed = ({ data, profile, friends }) => {
                   likes={post.content.likes}
                   likedBy={post.content.likedBy}
                   userEmail={post.content.email}
+                  collectionName={"videos"}
                 />
               );
           }
