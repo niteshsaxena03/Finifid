@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useFirebase } from "@/Firebase/firebaseContext";
 import CommentItem from "./CommentItem";
 import "./Comments.css";
+import { v4 as uuidv4 } from "uuid";
 
 const Comments = ({ data }) => {
   const location = useLocation();
@@ -15,9 +16,11 @@ const Comments = ({ data }) => {
     commentsCount,
   } = location.state || {};
   const [newComment, setNewComment] = useState("");
+  const [tempComment,setTempComment]=useState("");
 
   const handleInputChange = (event) => {
     setNewComment(event.target.value);
+    setTempComment(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -55,6 +58,7 @@ const Comments = ({ data }) => {
             commentText={comments[key].commentText}
           />
         ))}
+        <CommentItem key={uuidv4()} userName={data.name} commentText={tempComment}/>
       </div>
     </div>
   );

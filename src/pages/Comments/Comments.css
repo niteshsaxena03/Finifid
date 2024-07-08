@@ -1,11 +1,13 @@
 .commentsContainer {
-  height:100%;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto; /* Center the container horizontally */
   padding: 20px;
-  background-color: #ffd700; /* Darker shade of yellow */
+  background-color: #f8d500; /* Slightly adjusted shade of yellow for better contrast */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: Add a subtle shadow */
+  border-radius: 8px; /* Optional: Round corners for a modern look */
 }
 
+/* Heading styling */
 .commentsHeading {
   text-align: center;
   margin-bottom: 20px;
@@ -14,21 +16,24 @@
   font-weight: bold;
 }
 
+/* Post info styling */
 .postInfo {
   margin: 10px 0;
   font-size: 1.2em;
   color: #555;
 }
 
+/* Comment form styling */
 .commentForm {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%; /* Full width by default */
 }
 
 .commentInput {
-  width: 100%;
-  max-width: 600px;
+  width: 100%; /* Full width */
+  max-width: 600px; /* Max width for larger screens */
   height: 100px;
   padding: 10px;
   border: 1px solid #ddd;
@@ -46,12 +51,85 @@
   color: white;
   font-size: 1em;
   cursor: pointer;
+  width: 100%; /* Full width by default */
+  max-width: 600px; /* Max width for larger screens */
 }
 
 .submitButton:hover {
   background-color: #0056b3;
 }
 
+/* Comment list styling */
 .commentList {
   margin-top: 20px;
+}
+
+/* Media Queries for responsiveness */
+
+/* For tablets and smaller screens */
+@media (max-width: 1024px) {
+  .commentsContainer {
+    padding: 15px;
+  }
+
+  .commentsHeading {
+    font-size: 2.5em;
+  }
+
+  .commentForm {
+    width: 90%; /* Reduce width for tablets */
+  }
+
+  .commentInput {
+    max-width: 500px; /* Adjust max width for tablets */
+  }
+
+  .submitButton {
+    font-size: 0.9em;
+    padding: 8px 16px;
+    max-width: 500px; /* Adjust max width for tablets */
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 768px) {
+  .commentsContainer {
+    padding: 10px;
+  }
+
+  .commentsHeading {
+    font-size: 2em;
+  }
+
+  .commentForm {
+    width: 100%; /* Full width for mobile phones */
+    padding: 0 10px; /* Add padding for better spacing */
+  }
+
+  .commentInput {
+    height: 80px;
+    max-width: 100%; /* Full width for mobile phones */
+  }
+
+  .submitButton {
+    font-size: 0.8em;
+    padding: 6px 12px;
+    max-width: 60%; /* Full width for mobile phones */
+  }
+}
+
+/* For very small mobile screens */
+@media (max-width: 480px) {
+  .commentsHeading {
+    font-size: 1.5em;
+  }
+
+  .commentInput {
+    height: 60px;
+  }
+
+  .submitButton {
+    font-size: 0.7em;
+    padding: 4px 10px;
+  }
 }
