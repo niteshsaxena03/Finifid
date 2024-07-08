@@ -168,6 +168,58 @@ export const FirebaseProvider = (props) => {
     }
   };
 
+  const addCommentToPost = async (
+    postId,
+    userEmail,
+    currentUserName,
+    comment,
+    collectionName
+  ) => {
+    try {
+      // Get a reference to the userPosts collection
+      const postsCollectionRef = collection(db, collectionName);
+
+      // Query to find the post with the given postId
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
+      const compositeKey = userEmail + postId;
+
+      if (!postSnap.empty) {
+        // Get the document reference and data
+        const postDoc = postSnap.docs[0];
+        const postDocRef = doc(db, collectionName, compositeKey);
+        const postData = postDoc.data();
+        const comments = postData.comments || {};
+        const commentCount = postData.commentsCount || 0;
+
+        // Create a new comment object with timestamp
+        const newComment = {
+          userName: currentUserName,
+          commentText: comment,
+        };
+
+        // Add the new comment to the comments object
+        const updatedComments = {
+          ...comments,
+          [`comment_${commentCount + 1}`]: newComment, // Append comment with a new key
+        };
+
+        // Update the post with the new comment and increment the comment count
+        await updateDoc(postDocRef, {
+          comments: updatedComments,
+          commentsCount: commentCount + 1,
+        });
+      } else {
+        console.error(`No such post with postId: ${postId}!`);
+      }
+    } catch (error) {
+      console.error("Error adding comment to post:", error.message);
+    }
+  };
+
 
   return (
     <FirebaseContext.Provider
@@ -180,6 +232,7 @@ export const FirebaseProvider = (props) => {
         fetchDetails,
         getUsersByQuery,
         toggleLikePost,
+        addCommentToPost,
       }}
     >
       {props.children}

@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useFirebase } from "@/Firebase/firebaseContext";
 import "./Comments.css";
 
 const Comments = ({ data }) => {
   const location = useLocation();
+  const { addCommentToPost } = useFirebase();
+
   const { postId, userEmail, collectionName, comments, commentsCount } =
     location.state || {};
   const [newComment, setNewComment] = useState("");
@@ -12,11 +15,27 @@ const Comments = ({ data }) => {
     setNewComment(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Add logic to send `newComment` to the backend
-    console.log("New Comment:", newComment);
-    setNewComment(""); // Clear input after submission
+
+    // Ensure there's a comment to submit
+    if (newComment.trim()) {
+      try {
+        // Call the function to add the comment
+        await addCommentToPost(
+          postId,
+          userEmail,
+          data.name,
+          newComment,
+          collectionName
+        );
+
+        // Clear input after successful submission
+        setNewComment("");
+      } catch (error) {
+        console.error("Error adding comment:", error.message);
+      }
+    }
   };
 
   return (
