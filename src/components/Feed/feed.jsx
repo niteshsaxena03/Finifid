@@ -213,7 +213,7 @@ const Feed = ({ data, profile, friends }) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setVideo(file);
+    
 
     const formattedEmail = formatEmail(data.email); // Format email for storage reference
     const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
@@ -226,6 +226,7 @@ const Feed = ({ data, profile, friends }) => {
       const postId = uuidv4();
       const userEmail = data.email; // Get the user's email
       const compositeKey = userEmail + postId;
+      const postDocRef = doc(db, "videos", compositeKey);
 
       // Save metadata and URL to Firestore
       const videoData = {
@@ -239,7 +240,7 @@ const Feed = ({ data, profile, friends }) => {
         likes: 0,
         likedBy: [],
       };
-      await addDoc(collection(db, "videos",compositeKey), videoData);
+       await setDoc(postDocRef, videoData);
 
       await FetchData("videos");
 
