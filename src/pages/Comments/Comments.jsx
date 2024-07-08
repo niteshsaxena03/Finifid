@@ -1,18 +1,38 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import "./Comments.css";
 
-const Comments = ({data}) => {
+const Comments = ({ data }) => {
   const location = useLocation();
-  const { postId, userEmail,collectionName,comments,commentsCount } = location.state || {}; 
-  console.log(collectionName);
+  const { postId, userEmail, collectionName, comments, commentsCount } =
+    location.state || {};
+  const [newComment, setNewComment] = useState("");
+
+  const handleInputChange = (event) => {
+    setNewComment(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Add logic to send `newComment` to the backend
+    console.log("New Comment:", newComment);
+    setNewComment(""); // Clear input after submission
+  };
 
   return (
-    <div>
-      <h1>Comments for Post {postId}</h1>
-      <h1>Post belongs to :{userEmail}</h1>
-      <h1>Name of person writing comments:{data.name}</h1>
-      <h1>Collection is :{collectionName}</h1>
-      <h1>Current number of comments :{commentsCount}</h1>
-      {/* <h1>Comments are :{comments}</h1> */}
+    <div className="commentsContainer">
+      <h1 className="commentsHeading">Comments</h1>
+      <form onSubmit={handleSubmit} className="commentForm">
+        <textarea
+          value={newComment}
+          onChange={handleInputChange}
+          placeholder="Add a comment..."
+          className="commentInput"
+        />
+        <button type="submit" className="submitButton">
+          Submit
+        </button>
+      </form>
     </div>
   );
 };

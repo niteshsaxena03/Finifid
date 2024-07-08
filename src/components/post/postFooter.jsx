@@ -20,7 +20,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
   const navigate = useNavigate();
   
   const currentUserEmail=formatEmail(user.email);
-  console.log(collectionName);
+  //console.log(collectionName);
   
   useEffect(() => {
     // Check if the user has liked the post
