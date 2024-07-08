@@ -1,14 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useFirebase } from "@/Firebase/firebaseContext";
+import CommentItem from "./CommentItem";
 import "./Comments.css";
 
 const Comments = ({ data }) => {
   const location = useLocation();
   const { addCommentToPost } = useFirebase();
-
-  const { postId, userEmail, collectionName, comments, commentsCount } =
-    location.state || {};
+  const {
+    postId,
+    userEmail,
+    collectionName,
+    comments = {},
+    commentsCount,
+  } = location.state || {};
   const [newComment, setNewComment] = useState("");
 
   const handleInputChange = (event) => {
@@ -17,25 +22,15 @@ const Comments = ({ data }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Ensure there's a comment to submit
-    if (newComment.trim()) {
-      try {
-        // Call the function to add the comment
-        await addCommentToPost(
-          postId,
-          userEmail,
-          data.name,
-          newComment,
-          collectionName
-        );
-
-        // Clear input after successful submission
-        setNewComment("");
-      } catch (error) {
-        console.error("Error adding comment:", error.message);
-      }
-    }
+    // Add logic to send `newComment` to the backend
+    await addCommentToPost(
+      postId,
+      userEmail,
+      data.name,
+      newComment,
+      collectionName
+    );
+    setNewComment(""); // Clear input after submission
   };
 
   return (
@@ -52,6 +47,15 @@ const Comments = ({ data }) => {
           Submit
         </button>
       </form>
+      <div className="commentList">
+        {Object.keys(comments).map((key) => (
+          <CommentItem
+            key={key}
+            userName={comments[key].userName}
+            commentText={comments[key].commentText}
+          />
+        ))}
+      </div>
     </div>
   );
 };

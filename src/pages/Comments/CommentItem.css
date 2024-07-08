@@ -1,0 +1,22 @@
+.commentItem {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 3%;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  width:80%;
+  margin: 1% 10%;
+}
+
+.commentUserName {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 2em;
+}
+
+.commentText {
+  font-size: 1.25em;
+  color: #333;
+}

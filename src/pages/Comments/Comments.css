@@ -1,38 +1,31 @@
-/* Overall container styling */
 .commentsContainer {
-  height:100vh;
+  height:100%;
   width: 100%;
   margin: 0 auto;
   padding: 20px;
-  background-color:#e9e640;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffd700; /* Darker shade of yellow */
 }
 
-/* Centered heading styling */
 .commentsHeading {
   text-align: center;
   margin-bottom: 20px;
   font-size: 3em;
-  color: #333;
+  color: black;
   font-weight: bold;
 }
 
-/* Post info styling (if needed) */
 .postInfo {
   margin: 10px 0;
   font-size: 1.2em;
   color: #555;
 }
 
-/* Comment form styling */
 .commentForm {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Text area styling */
 .commentInput {
   width: 100%;
   max-width: 600px;
@@ -43,10 +36,8 @@
   margin-bottom: 10px;
   font-size: 1em;
   resize: vertical;
-  background-color: #ffffff; /* White background for text area */
 }
 
-/* Submit button styling */
 .submitButton {
   padding: 10px 20px;
   border: none;
@@ -59,4 +50,8 @@
 
 .submitButton:hover {
   background-color: #0056b3;
+}
+
+.commentList {
+  margin-top: 20px;
 }
