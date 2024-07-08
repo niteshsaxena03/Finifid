@@ -19,6 +19,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
   const navigate = useNavigate();
   
   const currentUserEmail=formatEmail(user.email);
+  console.log(collectionName);
   
   useEffect(() => {
     // Check if the user has liked the post
@@ -45,7 +46,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
   };
 
    const handleCommentClick = () => {
-     navigate("/comments", { state: { postId, userEmail } });
+     navigate("/comments", { state: { postId, userEmail, collectionName } });
    };
 
   return (

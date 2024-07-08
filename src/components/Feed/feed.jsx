@@ -143,6 +143,8 @@ const Feed = ({ data, profile, friends }) => {
         email: userEmail,
         likes: 0,
         likedBy: [],
+        comments: {},
+        commentsCount: 0,
       };
 
       // Upload the post data
@@ -190,6 +192,8 @@ const Feed = ({ data, profile, friends }) => {
         email: data.email,
         likes: 0,
         likedBy: [],
+        comments: {},
+        commentsCount: 0,
       };
       await setDoc(postDocRef, photoData);
 
@@ -212,8 +216,6 @@ const Feed = ({ data, profile, friends }) => {
   const AddVideo = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
-    
 
     const formattedEmail = formatEmail(data.email); // Format email for storage reference
     const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
@@ -239,8 +241,10 @@ const Feed = ({ data, profile, friends }) => {
         email: data.email,
         likes: 0,
         likedBy: [],
+        comments: {},
+        commentsCount: 0,
       };
-       await setDoc(postDocRef, videoData);
+      await setDoc(postDocRef, videoData);
 
       await FetchData("videos");
 
