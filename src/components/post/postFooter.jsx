@@ -6,6 +6,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect } from "react";
 import { useFirebase } from "../../Firebase/firebaseContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
@@ -15,6 +16,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
   const { toggleLikePost,user } = useFirebase();
+  const navigate = useNavigate();
   
   const currentUserEmail=formatEmail(user.email);
   
@@ -42,6 +44,10 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
     }
   };
 
+   const handleCommentClick = () => {
+     navigate("/comments", { state: { postId, userEmail } });
+   };
+
   return (
     <div className="postFooter">
       <button onClick={handleLikeClick} className="iconButton">
@@ -51,7 +57,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName 
           idx={-1}
         />
       </button>
-      <button className="iconButton">
+      <button onClick={handleCommentClick} className="iconButton">
         <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
       </button>
       <button className="iconButton">
