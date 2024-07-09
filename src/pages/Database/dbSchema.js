@@ -9,7 +9,8 @@ const Schema = {
   story: [],
   age:"",
   ProfileDetails : {} ,
-  joinedDate : ""
+  joinedDate : "",
+  notifications:[],
 };
 
 export default Schema;

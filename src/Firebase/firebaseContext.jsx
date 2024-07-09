@@ -11,6 +11,7 @@ import {
   updateDoc,
   setDoc,
   getDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { Firestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -220,6 +221,28 @@ export const FirebaseProvider = (props) => {
     }
   };
 
+  const addNotification = async (targetUserEmail, actorEmail, action) => {
+    try {
+      // Reference to the target user's document
+      const userDocRef = doc(db, "users", targetUserEmail);
+
+      // Construct the notification object
+      const notification = {
+        email: actorEmail,
+        action: action,
+      };
+
+      // Add the notification to the user's notifications array
+      await updateDoc(userDocRef, {
+        notifications: arrayUnion(notification),
+      });
+
+      console.log("Notification added successfully");
+    } catch (error) {
+      console.error("Error adding notification:", error.message);
+    }
+  };
+
 
   return (
     <FirebaseContext.Provider
@@ -233,6 +256,7 @@ export const FirebaseProvider = (props) => {
         getUsersByQuery,
         toggleLikePost,
         addCommentToPost,
+        addNotification,
       }}
     >
       {props.children}

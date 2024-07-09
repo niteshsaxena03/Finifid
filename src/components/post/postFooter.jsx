@@ -16,7 +16,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
    const [commentCount, setCommentCount] = useState(commentsCount);
-  const { toggleLikePost,user } = useFirebase();
+  const { toggleLikePost,user,addNotification } = useFirebase();
   const navigate = useNavigate();
   
   const currentUserEmail=formatEmail(user.email);
@@ -33,6 +33,8 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
       // Toggle like and update Firestore
       await toggleLikePost(postId, userEmail,currentUserEmail,collectionName);
 
+      await addNotification(userEmail,currentUserEmail, "like");
+
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
         // Update like count based on previous state
@@ -48,6 +50,7 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
 
    const handleCommentClick = () => {
      navigate("/comments", { state: { postId, userEmail, collectionName,comments,commentsCount } });
+     addNotification(userEmail,currentUserEmail, "comment");
    };
 
   return (

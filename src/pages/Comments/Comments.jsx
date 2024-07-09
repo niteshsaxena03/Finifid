@@ -51,6 +51,11 @@ const Comments = ({ data }) => {
         </button>
       </form>
       <div className="commentList">
+        <CommentItem
+          key={uuidv4()}
+          userName={data.name}
+          commentText={tempComment}
+        />
         {Object.keys(comments).map((key) => (
           <CommentItem
             key={key}
@@ -58,7 +63,6 @@ const Comments = ({ data }) => {
             commentText={comments[key].commentText}
           />
         ))}
-        <CommentItem key={uuidv4()} userName={data.name} commentText={tempComment}/>
       </div>
     </div>
   );
