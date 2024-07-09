@@ -29,6 +29,9 @@ const Post = ({
         avatar={avatar}
         timestamp={timestamp}
         email={email}
+        userEmail={userEmail}
+        collectionName={collectionName}
+        postId={postId}
       />
       <div className="postBody">
         {/* Message */}

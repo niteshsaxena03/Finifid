@@ -11,6 +11,7 @@ import {
   updateDoc,
   setDoc,
   getDoc,
+  deleteDoc,
   arrayUnion,
 } from "firebase/firestore";
 import { Firestore } from "firebase/firestore";
@@ -259,7 +260,24 @@ export const FirebaseProvider = (props) => {
   const logOut = () => {
     return signOut(firebaseAuth);
   };
+  const deletePost = async (userEmail, postId, collectionName) => {
+    try {
+      // Create the composite key
+      const compositeKey = userEmail + postId;
 
+      // Get the document reference
+      const postDocRef = doc(db, collectionName, compositeKey);
+
+      // Delete the document
+      await deleteDoc(postDocRef);
+
+      console.log(
+        `Document with composite key ${compositeKey} successfully deleted.`
+      );
+    } catch (error) {
+      console.error("Error deleting document:", error.message);
+    }
+  };
 
 
   return (
@@ -276,6 +294,7 @@ export const FirebaseProvider = (props) => {
         addCommentToPost,
         addNotification,
         logOut,
+        deletePost,
       }}
     >
       {props.children}
