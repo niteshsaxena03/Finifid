@@ -1,3 +1,36 @@
 .appBody{
     margin: 0% 6% ;
 }
+
+/* Resonsiveness */
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+    
+}
+
+@media (min-width: 1300px) and (max-width: 1440px) {
+   #headTrend #date {
+    font-size: 0.7rem;
+   }  
+
+   .storyFont{
+    font-size: 1rem;
+   }
+
+   .recharts-cartesian-axis-ticks{
+     font-size: 0.7rem;
+   }
+}
+
+@media (min-width: 1125px) and (max-width: 1299px) {
+    #headTrend #date {
+     font-size: 0.7rem;
+    }  
+ 
+    .storyFont{
+     font-size: 0.9rem;
+    }
+ }
+ 
+ 
+

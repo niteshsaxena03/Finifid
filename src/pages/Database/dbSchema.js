@@ -4,7 +4,7 @@ const Schema = {
   hobby: "",
   profession: "",
   followers: [],
-  following: [],
+  following: ["socialnetworking_gmail_com"],
   isStory: false,
   story: [],
   age:"",

@@ -12,6 +12,7 @@ import SeeFriendStory from "./components/Story/SeeFriendStory";
 import FriendsProfile from "./pages/Profile/FriendsProfile";
 import ProfileDetails from "./pages/SignUp/ProfileDetails.jsx";
 import SearchUser from "./pages/SearchUser/SearchUser";
+import EditProfile from "./pages/Profile/EditProfile.jsx";
 // DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
 import { useState, useEffect } from "react";
@@ -60,6 +61,9 @@ function App() {
       <Route path="/profile/friend/:email" element={<FriendsProfile currentUserData={data}/>} />
       <Route path="/createProfile/:name" element={<ProfileDetails/>} />
       <Route path="/searchuser" element={<SearchUser/>}/>
+      {/* Routes for edit  */}
+      <Route path="/editProfile" element={<EditProfile  data={data} />}/>
+
     </Routes>
     </Provider>
   );

@@ -28,7 +28,7 @@ const Stories = ({ data }) => {
     dots: true,
     infinite: true,
     speed: 100,
-    slidesToShow: followingSize <= 4 ? followingSize : 5  ,  
+    slidesToShow: followingSize < 4 ? followingSize + 1 : 5  ,  
     slidesToScroll: 1,
   };
 
@@ -44,6 +44,7 @@ const Stories = ({ data }) => {
 
         const friendsData = await Promise.all(friendsDataPromises);
         setFriendsStories(friendsData);
+        console.log(friendsData.length)
         setSize(friendsData.length) ; 
       }
     };    

@@ -120,52 +120,52 @@ export const FirebaseProvider = (props) => {
   const isLoggedIn = !!user;
 
 
-  const toggleLikePost = async (postId, userEmail) => {
-    try {
-      // Get a reference to the userPosts collection
-      const postsCollectionRef = collection(db, "userPosts");
+    const toggleLikePost = async (postId, userEmail) => {
+      try {
+        // Get a reference to the userPosts collection
+        const postsCollectionRef = collection(db, "userPosts");
 
-      // Query to find the post with the given postId
-      const postsQuery = query(
-        postsCollectionRef,
-        where("postId", "==", postId)
-      );
-      const postSnap = await getDocs(postsQuery);
-      const compositeKey=userEmail+postId;
+        // Query to find the post with the given postId
+        const postsQuery = query(
+          postsCollectionRef,
+          where("postId", "==", postId)
+        );
+        const postSnap = await getDocs(postsQuery);
+        const compositeKey=userEmail+postId;
 
-      if (!postSnap.empty) {
-        // Get the document reference and data
-        const postDoc = postSnap.docs[0];
-        const postDocRef = doc(db, "userPosts",compositeKey);
-        const postData = postDoc.data();
-        const likedBy = postData.likedBy;
-        const likes = postData.likes ;
+        if (!postSnap.empty) {
+          // Get the document reference and data
+          const postDoc = postSnap.docs[0];
+          const postDocRef = doc(db, "userPosts",compositeKey);
+          const postData = postDoc.data();
+          const likedBy = postData.likedBy;
+          const likes = postData.likes ;
 
-        // Determine if the post is currently liked by the user
-        const isLiked = likedBy.includes(userEmail);
+          // Determine if the post is currently liked by the user
+          const isLiked = likedBy.includes(userEmail);
 
-        if (isLiked) {
-          // If already liked, unlike the post
-          const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
-          await updateDoc(postDocRef, {
-            likes: likes - 1,
-            likedBy: updatedLikedBy,
-          });
+          if (isLiked) {
+            // If already liked, unlike the post
+            const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
+            await updateDoc(postDocRef, {
+              likes: likes - 1,
+              likedBy: updatedLikedBy,
+            });
+          } else {
+            // If not liked, like the post
+            const updatedLikedBy = [...likedBy, userEmail];
+            await updateDoc(postDocRef, {
+              likes: likes + 1,
+              likedBy: updatedLikedBy,
+            });
+          }
         } else {
-          // If not liked, like the post
-          const updatedLikedBy = [...likedBy, userEmail];
-          await updateDoc(postDocRef, {
-            likes: likes + 1,
-            likedBy: updatedLikedBy,
-          });
+          console.error(`No such post with postId: ${postId}!`);
         }
-      } else {
-        console.error(`No such post with postId: ${postId}!`);
+      } catch (error) {
+        console.error("Error toggling like post:", error.message);
       }
-    } catch (error) {
-      console.error("Error toggling like post:", error.message);
-    }
-  };
+    };
 
 
   return (

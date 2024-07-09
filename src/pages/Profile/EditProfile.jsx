@@ -9,23 +9,23 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import "./SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
-import { useNavigate, useParams } from "react-router-dom";
-import {
-    storage,
-    useFirebase,
-  } from "../../Firebase/firebaseContext";
-  
+import "../SignUp/SignUpScreen.css"; // Import your CSS file for SignUpScreen styling
 
-// Loader 
-import SimpleBackdrop from "../../components/Progress/LoadingBackDrop.jsx";
-
-// css 
-import './form.css'
 
 // Data-Base
-import Database from "../Database/Database.js";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import { db,storage } from "../../Firebase/firebaseContext.jsx";
+import {doc, updateDoc } from "firebase/firestore";
+
+  
+
+// css 
+import '../SignUp/form.css'
+
+// Progress 
+import SimpleBackdrop from "../../components/Progress/LoadingBackDrop.jsx";
+
 
 let profileDetailsOfUser = {
     username : "" ,
@@ -39,36 +39,25 @@ let profileDetailsOfUser = {
     post : 0 
 }
 
-let previousDetails = {
-    email : "" ,
-    password : "" , 
-    hobby : "" ,
-    profession : "" ,
-    age : "" 
-}
 
-function setPreviousFormDetails(email  ,  password , hobby, profession  , age  ){
-    previousDetails.email = email ; 
-    previousDetails.password = password ; 
-    previousDetails.age = age ;  
-    previousDetails.profession = profession ; 
-    previousDetails.hobby = hobby; 
-}
-
-export default function ProfileDetails() {
-
-    // User name -    
-    const {name} = useParams() ; 
+export default function EditProfile({data}) {
+  
 
     const navigate = useNavigate();
+
+    const [ userData , setData ] = useState([]) ;
 
     const [ profileDetails , setDetails ] = useState(profileDetailsOfUser) ;
     const [error, setError] = useState(null);
     let [ button , setButton ] = useState(false) ;
-    const { signUpUserWithEmailAndPassword } = useFirebase();
+
+    console.log("main data  ",userData) ;
+
+    useEffect(()=>{
+        setData(data) ;
+    },[data])
 
 
- 
 
     function handleAllChange(name , value ){
         profileDetailsOfUser[name] = value  ;
@@ -80,80 +69,55 @@ export default function ProfileDetails() {
         }) ;
     }
     
-    function createUsername(name) {
-        // Convert to lowercase and trim spaces
-        const username = name.toLowerCase().trim();
-      
-        // Replace spaces with underscores (you can modify this based on your preference)
-        return  `@${ username.replace(/\s+/g, '_')}`;
-
-    }
-
-    const formatEmail = (email) => {
-        return email.replace(/[^a-zA-Z0-9]/g, "_");
-      };
-      
-
-    useEffect(()=>{
-
-        function generateUsername(){
-            const username = createUsername(name);
-            handleAllChange("username",username) ;
-        }
-
-        generateUsername() ;  
-    },[])
-
-
-  
-
-
-
-
+ 
   const handleSignUp = async (e) => {
 
     e.preventDefault();
     setError(null); // Clear previous errors
     setButton(true) ;
-
     try {
+
+        if( userData && userData.ProfileDetails){
         // Database Init :
 
-        const formattedEmail = formatEmail(previousDetails.email).toLowerCase() ;
         // Uploading Profile Image : 
-        const userPhotoRef = ref(storage ,`Profile/${formattedEmail}/ProfilePhoto`) ; 
+        const userPhotoRef = ref(storage ,`Profile/${data.email}/ProfilePhoto`) ; 
         await uploadBytes(userPhotoRef , profileDetailsOfUser.profileImg ) ; 
         const profileURL = await getDownloadURL(userPhotoRef) ;
 
         // BackGround Image 
-        const userPhotoRef_background = ref(storage ,`Profile/${formattedEmail}/BackGroundPhoto`) ; 
+        const userPhotoRef_background = ref(storage ,`Profile/${data.email}/BackGroundPhoto`) ; 
         await uploadBytes(userPhotoRef_background , profileDetailsOfUser.backgroundImg ) ; 
         const backProfileURL = await getDownloadURL(userPhotoRef_background) ;
 
 
         // Upload Data ! 
-        profileDetailsOfUser.profileImg = profileURL ;
-        profileDetailsOfUser.backgroundImg = backProfileURL ;
 
+        // Other Data 
+        userData.ProfileDetails.backgroundImg = backProfileURL ; 
+        userData.ProfileDetails.profileImg = profileURL ; 
+        userData.ProfileDetails.bio = profileDetailsOfUser.bio ; 
+        userData.ProfileDetails.location = profileDetailsOfUser.location ; 
+        userData.ProfileDetails.favourite = profileDetailsOfUser.favourite ; 
+        userData.ProfileDetails.work = profileDetailsOfUser.work ; 
+        
+        
+        
+        
+        console.log("Last Details Before set" , userData.ProfileDetails ) ;
+        
+        const userDocRef = doc(db, "users", userData.email);    
+        await updateDoc(userDocRef, {
+               ProfileDetails: userData.ProfileDetails ,
+            });
+                        
+        console.log("Update  successfull !") ;
+        navigate("/home") ;
 
-        console.log("Last Details Before set" , profileDetailsOfUser) ;
-
-
-
-        await Database(name, formattedEmail , previousDetails.hobby,previousDetails.profession,previousDetails.age,profileDetailsOfUser,true);
-        console.log("Sign up successfull !") ;
-
-        const result = await signUpUserWithEmailAndPassword(previousDetails.email, previousDetails.password);
-        console.log("Sign up successful:", result);
-
-        if(result){
+        // After upload 
         setButton(false) ;
-        navigate("/home"); // Navigate to the home page after successful sign-up
+            
         }
-        else{
-          throw "Something went Wrong ! " ;
-        }
-    
     }
     catch (error) {
       console.error("Error signing up:", error.message);
@@ -163,30 +127,23 @@ export default function ProfileDetails() {
   };
 
   return (
+
     <div className="loginScreen">
-      {
-        button ? <span><SimpleBackdrop/><br/><br/><br/><br/><p style={{marginLeft : "5%" , fontSize : "25px" ,width : "100%"}}>Creating Profile...</p></span>
-       :
+    {
+        button ? <span><SimpleBackdrop/><br/><br/><br/><br/><p style={{marginLeft : "5%" , fontSize : "25px"}}>Updating...</p></span>
+      :
+
       <Card className="cardContainer mx-auto">
         <form onSubmit={handleSignUp}>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold">Create Your Profile</CardTitle>
+            <CardTitle className="text-2xl font-bold">Edit Your Profile</CardTitle>
             <CardDescription>
-              Enter your details to create a your profile
+              Enter your details to edit your profile
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="space-y-2">
-
-                <Label htmlFor="name">Username</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder={profileDetailsOfUser.username} 
-                  disabled
-                />
-              </div>
+            
               <div className="space-y-2">
                 <Label htmlFor="backgroundImage">Background Image</Label>
                 <Input
@@ -194,9 +151,8 @@ export default function ProfileDetails() {
                     type="file"
                     accept="image/*"
                     name = "backgroundImg"
-                    onChange={(e) => handleAllChange(e.target.name , e.target.files[0])}
-                    
-                />
+                    onChange={(e) => handleAllChange(e.target.name , e.target.files[0])}   
+                   />
                 </div>
 
                 <div className="space-y-2">
@@ -207,8 +163,9 @@ export default function ProfileDetails() {
                     accept="image/*"
                     name = "profileImg"
                     onChange={(e) => handleAllChange(e.target.name , e.target.files[0])}
-                />
+                 />
                 </div>
+
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
                 <Input
@@ -273,11 +230,6 @@ export default function ProfileDetails() {
             </select>
             </div>
 
-            <div className="space-y-2 flex-1">
-            <Label htmlFor="dob">Date of Birth</Label>
-            <input type="date" id="dob" name="dob"  className="w-full selectedInput" onChange={(e)=>handleAllChange(e.target.name , e.target.value )} required />
-            </div>
-
 
             </div>
 
@@ -285,19 +237,15 @@ export default function ProfileDetails() {
                 <div className="error-message text-red-500">{error}</div>
               )}
               <Button type="submit" className="w-full" variant="mehroon">
-                Create Profile
-              </Button>
-              <Button className="w-full" onClick={() => navigate("/login")}>
-                Already have an account? Log in
+                Edit Profile
               </Button>
             </div>
           </CardContent>
         </form>
       </Card>
-    }
+        }
     </div>
   );
 }
 
 
-export {setPreviousFormDetails} ;

@@ -27,8 +27,14 @@ import { v4 as uuid } from "uuid";
 import getTrendingSearches from "./GoogleTendsAPI.js";
 import { currentDate } from "./GoogleTendsAPI.js";
 
+// Edit Profile 
+import { useNavigate } from "react-router";
+
 function ProfileScreen({ data }) {
   const [trends, setTrends] = useState(null);
+
+  // navigation
+  const navigate = useNavigate() ;
 
   // For Followers and following  :
   const updatedFollowers = useSelector((State) => State.postCounter.followers);
@@ -50,6 +56,10 @@ function ProfileScreen({ data }) {
   //  Random Data for Follower Function :
 
   let Emails = ["redux@gmail.com", "ryzen@gmail.com", "randomUser@gmail.com"];
+
+  function handleEditProfile(){
+      navigate("/editProfile")
+  }
 
   return (
     <div className="profileScreen">
@@ -78,7 +88,7 @@ function ProfileScreen({ data }) {
               <div className="editProfile ">
                 <button type="button">
                   <EditIcon style={{ color: "#8e0b3a" }} />{" "}
-                  <a href="" style={{ color: "#8e0b3a" }}>
+                  <a onClick={()=>handleEditProfile()} style={{ color: "#8e0b3a" , cursor : "pointer" }}>
                     Edit Profile
                   </a>
                 </button>
@@ -86,7 +96,7 @@ function ProfileScreen({ data }) {
             </div>
 
             {/* All user Post's */}
-            <div className="userFeed">
+            <div className="userFeed profileFedd">
               <Feed key={uuid()} data={data} profile={true} />
             </div>
           </div>

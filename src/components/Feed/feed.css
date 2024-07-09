@@ -7,9 +7,10 @@
     height: 85px;
     width: 20px;
 
-    margin-top: 1.5%;
+    margin-top: 1.5%;   
 
     border-radius: 10px;
+    margin-left: 3%;
 }
 
 .feedSearch{
@@ -108,3 +109,9 @@
     color: #8e0b3bdc !important;
 }
 
+
+/* space from Top */
+.spaceFromBottom{
+   height: 30% !important;
+   width: 100%;
+}

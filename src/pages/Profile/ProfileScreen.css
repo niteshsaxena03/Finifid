@@ -6,7 +6,6 @@
   
   margin: 2% 7%;
   width: 100%;
-
 }
 
 .mainProfileScreen{
@@ -117,5 +116,10 @@
 .suggestFollow .MuiAvatar-circular{
   height: 55px !important;
   width: 55px !important;
+}
+
+/* feed setting */
+.profileFedd .feed{
+  margin-left: 0%;
 }
  

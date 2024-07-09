@@ -156,7 +156,7 @@ const Feed = ({ data, profile, friends }) => {
   };
 
   // Photo Work
-  const AddPhoto = async (event) => {
+  const AddPhoto = async (event) => { 
     const file = event.target.files[0];
     if (!file) return;
 
@@ -191,9 +191,6 @@ const Feed = ({ data, profile, friends }) => {
       data.ProfileDetails.post ++ ; 
       await updatePostData() ; 
 
-      // Update Posts Data
-      data.ProfileDetails.post++;
-      await updatePostData();
     } catch (error) {
       console.error("Error uploading image:", error);
     }
@@ -204,7 +201,6 @@ const Feed = ({ data, profile, friends }) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setVideo(file);
 
     const formattedEmail = formatEmail(data.email); // Format email for storage reference
     const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
@@ -426,6 +422,7 @@ const Feed = ({ data, profile, friends }) => {
         }
       })
      }
+    <div className="spaceFromBottom"><br /><br /><br /></div>    
     </div>
 
   );
