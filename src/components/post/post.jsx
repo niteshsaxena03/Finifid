@@ -16,7 +16,10 @@ const Post = ({
   caption = "",
   likes,
   likedBy,
-  userEmail, // Ensure userEmail is passed to the component
+  userEmail,
+  collectionName,
+  comments,
+  commentsCount,
 }) => {
   return (
     <div key={postId} className="posts">
@@ -66,6 +69,9 @@ const Post = ({
         likes={likes}
         likedBy={likedBy}
         userEmail={userEmail}
+        collectionName={collectionName}
+        commentsCount={commentsCount}
+        comments={comments}
       />
     </div>
   );

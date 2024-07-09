@@ -20,6 +20,7 @@ import { Provider } from "react-redux";
 
 // Redux 
 import { Store } from "./app/store.js";
+import Comments from "./pages/Comments/Comments";
 
 
 function App() {
@@ -54,15 +55,16 @@ function App() {
       <Route path="/signup" element={<SignUpScreen />} />
       <Route path="/home" element={<HomeScreen data={data} />} />
       <Route path="/friends" element={<FriendScreen data = {data} />} />
-      <Route path="/notifications" element={<NotificationScreen />} />
-      <Route path="/profile" element={<ProfileScreen data = {data}/>} />
+      <Route path="/notifications" element={<NotificationScreen data={data}/>} />     
+       <Route path="/profile" element={<ProfileScreen data = {data}/>} />
       <Route path="/story" element={<MainStory data={data}/>} />
       <Route path="/story/friend" element={<SeeFriendStory />} />
       <Route path="/profile/friend/:email" element={<FriendsProfile currentUserData={data}/>} />
       <Route path="/createProfile/:name" element={<ProfileDetails/>} />
       <Route path="/searchuser" element={<SearchUser/>}/>
+      <Route path="/comments" element={<Comments data={data} />} />
       {/* Routes for edit  */}
-      <Route path="/editProfile" element={<EditProfile  data={data} />}/>
+      <Route path="/editProfile" element={<EditProfile  data={data} />}/> 
 
     </Routes>
     </Provider>

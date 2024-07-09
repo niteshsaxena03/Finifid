@@ -9,6 +9,10 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+const formatEmail = (email) => {
+  return email.replace(/[^a-zA-Z0-9]/g, "_");
+};
+
 function SearchUser() {
   const query = useQuery();
   const searchQuery = query.get("query") || ""; // Ensure searchQuery is never undefined
@@ -32,6 +36,7 @@ function SearchUser() {
     fetchUsers();
   }, [searchQuery, getUsersByQuery]);
 
+  const fallbackImage = "https://via.placeholder.com/100";
   return (
     <div className="search-user-container">
       <Header />
@@ -39,15 +44,19 @@ function SearchUser() {
         <h2 className="main-heading">Search Results</h2>
         {searchQuery ? (
           users.length > 0 ? (
-            users.map((user, index) => (
-              <div key={index} className="friend-component">
-                <FriendComponent
-                  name={user.name}
-                  about={user.profession || "No profession available"} // Display profession or fallback text
-                  image={user.image} // Ensure image field is available
-                />
-              </div>
-            ))
+            users.map((User, index) => {
+              console.log("User:", User); // Log each user's details
+              return (
+                <div key={index} className="friend-component">
+                  <FriendComponent
+                    name={User.name}
+                    about={User.profession || "No profession available"} // Display profession or fallback text
+                    email={formatEmail(User.email)}
+                    image={User.ProfileDetails?.profileImg || fallbackImage}
+                  />
+                </div>
+              );
+            })
           ) : (
             <p className="no-results">No Users Found</p>
           )

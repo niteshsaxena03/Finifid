@@ -6,22 +6,42 @@ import ShareIcon from "@mui/icons-material/Share";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect } from "react";
 import { useFirebase } from "../../Firebase/firebaseContext.jsx";
+import { useNavigate } from "react-router-dom";
 
-const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
+const formatEmail = (email) => {
+  return email.replace(/[^a-zA-Z0-9]/g, "_");
+};
+
+const PostFooter = ({
+  postId,
+  likes = 0,
+  likedBy = [],
+  userEmail,
+  collectionName,
+  comments = {},
+  commentsCount = 0,
+}) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
-  const { toggleLikePost } = useFirebase();
+  const [commentCount, setCommentCount] = useState(commentsCount);
+  const { toggleLikePost, user, addNotification } = useFirebase();
+  const navigate = useNavigate();
+
+  const currentUserEmail = formatEmail(user.email);
+  //console.log(collectionName);
 
   useEffect(() => {
     // Check if the user has liked the post
-    setIsLiked(likedBy.includes(userEmail));
+    setIsLiked(likedBy.includes(currentUserEmail));
   }, [likedBy, userEmail]);
 
   const handleLikeClick = async () => {
     console.log("PostFooter handleLikeClick called"); // Ensure this logs to the console
     try {
       // Toggle like and update Firestore
-      await toggleLikePost(postId, userEmail);
+      await toggleLikePost(postId, userEmail, currentUserEmail, collectionName);
+
+      await addNotification(userEmail, currentUserEmail, "has liked on your post");
 
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
@@ -36,6 +56,13 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
     }
   };
 
+  const handleCommentClick = () => {
+    navigate("/comments", {
+      state: { postId, userEmail, collectionName, comments, commentsCount },
+    });
+    addNotification(userEmail, currentUserEmail, "has commented on your post");
+  };
+
   return (
     <div className="postFooter">
       <button onClick={handleLikeClick} className="iconButton">
@@ -45,8 +72,9 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail }) => {
           idx={-1}
         />
       </button>
-      <button className="iconButton">
-        <Icon Icon={ChatBubbleOutlineIcon} label={"Comment"} idx={-1} />
+      <button onClick={handleCommentClick} className="iconButton">
+        <Icon Icon={ChatBubbleOutlineIcon} label={`Comments`} idx={-1} />
+        <span className="commentCount">{commentCount}</span>
       </button>
       <button className="iconButton">
         <Icon Icon={ShareIcon} label={"Share"} idx={-1} />

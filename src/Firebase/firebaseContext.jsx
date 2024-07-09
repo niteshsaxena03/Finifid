@@ -11,6 +11,7 @@ import {
   updateDoc,
   setDoc,
   getDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { Firestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -20,6 +21,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 
 import fetchUserData from "../pages/Database/userData.js";
@@ -120,52 +122,144 @@ export const FirebaseProvider = (props) => {
   const isLoggedIn = !!user;
 
 
-    const toggleLikePost = async (postId, userEmail) => {
-      try {
-        // Get a reference to the userPosts collection
-        const postsCollectionRef = collection(db, "userPosts");
+  const toggleLikePost = async (postId, userEmail,currentUserEmail,collectionName) => {
+    console.log(userEmail);
+    console.log(currentUserEmail);
+    try {
+      // Get a reference to the userPosts collection
+      const postsCollectionRef = collection(db,collectionName);
 
-        // Query to find the post with the given postId
-        const postsQuery = query(
-          postsCollectionRef,
-          where("postId", "==", postId)
-        );
-        const postSnap = await getDocs(postsQuery);
-        const compositeKey=userEmail+postId;
+      // Query to find the post with the given postId
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
+      const compositeKey=userEmail+postId;
 
-        if (!postSnap.empty) {
-          // Get the document reference and data
-          const postDoc = postSnap.docs[0];
-          const postDocRef = doc(db, "userPosts",compositeKey);
-          const postData = postDoc.data();
-          const likedBy = postData.likedBy;
-          const likes = postData.likes ;
+      if (!postSnap.empty) {
+        // Get the document reference and data
+        const postDoc = postSnap.docs[0];
+        const postDocRef = doc(db, collectionName,compositeKey);
+        const postData = postDoc.data();
+        const likedBy = postData.likedBy;
 
-          // Determine if the post is currently liked by the user
-          const isLiked = likedBy.includes(userEmail);
+        // Determine if the post is currently liked by the user
+        const isLiked = likedBy.includes(currentUserEmail);
 
-          if (isLiked) {
-            // If already liked, unlike the post
-            const updatedLikedBy = likedBy.filter((email) => email !== userEmail);
-            await updateDoc(postDocRef, {
-              likes: likes - 1,
-              likedBy: updatedLikedBy,
-            });
-          } else {
-            // If not liked, like the post
-            const updatedLikedBy = [...likedBy, userEmail];
-            await updateDoc(postDocRef, {
-              likes: likes + 1,
-              likedBy: updatedLikedBy,
-            });
-          }
+        if (isLiked) {
+          // If already liked, unlike the post
+          const updatedLikedBy = likedBy.filter((email) => email !== currentUserEmail);
+          await updateDoc(postDocRef, {
+            likes: updatedLikedBy.length,
+            likedBy: updatedLikedBy,
+          });
         } else {
-          console.error(`No such post with postId: ${postId}!`);
+          // If not liked, like the post
+          const updatedLikedBy = [...likedBy, currentUserEmail];
+          await updateDoc(postDocRef, {
+            likes: updatedLikedBy.length,
+            likedBy: updatedLikedBy,
+          });
         }
-      } catch (error) {
-        console.error("Error toggling like post:", error.message);
+      } else {
+        console.error(`No such post with postId: ${postId}!`);
       }
-    };
+    } catch (error) {
+      console.error("Error toggling like post:", error.message);
+    }
+  };
+
+  const addCommentToPost = async (
+    postId,
+    userEmail,
+    currentUserName,
+    comment,
+    collectionName
+  ) => {
+    try {
+      // Get a reference to the userPosts collection
+      const postsCollectionRef = collection(db, collectionName);
+
+      // Query to find the post with the given postId
+      const postsQuery = query(
+        postsCollectionRef,
+        where("postId", "==", postId)
+      );
+      const postSnap = await getDocs(postsQuery);
+      const compositeKey = userEmail + postId;
+
+      if (!postSnap.empty) {
+        // Get the document reference and data
+        const postDoc = postSnap.docs[0];
+        const postDocRef = doc(db, collectionName, compositeKey);
+        const postData = postDoc.data();
+        const comments = postData.comments || {};
+        const commentCount = postData.commentsCount || 0;
+
+        // Create a new comment object with timestamp
+        const newComment = {
+          userName: currentUserName,
+          commentText: comment,
+        };
+
+        // Add the new comment to the comments object
+        const updatedComments = {
+          ...comments,
+          [`comment_${commentCount + 1}`]: newComment, // Append comment with a new key
+        };
+
+        // Update the post with the new comment and increment the comment count
+        await updateDoc(postDocRef, {
+          comments: updatedComments,
+          commentsCount: commentCount + 1,
+        });
+      } else {
+        console.error(`No such post with postId: ${postId}!`);
+      }
+    } catch (error) {
+      console.error("Error adding comment to post:", error.message);
+    }
+  };
+
+  const addNotification = async (targetUserEmail, actorEmail, action) => {
+    try {
+      // Reference to the target user's document
+      const userDocRef = doc(db, "users", targetUserEmail);
+
+      // Fetch existing notifications
+      const userDoc = await getDoc(userDocRef);
+      if (!userDoc.exists()) {
+        console.error("User does not exist");
+        return;
+      }
+
+      // Get existing notifications array
+      const existingNotifications = userDoc.data().notifications || [];
+
+      // Construct the new notification object
+      const notification = {
+        email: actorEmail,
+        action: action,
+      };
+
+      // Update the notifications array with the new notification
+      const updatedNotifications = [...existingNotifications, notification];
+
+      // Write the updated array back to Firestore
+      await updateDoc(userDocRef, {
+        notifications: updatedNotifications,
+      });
+
+      console.log("Notification added successfully");
+    } catch (error) {
+      console.error("Error adding notification:", error.message);
+    }
+  };
+  const logOut = () => {
+    return signOut(firebaseAuth);
+  };
+
 
 
   return (
@@ -179,6 +273,9 @@ export const FirebaseProvider = (props) => {
         fetchDetails,
         getUsersByQuery,
         toggleLikePost,
+        addCommentToPost,
+        addNotification,
+        logOut,
       }}
     >
       {props.children}
