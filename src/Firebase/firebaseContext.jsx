@@ -226,15 +226,28 @@ export const FirebaseProvider = (props) => {
       // Reference to the target user's document
       const userDocRef = doc(db, "users", targetUserEmail);
 
-      // Construct the notification object
+      // Fetch existing notifications
+      const userDoc = await getDoc(userDocRef);
+      if (!userDoc.exists()) {
+        console.error("User does not exist");
+        return;
+      }
+
+      // Get existing notifications array
+      const existingNotifications = userDoc.data().notifications || [];
+
+      // Construct the new notification object
       const notification = {
         email: actorEmail,
         action: action,
       };
 
-      // Add the notification to the user's notifications array
+      // Update the notifications array with the new notification
+      const updatedNotifications = [...existingNotifications, notification];
+
+      // Write the updated array back to Firestore
       await updateDoc(userDocRef, {
-        notifications: arrayUnion(notification),
+        notifications: updatedNotifications,
       });
 
       console.log("Notification added successfully");
