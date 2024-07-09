@@ -13,6 +13,7 @@ import {
   getDoc,
   deleteDoc,
   arrayUnion,
+  increment,
 } from "firebase/firestore";
 import { Firestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -265,14 +266,22 @@ export const FirebaseProvider = (props) => {
       // Create the composite key
       const compositeKey = userEmail + postId;
 
-      // Get the document reference
+      // Get the document reference for the post
       const postDocRef = doc(db, collectionName, compositeKey);
 
-      // Delete the document
+      // Get the document reference for the user's profile
+      const userDocRef = doc(db, "users", userEmail);
+
+      // Delete the post document
       await deleteDoc(postDocRef);
 
+      // Decrease the post count in the user's profile details
+      await updateDoc(userDocRef, {
+        "ProfileDetails.post": increment(-1),
+      });
+
       console.log(
-        `Document with composite key ${compositeKey} successfully deleted.`
+        `Document with composite key ${compositeKey} successfully deleted and post count updated.`
       );
     } catch (error) {
       console.error("Error deleting document:", error.message);

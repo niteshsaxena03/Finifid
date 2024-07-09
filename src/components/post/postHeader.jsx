@@ -19,10 +19,11 @@ const PostHeader = ({
   collectionName,
 }) => {
   const navigate = useNavigate();
-  const { user, deletePost } = useFirebase();
+  const { user, deletePost, getUserDetailsByEmail } = useFirebase();
   const [anchorEl, setAnchorEl] = useState(null);
   const currentUserEmail = formatEmail(user.email);
-
+  const userDetails=getUserDetailsByEmail(userEmail);
+  
   function handleClick(email) {
     navigate(`/profile/friend/${email}`);
   }
