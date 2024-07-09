@@ -12,16 +12,24 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,comments={},commentsCount=0 }) => {
+const PostFooter = ({
+  postId,
+  likes = 0,
+  likedBy = [],
+  userEmail,
+  collectionName,
+  comments = {},
+  commentsCount = 0,
+}) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
-   const [commentCount, setCommentCount] = useState(commentsCount);
-  const { toggleLikePost,user,addNotification } = useFirebase();
+  const [commentCount, setCommentCount] = useState(commentsCount);
+  const { toggleLikePost, user, addNotification } = useFirebase();
   const navigate = useNavigate();
-  
-  const currentUserEmail=formatEmail(user.email);
+
+  const currentUserEmail = formatEmail(user.email);
   //console.log(collectionName);
-  
+
   useEffect(() => {
     // Check if the user has liked the post
     setIsLiked(likedBy.includes(currentUserEmail));
@@ -31,9 +39,9 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
     console.log("PostFooter handleLikeClick called"); // Ensure this logs to the console
     try {
       // Toggle like and update Firestore
-      await toggleLikePost(postId, userEmail,currentUserEmail,collectionName);
+      await toggleLikePost(postId, userEmail, currentUserEmail, collectionName);
 
-      await addNotification(userEmail,currentUserEmail, "like");
+      await addNotification(userEmail, currentUserEmail, "like");
 
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
@@ -48,10 +56,12 @@ const PostFooter = ({ postId, likes = 0, likedBy = [], userEmail,collectionName,
     }
   };
 
-   const handleCommentClick = () => {
-     navigate("/comments", { state: { postId, userEmail, collectionName,comments,commentsCount } });
-     addNotification(userEmail,currentUserEmail, "comment");
-   };
+  const handleCommentClick = () => {
+    navigate("/comments", {
+      state: { postId, userEmail, collectionName, comments, commentsCount },
+    });
+    addNotification(userEmail, currentUserEmail, "comment");
+  };
 
   return (
     <div className="postFooter">
