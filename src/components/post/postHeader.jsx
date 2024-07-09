@@ -2,21 +2,23 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router";
 
-const PostHeader = ({ name, subHeader, timestamp, avatar , email  }) => {
+const PostHeader = ({ name, subHeader, timestamp, avatar, email }) => {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate() ; 
-
-  function handleClick(email){
-    navigate(`/profile/friend/${email}`); 
+  function handleClick(email) {
+    navigate(`/profile/friend/${email}`);
   }
- 
 
   return (
     <div className="postHeader">
       <div className="postHeaderLeft">
         {/* avatar */}
 
-     <Avatar  onClick={()=>handleClick(email)} src={avatar} style={{ objectFit: "contain", height: "50px", width: "50px" }} />
+        <Avatar
+          onClick={() => handleClick(email)}
+          src={avatar}
+          style={{ objectFit: "contain", height: "50px", width: "50px" }}
+        />
 
         {/* Username and Info  */}
 
@@ -30,8 +32,6 @@ const PostHeader = ({ name, subHeader, timestamp, avatar , email  }) => {
       <div className="postHeaderRight ">
         <MoreVertIcon />
       </div>
-
-      
     </div>
   );
 };

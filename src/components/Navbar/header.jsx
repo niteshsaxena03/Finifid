@@ -77,7 +77,7 @@ function Header({
           {home && (
             <HeaderOptions Icon={Home} label={"Home"} navigation={"/home"} />
           )}
-          <HeaderOptions Icon={Message} label={"Message"} />
+          
           {notifications && (
             <HeaderOptions
               Icon={NotificationAdd}
