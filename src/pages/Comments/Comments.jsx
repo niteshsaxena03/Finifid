@@ -15,6 +15,9 @@ const Comments = ({ data }) => {
     comments = {},
     commentsCount,
   } = location.state || {};
+
+  const { user, addNotification } = useFirebase();
+  const currentUserEmail=user.email;
   const [newComment, setNewComment] = useState("");
   const [tempComment,setTempComment]=useState("");
 
@@ -33,6 +36,7 @@ const Comments = ({ data }) => {
       newComment,
       collectionName
     );
+    addNotification(userEmail, currentUserEmail, "has commented on your post");
     setNewComment(""); // Clear input after submission
   };
 
