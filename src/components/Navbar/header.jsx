@@ -12,6 +12,7 @@ import {
   Group as GroupIcon,
 } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
+import { useFirebase } from "@/Firebase/firebaseContext.jsx"; // Import useFirebase
 
 function Header({
   profile = true,
@@ -22,6 +23,7 @@ function Header({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const { logOut } = useFirebase(); // Destructure logout function from useFirebase
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -35,6 +37,16 @@ function Header({
     event.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/searchuser?query=${searchQuery.trim()}`);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      console.log("Log Out successful");
+      navigate("/"); // Redirect to the home or login page after logout
+    } catch (error) {
+      console.error("Error logging out:", error.message);
     }
   };
 
@@ -87,6 +99,9 @@ function Header({
               navigation={"/profile"}
             />
           )}
+          <button onClick={handleLogout} className="logoutButton">
+            Log out
+          </button>
         </div>
       </div>
     </div>

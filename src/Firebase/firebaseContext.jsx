@@ -21,6 +21,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 
 import fetchUserData from "../pages/Database/userData.js";
@@ -255,6 +256,10 @@ export const FirebaseProvider = (props) => {
       console.error("Error adding notification:", error.message);
     }
   };
+  const logOut = () => {
+    return signOut(firebaseAuth);
+  };
+
 
 
   return (
@@ -270,6 +275,7 @@ export const FirebaseProvider = (props) => {
         toggleLikePost,
         addCommentToPost,
         addNotification,
+        logOut,
       }}
     >
       {props.children}
