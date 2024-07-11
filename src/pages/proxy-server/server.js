@@ -10,7 +10,7 @@ app.use(cors());
 
 // Define the proxy endpoint
 app.get('/trends', (req, res) => {
-  const apiUrl = 'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=-330&geo=IN&ns=15';
+  const apiUrl = 'https://trendserver.onrender.com/trends';
   request(apiUrl, (error, response, body) => {
     if (error) {
       res.status(500).send(error);

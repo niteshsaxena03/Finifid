@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { useState } from "react";
 import "./feed.css";
 
@@ -7,39 +7,30 @@ import { serverTimestamp } from "../../Firebase/firebaseContext.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 // Upload's
-import {
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
-
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 // Redux
-import { useDispatch  } from "react-redux";
-import { incCount , refreshContent } from "../../features/postCounter.js";
+import { useDispatch } from "react-redux";
+import { incCount, refreshContent } from "../../features/postCounter.js";
 
+const FeedPost = ({ data }) => {
+  async function updatePostData() {
+    const userDocRef = doc(db, "users", data.email);
+    await setDoc(userDocRef, data);
+    console.log("Succesfully Update Post Number ! ");
 
+    const userDoc = await getDoc(userDocRef);
+    dispatch(incCount(userDoc.data().ProfileDetails.post));
+  }
 
-const FeedPost = ({data}) => {
+  //   Hooks :
+  let [input, setInput] = useState("");
 
+  // DataBase Work  Temp :
+  const dispatch = useDispatch();
 
-    async function updatePostData() {
-        const userDocRef = doc(db, "users", data.email);
-        await setDoc(userDocRef, data);
-        console.log("Succesfully Update Post Number ! ");
-    
-        const userDoc = await getDoc(userDocRef);
-        dispatch(incCount(userDoc.data().ProfileDetails.post));
-    }
-   
-    //   Hooks :
-    let [input, setInput] = useState("");
-  
-    // DataBase Work  Temp :
-    const dispatch = useDispatch();
-
-     // Adding Post To Database
-    const AddPost = async (event) => {
+  // Adding Post To Database
+  const AddPost = async (event) => {
     event.preventDefault();
     try {
       // Generate a unique postId
@@ -79,17 +70,17 @@ const FeedPost = ({data}) => {
 
   return (
     <form onSubmit={AddPost}>
-    <input
-      type="text"
-      placeholder="Start a post..."
-      // for the value setting
-      onChange={(event) => setInput(event.target.value)}
-      // for getting value :
-      value={input}
-    />
-    <button>Submit</button>
-  </form>
-  )
-}
+      <input
+        type="text"
+        placeholder="Start a post..."
+        // for the value setting
+        onChange={(event) => setInput(event.target.value)}
+        // for getting value :
+        value={input}
+      />
+      <button>Submit</button>
+    </form>
+  );
+};
 
-export default FeedPost
+export default FeedPost;

@@ -185,7 +185,11 @@ export const FirebaseProvider = (props) => {
             likes: updatedLikedBy.length,
             likedBy: updatedLikedBy,
           });
-
+          await addNotification(
+            userEmail,
+            currentUserEmail,
+            "has liked on your post"
+          );
          await updateCategory(currentUserEmail,userEmail) ;
         }
       } else {

@@ -1,55 +1,49 @@
-.rightProfileSection{
-    display: flex;
-    flex-direction: column;
+.rightProfileSection {
+  display: flex;
+  flex-direction: column;
 
-    height: max-content;
+  height: max-content;
 }
 
+.functionSection {
+  height: 450px;
+  width: 100%;
 
-.functionSection{
-    height: 450px;
-    width: 100%;
-
-    box-shadow: 0 0 1px #8e0b3a;
+  box-shadow: 0 0 1px #8e0b3a;
 }
 
-.suggestFollow{
-    height: max-content;
-    width: 100%;
+.suggestFollow {
+  height: max-content;
+  width: 100%;
 
-    box-shadow: 0 0 1px #8e0b3a;
+  box-shadow: 0 0 1px #8e0b3a;
 
-    margin-top: 2%;
+  margin-top: 2%;
 }
 
-.suggestFollow  .MuiAvatar-circular{
-    height: 40px;
-    width: 40px;
+.suggestFollow .MuiAvatar-circular {
+  height: 40px;
+  width: 40px;
 }
 
-.suggestFollow  .addFontStyleHeader{
-    font-size: 17px;
+.suggestFollow .addFontStyleHeader {
+  font-size: 17px;
 }
 
-.suggestFollow  .addFontStyleSubHeader{
-    font-size: 14   px;
+.suggestFollow .addFontStyleSubHeader {
+  font-size: 14 px;
 }
 
-
-.rightProfileSection .recentSection{
-    margin-top: 0 ;
+.rightProfileSection .recentSection {
+  margin-top: 0;
 }
-
-
 
 /* socialTrending */
-.socialTrending{
-    height: max-content;
-    width: 100%;
+.socialTrending {
+  height: max-content;
+  width: 100%;
 }
 
-.socialTrending .subProfile{
-    width: 100% !important;
+.socialTrending .subProfile {
+  width: 100% !important;
 }
-
-

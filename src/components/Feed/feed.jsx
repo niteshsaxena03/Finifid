@@ -34,7 +34,11 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { incCount, refreshContent , addDirectStory} from "../../features/postCounter.js";
+import {
+  incCount,
+  refreshContent,
+  addDirectStory,
+} from "../../features/postCounter.js";
 
 // Components
 import CircularIndeterminate from "../Progress/progress.jsx";
@@ -47,11 +51,11 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const Feed = ({ data, friends ,  profile }) => {
+const Feed = ({ data, friends, profile }) => {
   let refresh = useSelector((State) => State.postCounter.contentRefresh);
 
-  // Navigation : 
-  const navigate = useNavigate() ;
+  // Navigation :
+  const navigate = useNavigate();
 
   let allRandomPost = [];
 
@@ -128,14 +132,17 @@ const Feed = ({ data, friends ,  profile }) => {
   }
 
   // Photo Work
-  const AddPhoto = async () => { 
-    ( profile != true ? navigate(`/post/photo/${"feed"}`) : navigate(`/post/photo/${"profile"}`) )
+  const AddPhoto = async () => {
+    profile != true
+      ? navigate(`/post/photo/${"feed"}`)
+      : navigate(`/post/photo/${"profile"}`);
   };
 
   // Video WorK
   const AddVideo = async (event) => {
-    ( profile != true ? navigate(`/post/video/${"feed"}`) : navigate(`/post/video/${"profile"}`) )
-
+    profile != true
+      ? navigate(`/post/video/${"feed"}`)
+      : navigate(`/post/video/${"profile"}`);
   };
 
   //Shuffle
@@ -165,8 +172,8 @@ const Feed = ({ data, friends ,  profile }) => {
     fetchCurrent();
   }, [data, refresh]);
 
-   function AddStory(event){
-    dispatch(addDirectStory({get : true , event : event})) ;
+  function AddStory(event) {
+    dispatch(addDirectStory({ get: true, event: event }));
   }
 
   return (
@@ -191,32 +198,24 @@ const Feed = ({ data, friends ,  profile }) => {
                   : ""
               }
             />
-              <FeedPost data = {data} />
+            <FeedPost data={data} />
           </div>
 
           {/* icons  */}
           <form className="feedIcons">
             <label htmlFor="photo">
-              <span onClick={AddPhoto} style={{cursor:"pointer"}}><Icon  Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} /> </span>
+              <span onClick={AddPhoto} style={{ cursor: "pointer" }}>
+                <Icon Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} />{" "}
+              </span>
             </label>
-           
+
             <label htmlFor="video">
-             <span onClick={AddVideo} style={{cursor:"pointer"}}><Icon Icon={VideoCallIcon} label={"Video"} idx={1} /></span>
-            </label>
-          
-            <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
-
-            <label htmlFor="Story"style={{cursor:"pointer"}} >
-                 <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
-                 <input
-                  type="file"
-                  accept="image/*"
-                  id="Story"
-                  style={{ display: "none" }}
-                  onChange={AddStory}
-                  />
+              <span onClick={AddVideo} style={{ cursor: "pointer" }}>
+                <Icon Icon={VideoCallIcon} label={"Video"} idx={1} />
+              </span>
             </label>
 
+            
           </form>
         </div>
       )}

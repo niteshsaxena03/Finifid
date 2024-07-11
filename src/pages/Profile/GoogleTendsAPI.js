@@ -1,7 +1,7 @@
 
 let currentDate ; 
 async function getTrendingSearches() {
-  const apiUrl = `http://localhost:3000/trends`;
+  const apiUrl = `https://trendserver.onrender.com/trends`;
 
   try {
     const response = await fetch(apiUrl, {

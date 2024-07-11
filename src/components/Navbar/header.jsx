@@ -13,8 +13,10 @@ import {
 } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { useFirebase } from "@/Firebase/firebaseContext.jsx"; // Import useFirebase
+import Button from '@mui/material/Button';
 
 function Header({
+  data ,  
   profile = true,
   friends = true,
   notifications = true,
@@ -97,11 +99,12 @@ function Header({
               Avatar={Avatar}
               label={"User"}
               navigation={"/profile"}
+              data = {data}
             />
           )}
-          <button onClick={handleLogout} className="logoutButton">
-            Log out
-          </button>
+          <Button  variant="outlined" onClick={handleLogout} className="logoutButton ">
+            Logout
+          </Button  >
         </div>
       </div>
     </div>

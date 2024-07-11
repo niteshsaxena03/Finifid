@@ -7,10 +7,17 @@ import { useState , useEffect } from 'react';
 
 // Redux
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+
+import { Button } from '@mui/material';
 
 function ImagesStories({data}) {
 
     const [ stories , setStories ] = useState([]) ;
+    const navigate = useNavigate(); 
+    function handleHome(){
+      navigate("/home")
+    }
  
     let story =  useSelector((State)=>State.postCounter.Story) ;
 
@@ -52,7 +59,10 @@ function ImagesStories({data}) {
       return (
         <div>
           {stories.length > 0 ? (
+            <>
             <Stories width="400px" height="600px" stories={stories} />
+            <Button color="error" style={{marginTop : "10%"}} variant="outlined" onClick={handleHome}>Home</Button>
+            </>
           ) : (
             <p>Loading stories...</p>
           )}

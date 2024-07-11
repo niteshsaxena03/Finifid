@@ -41,12 +41,6 @@ const PostFooter = ({
       // Toggle like and update Firestore
       await toggleLikePost(postId, userEmail, currentUserEmail, collectionName);
 
-      await addNotification(
-        userEmail,
-        currentUserEmail,
-        "has liked on your post"
-      );
-
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
         // Update like count based on previous state
@@ -78,12 +72,6 @@ const PostFooter = ({
       <button onClick={handleCommentClick} className="iconButton">
         <Icon Icon={ChatBubbleOutlineIcon} label={`Comments`} idx={-1} />
         <span className="commentCount">{commentCount}</span>
-      </button>
-      <button className="iconButton">
-        <Icon Icon={ShareIcon} label={"Share"} idx={-1} />
-      </button>
-      <button className="iconButton">
-        <Icon Icon={SendIcon} label={"Send"} idx={-1} />
       </button>
     </div>
   );

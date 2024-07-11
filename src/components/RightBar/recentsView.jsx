@@ -8,14 +8,13 @@ import { useNavigate } from 'react-router';
 import FollowButton from '../FollowButton/followButton';
 
 // DB 
-import {getDoc,doc} from "firebase/firestore";
+import {getDocs,doc ,collection} from "firebase/firestore";
 import { db } from "../../Firebase/firebaseContext.jsx";
 
 // Redux 
 import { refreshPage } from '../../features/postCounter.js';
 
 
-let users = ["doghomeoffical_gmail_com","cathomeoffical_gmail_com","weather_gmail_com","ryzenamd_gmail_com"] ;
 
 const recentsView = ({userData,end}) => {
 
@@ -26,51 +25,46 @@ const recentsView = ({userData,end}) => {
   let refresh = useSelector((State)=>State.refresh)
 
 
-
-  useEffect(()=>{
-
-    async function getRandomSuggestion(){
-      let prevIdx = new Set()  ; 
-      let allData = [] ;
+  useEffect(() => {
+    async function getRandomSuggestion() {
       try {
-        // Fetching Users : 
-
-        for( let i = 0 ; i<users.length ; i++ ){
-
-        const userDocRef = doc(db, "users", users[i]);
-        const userDoc = await getDoc(userDocRef);
-        allData.push(userDoc.data()) ;
-
-        }
-
-        // Selecting Any 5 
-        let select = [] 
-        while( select.length != 4 ){
-
-            let idx = Math.floor(Math.random()*allData.length) ; 
-            
-            if( idx <= allData.length  && !prevIdx.has(idx) ){
-              select.push(allData[idx]) ;
-              prevIdx.add(idx) ;
+        const usersCollectionRef = collection(db, 'users');
+        const querySnapshot = await getDocs(usersCollectionRef);
+  
+        let allData = [];
+        querySnapshot.forEach((doc) => {
+          const users = doc.data();
+          // Exclude documents where email matches userData.email
+          if (userData.email !== users.email) {
+            allData.push(users);
+          }
+        });
+  
+        let select = [];
+        if (allData.length <= 4) {
+          // Less than 5 documents, select all
+          select = allData;
+        } else {
+          // More than 4 documents, select 4 random ones
+          let prevIdx = new Set();
+          while (select.length < 4) {
+            let idx = Math.floor(Math.random() * allData.length);
+            if (!prevIdx.has(idx)) {
+              select.push(allData[idx]);
+              prevIdx.add(idx);
             }
+          }
         }
-        
-
-
-        // Setting the data : 
-        setUsers(select) ;
-        
-
-      
+  
+        setUsers(select);
+  
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     }
-
-    getRandomSuggestion() ;
-  },[])
-
-
+  
+    getRandomSuggestion();
+  }, [userData])
 
   function handleClick(email){
     navigate(`/profile/friend/${email}`); 
@@ -78,7 +72,7 @@ const recentsView = ({userData,end}) => {
 
   function checkExists(userFollowings , email ){
     
-    if( userFollowings != undefined ){
+    if( userFollowings != undefined && userFollowings.following != undefined ){
 
     for(let i = 0 ; i<userFollowings.following.length ; i++ ){
 
@@ -99,7 +93,7 @@ const recentsView = ({userData,end}) => {
             <React.Fragment key={idx}>
             <div className="recentsView" aria-label={data && data.email ? data.email : "No email"}>
                 <div className="recentsActivity">
-                    <Avatar src={data && data.ProfileDetails ? data.ProfileDetails.profileImg : <Avatar/>}  onClick={()=>handleClick(data.email)}/>
+                    <Avatar src={data && data.ProfileDetails ? data.ProfileDetails.profileImg : null }  onClick={()=>handleClick(data.email)}/>
 
 
                 <div className='innerRecentsText'>
