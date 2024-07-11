@@ -125,7 +125,7 @@ function FriendsProfile({ currentUserData }) {
               idx={-1}
             />
 
-            <FunctionSection />
+            <FunctionSection data={data}/>
           </div>
 
           {/* Following Suggestion */}

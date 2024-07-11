@@ -34,10 +34,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { incCount, refreshContent } from "../../features/postCounter.js";
+import { incCount, refreshContent , addDirectStory} from "../../features/postCounter.js";
 
 // Components
 import CircularIndeterminate from "../Progress/progress.jsx";
+import { useNavigate } from "react-router";
+import FeedPost from "./feedPost";
 
 let overAllTime;
 
@@ -45,8 +47,11 @@ const formatEmail = (email) => {
   return email.replace(/[^a-zA-Z0-9]/g, "_");
 };
 
-const Feed = ({ data, profile, friends }) => {
+const Feed = ({ data, friends ,  profile }) => {
   let refresh = useSelector((State) => State.postCounter.contentRefresh);
+
+  // Navigation : 
+  const navigate = useNavigate() ;
 
   let allRandomPost = [];
 
@@ -163,96 +168,14 @@ const Feed = ({ data, profile, friends }) => {
   };
 
   // Photo Work
-  const AddPhoto = async (event) => { 
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // Format the file reference using the email
-    const email = formatEmail(data.email);
-    const imgRef = ref(storage, `Photo/${email}/${file.name}`);
-
-    try {
-      // Upload the photo
-      await uploadBytes(imgRef, file);
-      const url = await getDownloadURL(imgRef);
-
-      const postId = uuidv4();
-      const userEmail = data.email; // Get the user's email
-      const compositeKey = userEmail + postId;
-      const postDocRef = doc(db, "photos", compositeKey);
-
-      // Save metadata and URL to Firestore
-      const photoData = {
-        postId: postId,
-        url: url,
-        name: data.name,
-        subHeader: data.profession,
-        photoURL: data.ProfileDetails.profileImg,
-        timestamp: serverTimestamp(),
-        email: data.email,
-        likes: 0,
-        likedBy: [],
-        comments: {},
-        commentsCount: 0,
-      };
-      await setDoc(postDocRef, photoData);
-
-      // Update state with new photo URL
-      dispatch(refreshContent());
-
-      // Update Posts Data
-      data.ProfileDetails.post++;
-      await updatePostData();
-
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
+  const AddPhoto = async () => { 
+    ( profile != true ? navigate(`/post/photo/${"feed"}`) : navigate(`/post/photo/${"profile"}`) )
   };
 
   // Video WorK
   const AddVideo = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    ( profile != true ? navigate(`/post/video/${"feed"}`) : navigate(`/post/video/${"profile"}`) )
 
-    const formattedEmail = formatEmail(data.email); // Format email for storage reference
-    const vidRef = ref(storage, `Video/${formattedEmail}/${file.name}`);
-
-    try {
-      // Upload the video
-      await uploadBytes(vidRef, file);
-      const url = await getDownloadURL(vidRef);
-
-      const postId = uuidv4();
-      const userEmail = data.email; // Get the user's email
-      const compositeKey = userEmail + postId;
-      const postDocRef = doc(db, "videos", compositeKey);
-
-      // Save metadata and URL to Firestore
-      const videoData = {
-        postId: postId,
-        url: url,
-        name: data.name,
-        subHeader: data.profession,
-        photoURL: data.ProfileDetails.profileImg,
-        timestamp: serverTimestamp(),
-        email: data.email,
-        likes: 0,
-        likedBy: [],
-        comments: {},
-        commentsCount: 0,
-      };
-      await setDoc(postDocRef, videoData);
-
-      await FetchData("videos");
-
-      dispatch(refreshContent());
-
-      // Update Posts Data
-      data.ProfileDetails.post++;
-      await updatePostData();
-    } catch (error) {
-      console.error("Error uploading video:", error);
-    }
   };
 
   //Shuffle
@@ -282,14 +205,16 @@ const Feed = ({ data, profile, friends }) => {
     fetchCurrent();
   }, [data, refresh]);
 
+   function AddStory(event){
+    dispatch(addDirectStory({get : true , event : event})) ;
+  }
+
   return (
     <div className="feed">
       {console.log("feed working  !   ")}
       {/* Story Section  */}
       {profile == true ? null : (
         <div className="storyPost">
-          {/* {console.log(UserData)}; */}
-          {/* {console.log(FriendsData)} */}
           <Stories UserData={UserData} FriendsData={FriendsData} data={data} />
         </div>
       )}
@@ -306,45 +231,32 @@ const Feed = ({ data, profile, friends }) => {
                   : ""
               }
             />
-            <form onSubmit={AddPost}>
-              <input
-                type="text"
-                placeholder="Start a post..."
-                // for the value setting
-                onChange={(event) => setInput(event.target.value)}
-                // for getting value :
-                value={input}
-              />
-              <button>Submit</button>
-            </form>
+              <FeedPost data = {data} />
           </div>
 
           {/* icons  */}
           <form className="feedIcons">
             <label htmlFor="photo">
-              <Icon Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} />
+              <span onClick={AddPhoto} style={{cursor:"pointer"}}><Icon  Icon={AddPhotoAlternateIcon} label={"Photo"} idx={0} /> </span>
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              id="photo"
-              style={{ display: "none" }}
-              onChange={AddPhoto}
-            />
-
+           
             <label htmlFor="video">
-              <Icon Icon={VideoCallIcon} label={"Video"} idx={1} />
+             <span onClick={AddVideo} style={{cursor:"pointer"}}><Icon Icon={VideoCallIcon} label={"Video"} idx={1} /></span>
             </label>
-            <input
-              type="file"
-              accept="video/*"
-              id="video"
-              style={{ display: "none" }}
-              onChange={AddVideo}
-            />
-
+          
             <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
-            <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
+
+            <label htmlFor="Story"style={{cursor:"pointer"}} >
+                 <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
+                 <input
+                  type="file"
+                  accept="image/*"
+                  id="Story"
+                  style={{ display: "none" }}
+                  onChange={AddStory}
+                  />
+            </label>
+
           </form>
         </div>
       )}
@@ -421,7 +333,7 @@ const Feed = ({ data, profile, friends }) => {
                   timestamp={post.content.timestamp}
                   email={post.content.email}
                   postImage={post.content.url}
-                  caption=""
+                  caption={post.content.caption}
                   postId={post.content.postId}
                   likes={post.content.likes}
                   likedBy={post.content.likedBy}
@@ -459,7 +371,7 @@ const Feed = ({ data, profile, friends }) => {
                   timestamp={post.content.timestamp}
                   email={post.content.email}
                   postvideo={post.content.url}
-                  caption=""
+                  caption={post.content.caption}
                   postId={post.content.postId}
                   likes={post.content.likes}
                   likedBy={post.content.likedBy}

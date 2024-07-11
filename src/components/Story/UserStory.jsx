@@ -13,8 +13,8 @@ import { Avatar } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 // Redux
-import { useDispatch } from "react-redux";
-import { fetchStory } from "../../features/postCounter.js";
+import { useSelector ,  useDispatch } from "react-redux";
+import { addDirectStory, fetchStory } from "../../features/postCounter.js";
 
 // Story Schema
 let Story = {
@@ -25,12 +25,13 @@ let Story = {
 
 
 const UserStory = ({ data }) => {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [currentUserStoryData, setStory] = useState({});
   const [storyTracker, setStoryTracker] = useState(false);
-
+  const storyResult = useSelector((State)=>State.postCounter.addDirectStory) ; 
 
   useEffect(()=>{
     setStory(data) ;
@@ -120,35 +121,54 @@ const UserStory = ({ data }) => {
       setStoryTracker(true); // Set the class name after the story is updated
     } catch (error) {
       console.error("Error uploading image:", error);
-    }
+    } 
   };
 
+  
+    if(storyResult.get == true ){
+      console.log(storyResult.get) ;
+      async function handleStory(){
+        let storyContent = storyResult.event ; 
+        dispatch(addDirectStory({get : false , event : ""}))
+        await addStory(storyContent.event) ;
+      }
+      handleStory() ; 
+
+  }
+
+
   return (
+    <>
     <div className="borderBox" style={{ "--bg-image": `url(${currentUserStoryData.ProfileDetails?.profileImg || ""})` }}>
       <div className="storyIcon">
         {console.log("work")}
+       
         <span className="avatarContainer userContainer">
+     
           <Avatar
             style={ currentUserStoryData && currentUserStoryData.story ? currentUserStoryData.story.length > 0  ? { border : "3px solid #8e0b3a" , cursor : "pointer"} : null : null }
             onClick={currentUserStoryData.isStory ? seeStory : null}
             src={currentUserStoryData.ProfileDetails?.profileImg || ""}
-            
-            />
+          />
+        
+       
           <label htmlFor="iconPlus">
             <span className="plusIcon">
               <AddIcon />
             </span>
           </label>
+  
           <input
             type="file"
             style={{ display: "none" }}
             onChange={addStory}
             id="iconPlus"
-          />
+            />
         </span>
         <h4 className="storyFont">{currentUserStoryData.name}</h4>
       </div>
     </div>
+    </>
   );
 };
 

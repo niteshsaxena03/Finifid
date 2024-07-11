@@ -105,8 +105,8 @@ export default function SignUpScreen() {
                 <option value="Student">Student</option>
                 <option value="Influencer">Influencer</option>
                 <option value="Artist">Artist</option>
-                <option value="PublicServant">Public Servant</option> 
-                <option value="Freelancer">Freelancer</option>
+                <option value="Official">Official</option> 
+                <option value="Technical">Technical</option>
               </select>          
               </div>
               <div className="space-y-2">

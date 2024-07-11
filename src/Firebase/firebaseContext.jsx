@@ -122,9 +122,31 @@ export const FirebaseProvider = (props) => {
   const isLoggedIn = !!user;
 
 
+  async function updateCategory( userData , otherUser ){
+
+    try{
+
+      const userDocRef = doc(db, "users", userData);
+      let user = (await getDoc(userDocRef)).data();
+  
+      const otherDocRef = doc(db, "users", otherUser);
+      let other = (await getDoc(otherDocRef)).data();
+  
+  
+      other.category[user.profession]++ ; 
+    
+      await setDoc(otherDocRef, other);
+  
+      console.log("Check Reach")
+    }
+    catch(err){
+      console.log("Reach Error",err) ;
+    }
+
+  }
+
+
   const toggleLikePost = async (postId, userEmail,currentUserEmail,collectionName) => {
-    console.log(userEmail);
-    console.log(currentUserEmail);
     try {
       // Get a reference to the userPosts collection
       const postsCollectionRef = collection(db,collectionName);
@@ -161,6 +183,8 @@ export const FirebaseProvider = (props) => {
             likes: updatedLikedBy.length,
             likedBy: updatedLikedBy,
           });
+
+         await updateCategory(currentUserEmail,userEmail) ;
         }
       } else {
         console.error(`No such post with postId: ${postId}!`);
@@ -175,10 +199,13 @@ export const FirebaseProvider = (props) => {
     userEmail,
     currentUserName,
     comment,
-    collectionName
+    collectionName,
+    currentUserEmail
   ) => {
     try {
       // Get a reference to the userPosts collection
+      console.log('name' , currentUserEmail) ;
+
       const postsCollectionRef = collection(db, collectionName);
 
       // Query to find the post with the given postId
@@ -214,6 +241,9 @@ export const FirebaseProvider = (props) => {
           comments: updatedComments,
           commentsCount: commentCount + 1,
         });
+
+        await updateCategory(currentUserEmail,userEmail) ;
+
       } else {
         console.error(`No such post with postId: ${postId}!`);
       }

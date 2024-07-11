@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import getPostData from '../../pages/Profile/Reach.js';
 
 import { BarChart, Bar,ResponsiveContainer, CartesianGrid, Legend , Tooltip ,XAxis , YAxis} from 'recharts';
-// import { XAxis, YAxis } from './CustomAxis'; // Adjust the import path as needed
 
+// getting data 
+import { getData } from '../../pages/Profile/Reach.js';
 
-const Reach = () => {
+const Reach = ({userData}) => {
   let [data, setData] = useState([]);
  
 
   useEffect(() => {
-     const  fetchData = () => { 
+     const  fetchData = async () => { 
       try {
-        const result = getPostData();
+        const result = await getData(userData);
         setData(result);
       } catch (err) {
         console.error('Error fetching data:', err);
       }
     };
 
-    fetchData();
-  }, []);
+    console.log("data of user" , userData ) ;
+    if( userData && userData.email){
+      fetchData() ;
+    }
+  }, [userData]);
 
   return (
     <ResponsiveContainer width="100%" height={300} style={{ display: 'block' }}>

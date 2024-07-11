@@ -11,6 +11,7 @@ const Schema = {
   ProfileDetails : {} ,
   joinedDate : "",
   notifications:[],
+  category : {}
 };
 
 export default Schema;

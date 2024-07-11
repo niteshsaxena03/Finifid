@@ -96,7 +96,7 @@ function ProfileScreen({ data }) {
             </div>
 
             {/* All user Post's */}
-            <div className="userFeed profileFedd">
+            <div className="userFeed profileFeed">
               <Feed key={uuid()} data={data} profile={true} />
             </div>
           </div>
@@ -112,7 +112,7 @@ function ProfileScreen({ data }) {
               idx={-1}
             />
 
-            <FunctionSection />
+            <FunctionSection data = {data} profile = {true} />
           </div>
 
           {/* Following Suggestion */}

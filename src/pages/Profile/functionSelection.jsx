@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 
 import Charts from '../../components/Charts/Charts';
 
-export default function FunctionSection() {
+export default function FunctionSection({data}) {
   const [value, setValue] = React.useState('one');
   const [chart , setChat ] = React.useState("reach") ;  
 
@@ -60,7 +60,7 @@ export default function FunctionSection() {
     
     {
 
-      ( chart == "reach") ? <Charts name = {"reach"}/>:  null 
+      ( chart == "reach") ? <Charts name = {"reach"} data = {data} />:  null 
 
     }
     

@@ -31,7 +31,8 @@ const Comments = ({ data }) => {
       userEmail,
       data.name,
       newComment,
-      collectionName
+      collectionName,
+      data.email
     );
     setNewComment(""); // Clear input after submission
   };

@@ -43,7 +43,7 @@ const Post = ({
         {postImage && (
           <div className="imagePost">
             <p className="caption">
-              <i>{caption}</i>
+              {caption}
             </p>
             <div className="sepLine"></div>
             <div className="imageContainer">
@@ -56,7 +56,7 @@ const Post = ({
         {postvideo && (
           <div className="videoPost">
             <p className="caption">
-              <i>{caption}</i>
+              {caption}
             </p>
             <div className="sepLine vidLine"></div>
             <video src={postvideo} controls></video>

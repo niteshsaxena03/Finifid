@@ -13,6 +13,7 @@ import FriendsProfile from "./pages/Profile/FriendsProfile";
 import ProfileDetails from "./pages/SignUp/ProfileDetails.jsx";
 import SearchUser from "./pages/SearchUser/SearchUser";
 import EditProfile from "./pages/Profile/EditProfile.jsx";
+import { PostContentPhoto } from "./components/Feed/PostContentPhoto.jsx";
 // DataBase Imports :
 import { useFirebase } from "./Firebase/firebaseContext.jsx";
 import { useState, useEffect } from "react";
@@ -21,6 +22,7 @@ import { Provider } from "react-redux";
 // Redux 
 import { Store } from "./app/store.js";
 import Comments from "./pages/Comments/Comments";
+import { PostContentVideo } from "./components/Feed/PostContentVideo";
 
 
 function App() {
@@ -56,7 +58,7 @@ function App() {
       <Route path="/home" element={<HomeScreen data={data} />} />
       <Route path="/friends" element={<FriendScreen data = {data} />} />
       <Route path="/notifications" element={<NotificationScreen data={data}/>} />     
-       <Route path="/profile" element={<ProfileScreen data = {data}/>} />
+      <Route path="/profile" element={<ProfileScreen data = {data}/>} />
       <Route path="/story" element={<MainStory data={data}/>} />
       <Route path="/story/friend" element={<SeeFriendStory />} />
       <Route path="/profile/friend/:email" element={<FriendsProfile currentUserData={data}/>} />
@@ -65,6 +67,10 @@ function App() {
       <Route path="/comments" element={<Comments data={data} />} />
       {/* Routes for edit  */}
       <Route path="/editProfile" element={<EditProfile  data={data} />}/> 
+      {/* Route for Post  */}
+      <Route path="/post/photo/:type" element={<PostContentPhoto data={data} />} />
+      <Route path="/post/video/:type" element={<PostContentVideo data={data} />} />
+
 
     </Routes>
     </Provider>
