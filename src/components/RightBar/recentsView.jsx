@@ -109,12 +109,16 @@ const recentsView = ({userData,end}) => {
 
                 </div>
                     {
+                      data && data.email 
+                      ?
                       (
                       checkExists(userData ,data.email ) ?
                       <FollowButton userData={userData} otherUser = {data}  value = {true} /> 
                       : 
                       <FollowButton userData={userData} otherUser = {data}  value = {false}/>  
                       )
+                      :
+                      null 
                        
                    
                     }

@@ -59,8 +59,7 @@ const Feed = ({ data, friends ,  profile }) => {
   const [randomPosts, setRandomPosts] = useState(allRandomPost);
   let [progess, setProgess] = useState(true);
 
-  //   Hooks :
-  let [input, setInput] = useState("");
+
 
   // DataBase Work  Temp :
   const dispatch = useDispatch();
@@ -127,45 +126,6 @@ const Feed = ({ data, friends ,  profile }) => {
       console.error("Error fetching posts:", err);
     }
   }
-
-  // Adding Post To Database
-  const AddPost = async (event) => {
-    event.preventDefault();
-    try {
-      // Generate a unique postId
-      const postId = uuidv4();
-      const userEmail = data.email; // Get the user's email
-      const compositeKey = userEmail + postId;
-      const postDocRef = doc(db, "userPosts", compositeKey);
-
-      let postData = {
-        postId: postId,
-        name: data.name,
-        subHeader: data.profession,
-        message: input,
-        photoURL: data.ProfileDetails.profileImg,
-        timestamp: serverTimestamp(),
-        email: userEmail,
-        likes: 0,
-        likedBy: [],
-        comments: {},
-        commentsCount: 0,
-      };
-
-      // Upload the post data
-      await setDoc(postDocRef, postData);
-      setInput("");
-
-      // Post After Upload !
-      dispatch(refreshContent());
-
-      // Update user's post count
-      data.ProfileDetails.post++;
-      await updatePostData();
-    } catch (error) {
-      console.log("Error adding post:", error);
-    }
-  };
 
   // Photo Work
   const AddPhoto = async () => { 
