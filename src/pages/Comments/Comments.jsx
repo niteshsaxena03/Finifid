@@ -5,9 +5,12 @@ import CommentItem from "./CommentItem";
 import "./Comments.css";
 import { v4 as uuidv4 } from "uuid";
 
+const formatEmail = (email) => {
+  return email.replace(/[^a-zA-Z0-9]/g, "_");
+};
 const Comments = ({ data }) => {
   const location = useLocation();
-  const { addCommentToPost } = useFirebase();
+  const { addCommentToPost, user, addNotification } = useFirebase();
   const {
     postId,
     userEmail,
@@ -15,6 +18,7 @@ const Comments = ({ data }) => {
     comments = {},
     commentsCount,
   } = location.state || {};
+  const currentUserEmail=formatEmail(user.email);
   const [newComment, setNewComment] = useState("");
   const [tempComment,setTempComment]=useState("");
 
@@ -34,6 +38,7 @@ const Comments = ({ data }) => {
       collectionName,
       data.email
     );
+    addNotification(userEmail, currentUserEmail, "has commented on your post");
     setNewComment(""); // Clear input after submission
   };
 

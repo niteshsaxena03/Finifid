@@ -41,7 +41,11 @@ const PostFooter = ({
       // Toggle like and update Firestore
       await toggleLikePost(postId, userEmail, currentUserEmail, collectionName);
 
-      await addNotification(userEmail, currentUserEmail, "has liked on your post");
+      await addNotification(
+        userEmail,
+        currentUserEmail,
+        "has liked on your post"
+      );
 
       // Update the like status locally after toggling
       setIsLiked((prevIsLiked) => {
@@ -60,7 +64,6 @@ const PostFooter = ({
     navigate("/comments", {
       state: { postId, userEmail, collectionName, comments, commentsCount },
     });
-    addNotification(userEmail, currentUserEmail, "has commented on your post");
   };
 
   return (
