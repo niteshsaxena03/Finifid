@@ -1,45 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import { getNews } from './getNewsApi'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-const newsApi = ({end}) => {
-    let [filterNews , setNews] = useState([]) ; 
+const NewsApi = ({ end }) => {
+  const [filterNews, setFilterNews] = useState([]);
 
-    async function realNews(){
-      let news = await getNews() ; 
-      setNews(news) ;
-    } ; 
-    
-    useEffect(()=>{
-      
-      async function getNews(){
-        await realNews() ; 
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const news = (await axios.get("https://newsserver-bsja.onrender.com/api/news")).data;
+        setFilterNews(news);
+      } catch (error) {
+        console.error('Error fetching news:', error);
       }
+    }
 
-      getNews() ; 
-    },[])
+    fetchNews();
+  }, [end]); // Fetch news whenever `end` changes
 
-
-
-
-   function conciseDescription(text){
-      return text != null ? text.split(" ").slice(0,3).join(" ") : "Sorry !,News Not Available" ; 
-   }
-      
+  const conciseDescription = (text) => {
+    return text != null ? text.split(" ").slice(0, 3).join(" ") + " ..." : "Sorry! News Not Available";
+  };
 
   return (
+    
     <ul>
-    {filterNews.map((mp) => (
-      <li key={uuidv4()}>
-        <div className="newsBox">
-          <a href = {`${mp.url}`}><h5 className="newsFont">{mp.title}</h5></a>
-          <p className="sideFont">{conciseDescription(mp.description)}<b> ...</b></p>
-          <div className="sepLineNews" />
-        </div>
-      </li>
-    ))}
-  </ul>
-  )
-}
+      {
+      filterNews 
+      ?
+      filterNews.map((mp) => (
+        <li key={uuidv4()}>
+          <div className="newsBox">
+            <a href={mp.url}><h5 className="newsFont">{mp.title}</h5></a>
+            <p className="sideFont">{conciseDescription(mp.description)}</p>
+            <div className="sepLineNews" />
+          </div>
+        </li>
+      ))
+      : 
+      null 
+      }
+    </ul>
+  );
+};
 
-export default newsApi
+export default NewsApi;

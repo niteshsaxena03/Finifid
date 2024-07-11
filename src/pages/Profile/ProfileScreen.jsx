@@ -114,15 +114,15 @@ function ProfileScreen({ data }) {
 
               {/* Edit Button */}
               <div className="editProfile">
-                <button type="button">
-                  <EditIcon style={{ color: "#8e0b3a" }} />
-                  <a
-                    onClick={() => handleEditProfile()}
-                    style={{ color: "#8e0b3a", cursor: "pointer" }}
-                  >
-                    Edit Profile
-                  </a>
-                </button>
+                  <button type="button" style={{backgroundColor : "white"}}>
+                    <EditIcon style={{ color: "#8e0b3a" }} />
+                    <a
+                      onClick={() => handleEditProfile()}
+                      style={{ color: "#8e0b3a", cursor: "pointer" }}
+                    >
+                      Edit Profile
+                    </a>
+                  </button>
               </div>
             </div>
 
