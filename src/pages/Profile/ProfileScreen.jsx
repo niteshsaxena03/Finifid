@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 
 // importing css
 import "./ProfileScreen.css";
@@ -27,14 +28,14 @@ import { v4 as uuid } from "uuid";
 import getTrendingSearches from "./GoogleTendsAPI.js";
 import { currentDate } from "./GoogleTendsAPI.js";
 
-// Edit Profile 
+// Edit Profile
 import { useNavigate } from "react-router";
 
 function ProfileScreen({ data }) {
   const [trends, setTrends] = useState(null);
 
   // navigation
-  const navigate = useNavigate() ;
+  const navigate = useNavigate();
 
   // For Followers and following  :
   const updatedFollowers = useSelector((State) => State.postCounter.followers);
@@ -53,12 +54,14 @@ function ProfileScreen({ data }) {
     fetchTrends();
   }, []);
 
-  //  Random Data for Follower Function :
+  // Media query for screen size
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 1000px)" });
 
+  //  Random Data for Follower Function :
   let Emails = ["redux@gmail.com", "ryzen@gmail.com", "randomUser@gmail.com"];
 
-  function handleEditProfile(){
-      navigate("/editProfile")
+  function handleEditProfile() {
+    navigate("/editProfile");
   }
 
   return (
@@ -66,7 +69,7 @@ function ProfileScreen({ data }) {
       {/* NavBar - Component */}
       <Header profile={false} />
 
-      <div className="mainScreenContent">
+      <div className={`mainScreenContent ${isSmallScreen ? "column" : ""}`}>
         <div className="mainProfileScreen">
           {/* Profile  */}
           <div className="profileSection">
@@ -77,18 +80,46 @@ function ProfileScreen({ data }) {
             />
           </div>
 
-          {/* Post Part */}
+          {/* Right Side Content for small screens */}
+          {isSmallScreen && (
+            <div className="rightProfileSection column">
+              {/* Functions */}
+              <div className="functionSection recentSection curveBorder">
+                <RightBarHead
+                  Icon={QueryStatsIcon}
+                  newsHeader={"Statistics"}
+                  idx={-1}
+                />
+                <FunctionSection data={data} profile={true} />
+              </div>
 
+              {/* Following Suggestion */}
+              <div className="recentSection curveBorder suggestFollow">
+                {/* header */}
+                <RightBarHead
+                  Icon={TaskAltIcon}
+                  newsHeader={"You might like"}
+                  idx={-1}
+                />
+                {/* Activity's */}
+                <RecentsView userData={data} />
+              </div>
+            </div>
+          )}
+
+          {/* Post Part */}
           <div className="mainUserFeed">
             <div className="postTag">
               <h2>All Posts</h2>
 
-              {/* Edit Button  */}
-
-              <div className="editProfile ">
+              {/* Edit Button */}
+              <div className="editProfile">
                 <button type="button">
-                  <EditIcon style={{ color: "#8e0b3a" }} />{" "}
-                  <a onClick={()=>handleEditProfile()} style={{ color: "#8e0b3a" , cursor : "pointer" }}>
+                  <EditIcon style={{ color: "#8e0b3a" }} />
+                  <a
+                    onClick={() => handleEditProfile()}
+                    style={{ color: "#8e0b3a", cursor: "pointer" }}
+                  >
                     Edit Profile
                   </a>
                 </button>
@@ -102,52 +133,49 @@ function ProfileScreen({ data }) {
           </div>
         </div>
 
-        {/* Right Side Content  */}
-        <div className="rightProfileSection">
-          {/* Functions  */}
-          <div className="functionSection recentSection curveBorder">
-            <RightBarHead
-              Icon={QueryStatsIcon}
-              newsHeader={"Statistics"}
-              idx={-1}
-            />
+        {/* Right Side Content for larger screens */}
+        {!isSmallScreen && (
+          <div className="rightProfileSection">
+            {/* Functions */}
+            <div className="functionSection recentSection curveBorder">
+              <RightBarHead
+                Icon={QueryStatsIcon}
+                newsHeader={"Statistics"}
+                idx={-1}
+              />
+              <FunctionSection data={data} profile={true} />
+            </div>
 
-            <FunctionSection data = {data} profile = {true} />
-          </div>
+            {/* Following Suggestion */}
+            <div className="recentSection curveBorder suggestFollow">
+              {/* header */}
+              <RightBarHead
+                Icon={TaskAltIcon}
+                newsHeader={"You might like"}
+                idx={-1}
+              />
+              {/* Activity's */}
+              <RecentsView userData={data} />
+            </div>
 
-          {/* Following Suggestion */}
-
-          <div className="recentSection curveBorder suggestFollow">
-            {/* header  */}
-            <RightBarHead
-              Icon={TaskAltIcon}
-              newsHeader={"You might like"}
-              idx={-1}
-            />
-
-            {/* Activity's */}
-            <RecentsView userData={data} />
-          </div>
-
-          {/* Social One Trending ! */}
-          <div className="socialTrending">
-            <div className="subProfile curveBorder">
-              {/* Header */}
-
-              <h4 id="headTrend">
-                <RightBarHead
-                  newsHeader={"Trending's"}
-                  idx={-1}
-                  Date={true}
-                  label={currentDate}
-                />
-              </h4>
-
-              {/* Trending's In India  */}
-              {trends != null ? <Trends Trends={trends} /> : null}
+            {/* Social One Trending ! */}
+            <div className="socialTrending">
+              <div className="subProfile curveBorder">
+                {/* Header */}
+                <h4 id="headTrend">
+                  <RightBarHead
+                    newsHeader={"Trending's"}
+                    idx={-1}
+                    Date={true}
+                    label={currentDate}
+                  />
+                </h4>
+                {/* Trending's In India */}
+                {trends != null ? <Trends Trends={trends} /> : null}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

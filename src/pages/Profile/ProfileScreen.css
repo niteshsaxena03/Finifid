@@ -1,75 +1,63 @@
-.profileScreen{
-  overflow-x: hidden; 
+.profileScreen {
+  overflow-x: hidden;
 }
-.mainScreenContent{
+
+.mainScreenContent {
   display: flex;
-  
   margin: 2% 7%;
   width: 100%;
 }
 
-.mainProfileScreen{
+.mainProfileScreen {
   display: flex;
   flex-direction: column;
   width: 50%;
 }
 
-.profileSection{
+.profileSection {
   display: flex;
   flex-direction: column;
-
   background-color: #fff;
-
   box-shadow: 0 0 2px #8e0b3a;
-
-
   width: 100%;
-
-  border-radius:5px ;
-
-
+  border-radius: 5px;
   overflow: hidden;
 }
 
-
-.mainUserFeed{
-    display: flex;
-    flex-direction: column;
-
-    height: 40px;
-    width: 100%;
-
-    background-color: #fff; 
-
-    box-shadow: 0 0 1px #8e0b3a;
-
-    border-radius:10px ;
-
-    margin-top: 2%;
+.mainUserFeed {
+  display: flex;
+  flex-direction: column;
+  height: 40px;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 0 1px #8e0b3a;
+  border-radius: 10px;
+  margin-top: 2%;
 }
 
-.userFeed .feed{
+.userFeed .feed {
   align-items: center;
   width: 100% !important;
 }
 
-.userFeed .feedSearchBox{
+.userFeed .feedSearchBox {
   width: 100%;
   align-items: start !important;
 }
 
-.userFeed .posts{
-  width: 100%; 
-}
-
-.userFeed .feedIcons{
+.userFeed .posts {
   width: 100%;
 }
-.userFeed .feedSearch{
-   width: 100% !important ;
+
+.userFeed .feedIcons {
+  width: 100%;
 }
 
-.postTag{
+.userFeed .feedSearch {
+  width: 100% !important;
+}
+
+.postTag {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,48 +66,88 @@
   color: #333;
 }
 
-.editProfile{
+.editProfile {
   display: flex;
   align-items: center;
-
   z-index: 3;
 }
 
-
-.editProfile button{
+.editProfile button {
   background-color: #fff !important;
 }
 
-
-.editProfile button a{
-  cursor: pointer; 
+.editProfile button a {
+  cursor: pointer;
 }
 
-.editProfile .MuiSvgIcon-root{
+.editProfile .MuiSvgIcon-root {
   font-size: larger;
 }
 
+/* Right Hand Side */
 
-
-/* RIght Hand Side !  */
-
-.rightProfileSection{
+.rightProfileSection {
   display: flex;
-
   width: 30%;
   height: fit-content;
-
   margin-left: 5%;
-  }
+}
 
-
-.suggestFollow .MuiAvatar-circular{
+.suggestFollow .MuiAvatar-circular {
   height: 55px !important;
   width: 55px !important;
 }
 
-/* feed setting */
-.profileFeed .feed{
+/* Feed setting */
+.profileFeed .feed {
   margin-left: 0%;
 }
- 
+
+.mainScreenContent.column {
+  flex-direction: column;
+}
+
+.rightProfileSection.column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 2%;
+}
+
+.rightProfileSection .socialTrending {
+  display: none;
+}
+
+@media (min-width: 1001px) {
+  .rightProfileSection .socialTrending {
+    display: block;
+  }
+}
+
+/* Mobile view adjustments */
+@media (max-width: 1000px) {
+  .mainScreenContent {
+    flex-direction: column;
+    margin: 1% 2% 1% 0; /* Margin on all sides except right */
+    width: 100%;
+  }
+
+  .mainProfileScreen,
+  .profileSection,
+  .mainUserFeed,
+  .rightProfileSection,
+  .functionSection,
+  .recentSection,
+  .suggestFollow,
+  .socialTrending {
+    width: 100%;
+    margin: 1% 0; /* Margin on all sides except right */
+  }
+
+  .editProfile {
+    width: 100%;
+    justify-content: center;
+    margin: 1% 0; /* Margin on all sides except right */
+  }
+}
