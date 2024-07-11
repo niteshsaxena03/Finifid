@@ -63,3 +63,20 @@ html {
   margin-right: 3%;
   margin-left: 3%;
 }
+
+.mobileWarning {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.mobileWarning h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff0000; /* You can change this to your preferred color */
+}

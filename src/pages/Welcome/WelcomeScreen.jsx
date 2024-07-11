@@ -1,38 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import "./WelcomeScreen.css";
 import { useNavigate } from "react-router-dom";
 import { useFirebase } from "@/Firebase/firebaseContext";
+import { useMediaQuery } from "react-responsive";
 
 function WelcomeScreen() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
   const firebase = useFirebase();
-  const { isLoggedIn } = useFirebase();
+  const { isLoggedIn } = firebase; // Corrected here
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 768); 
-    };
+  // Using useMediaQuery to detect mobile devices
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
-    // Initial check on mount
-    handleResize();
-
-    // Event listener for window resize
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup the event listener
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  //function to detect if user is already logged in
+  // Function to detect if user is already logged in
   useEffect(() => {
     if (isLoggedIn) {
       navigate("/home");
     }
-  }, [firebase, navigate]);
+  }, [isLoggedIn, navigate]);
+
+  if (isMobile) {
+    return (
+      <div className="mobileWarning">
+        <h1>Sorry, this app is not optimized for mobile as of now.</h1>
+        <h1>Kindly use a desktop</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="welcomeScreen">
@@ -41,16 +36,16 @@ function WelcomeScreen() {
       <div className="buttonContainer">
         <Button
           className="button"
-          variant="background"
-          size={isSmallScreen ? "sm" : "lg"}
+          variant="contained"
+          size="lg"
           onClick={() => navigate("/login")}
         >
           Login
         </Button>
         <Button
           className="button"
-          variant="background"
-          size={isSmallScreen ? "sm" : "lg"}
+          variant="contained"
+          size="lg"
           onClick={() => navigate("/signup")}
         >
           SignUp
