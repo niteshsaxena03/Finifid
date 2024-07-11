@@ -55,7 +55,7 @@
     display: none; /* Hide Sidebar and RightBar on mobile */
   }
 
-  .Feed {
-    flex: 2; /* Make Feed take the full remaining space */
+  .appBody .Feed {
+    flex: 1; /* Make Feed take the full remaining space */
   }
 }

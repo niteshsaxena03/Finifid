@@ -11,7 +11,7 @@ function WelcomeScreen() {
   const { isLoggedIn } = firebase; // Corrected here
 
   // Using useMediaQuery to detect mobile devices
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  //const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   // Function to detect if user is already logged in
   useEffect(() => {
@@ -20,14 +20,14 @@ function WelcomeScreen() {
     }
   }, [isLoggedIn, navigate]);
 
-  if (isMobile) {
-    return (
-      <div className="mobileWarning">
-        <h1>Sorry, this app is not optimized for mobile as of now.</h1>
-        <h1>Kindly use a desktop</h1>
-      </div>
-    );
-  }
+  // if (isMobile) {
+  //   return (
+  //     <div className="mobileWarning">
+  //       <h1>Sorry, this app is not optimized for mobile as of now.</h1>
+  //       <h1>Kindly use a desktop</h1>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="welcomeScreen">

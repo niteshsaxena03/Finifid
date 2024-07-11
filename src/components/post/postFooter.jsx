@@ -79,12 +79,7 @@ const PostFooter = ({
         <Icon Icon={ChatBubbleOutlineIcon} label={`Comments`} idx={-1} />
         <span className="commentCount">{commentCount}</span>
       </button>
-      <button className="iconButton">
-        <Icon Icon={ShareIcon} label={"Share"} idx={-1} />
-      </button>
-      <button className="iconButton">
-        <Icon Icon={SendIcon} label={"Send"} idx={-1} />
-      </button>
+     
     </div>
   );
 };

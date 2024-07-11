@@ -255,18 +255,7 @@ const Feed = ({ data, friends, profile }) => {
               </span>
             </label>
 
-            <Icon Icon={CameraAltIcon} label={"Live"} idx={2} />
-
-            <label htmlFor="Story" style={{ cursor: "pointer" }}>
-              <Icon Icon={AddCircleIcon} label={"Story"} idx={3} />
-              <input
-                type="file"
-                accept="image/*"
-                id="Story"
-                style={{ display: "none" }}
-                onChange={AddStory}
-              />
-            </label>
+            
           </form>
         </div>
       )}

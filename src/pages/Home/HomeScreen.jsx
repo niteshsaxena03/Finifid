@@ -21,7 +21,7 @@ function HomeScreen({ data }) {
   }, [firebase, navigate, isLoggedIn]);
 
   // Using useMediaQuery to detect mobile devices
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isMobile = useMediaQuery({ query: "(max-width:1000px)" });
 
   return (
     // Main Home
